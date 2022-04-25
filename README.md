@@ -12,7 +12,7 @@ und auf den neuesten Stand der jeweiligen Vorlesungen gebracht wird.
 
 ## Wo befinden sich die PDFs?
 
-Die aktuellste PDF Version wird unter Releases hochgeladen. Zu der neusten PDF gelangt man direkt [hierüber] https://github.com/jelenap22/InfStat22/releases/[latest].
+Die aktuellste PDF Version wird unter Releases hochgeladen. Zu der neusten PDF gelangt man direkt hierüber https://github.com/jelenap22/InfStat22/releases/tag/v1.1
 
 
 ## Wie mitwirken?
