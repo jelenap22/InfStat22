@@ -1,0 +1,4642 @@
+\documentclass{tstextbook}
+
+\makeatletter
+\usepackage{bbm}
+\usepackage{pgfplots}
+\usepackage{tikz}
+\usepackage{subcaption}
+\usepackage[utf8]{inputenc}
+\usepackage{float}
+
+\begin{document}
+
+
+\tsbook{Studierendenmitschrift zur Vorlesung: Einführung in die Inferenzstatistik (SoSe 2022)}
+       {Original SoSe21 hergestellt von: Jim Feller \\
+       Aktualisierung SoSe22: Jelena Popadic}
+       
+       {Cover Designer}
+       {2017}
+       {xxxxx}{xxx--xx--xxxx--xx--x}{0.0}
+       {Publisher}
+
+%---------------------------------------------------------------------------
+% Chapters
+%---------------------------------------------------------------------------
+
+%---------------------------------------------------------------------------
+
+%---------------------------------------------------------------------------
+
+\chapter{Parametrische Modelle}
+
+\begin{book}
+	Siehe für eine Einführung zu diesem Kapitel S. 255-260 in \textit{Rice (2007)}.
+\end{book}
+
+
+\begin{example}[Ein Modell für den radioaktiven Zerfall]
+	 Atome eines Elements zerfallen unabhängig voneinander in scheinbar zufälliger Reihenfolge. Im Moment des Zerfalls wird ein $ \alpha $-Teilchen abgegeben. Im Experiment beobachtet man eine enorm große Zahl von Atomen über eine gewisse Zeitspanne. Dabei wird die (relativ kleine) Zahl der $ \alpha $-Teilchen beobachtet. \\
+	 $ S_{n_0} = \# \alpha $-Teilchen pro Zeitintervall \\
+	 	 
+	 
+	 \begin{tabular}{ll}
+	 	\hline
+		\textbf{Modell 1} \\
+	 	$ S_{n_0} \sim B(\tikzmarknode{A}{n_0}, \tikzmarknode{B}{p_0}) $ 
+	 	\begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
+	 		nodes={inner sep=1pt, align=center, font=\footnotesize}]
+	 		\draw[<-] (A.south) -- ++ (-1,-.5) node[below] {\# Atome \\ (enorm)};
+	 		\draw[<-] (B.south) -- ++ (1,-.5) node[below] {Zerfallswkeit\\ (extrem klein)};
+	 	\end{tikzpicture}
+	 	\vspace{8ex} &  $ \leftarrow $ unpraktisch zum Rechnen ($\ n_0 $ unbekannt) \\
+	 	\hline
+		\textbf{Modell 2} \\
+	 	$ \sqrt{n_0}\left(\frac{1}{n_0}S_{n_0} - p_0\right) \tikzmarknode{C}{\overset{w}{\longrightarrow}} N\left(0,p_o(1-p_0)\right)$ \begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
+	 		nodes={inner sep=1pt, align=center, font=\footnotesize}]
+	 		\draw[<-] (C.south) -- ++ (0,-.5) node[below] {$n_0 \rightarrow \infty$ \\ $p_0$ fest};
+	 	\end{tikzpicture}
+	 	\vspace{8ex} & $ \leftarrow $ unsinnig.\\
+	 	$ \E(S_{n_0}) = n_0 p_0 \longrightarrow \infty $ &  $ \leftarrow $ passt nicht zu der Tatsache, dass im \\
+	 	& Experiment eine relativ kleine Anzahl   \\
+	 	& von $ \alpha $-Teilchen, also ein relativ kleiner  \\
+	 	& Wert von $ S_{n_0} $, beobachtet wird. \\
+	 	\hline
+		\textbf{Modell 3} \\
+	 	$ S_{n_0} \sim P(\underbrace{\lambda_0}_{\tikzmarknode{D}{n_0} \tikzmarknode{E}{p_0}}) $ 
+	 		\begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
+	 			nodes={inner sep=1pt, align=center, font=\footnotesize}]
+	 			\draw[<-] (D.south) -- ++ (-1.5,-.5) node[below] {sehr groß};
+	 			\draw[<-] (E.south) -- ++ (1.5,-.5) node[below] {sehr klein, \\ sodass $ \lambda_0 $ moderat};
+	 		\end{tikzpicture}
+	 		\vspace{8ex} & $ \leftarrow $ praktikabel und sinnvoll \\ 
+	 	
+	 \end{tabular} \\
+	
+	
+	Begründung: Gesetz der kleinen Zahlen  \\
+	Damit lässt sich Modell 1 durch Modell 3 approximmieren \\
+	Sei $ X \sim B(n,p) $. Dann gilt für jedes $ k \in \N_0 $: 
+	\[
+	\Prob(X=k) \tikzmarknode{F}{\longrightarrow} \frac{\lambda^k}{k!} e^{-\lambda}.
+	\]
+	\begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
+		nodes={inner sep=1pt, align=center, font=\footnotesize}]
+		\draw[<-] (F.south) -- ++ (0,-0.7) node[below] {$ n \to \infty $, \\  $ np=\lambda $ fest }; 
+	\end{tikzpicture}
+		\vspace{8ex}
+	
+\end{example}
+
+\begin{proof}[Nachrechnen]
+	
+	\[ 
+	\begin{aligned}
+		\Prob(X=k) & = \binom{n}{k} p^k (1-p)^{n-k} \\
+		\vspace{8ex}
+		& = \overbrace{\frac{n(n-1)\cdot \ldots \cdot (n-k+1)}{k!}}^{ k  \text{ Faktoren}} \tikzmarknode{G}{p^k} (1-p)^{n-k} \\
+		& = \frac{np(n-1)p\cdot \ldots \cdot (n-k+1)p}{k!} (1-p)^n (1-p)^{-k} \\
+		& = \frac{np(n-1)p\cdot \ldots \cdot (n-k+1)p}{k!} \left(1-\frac{np}{n}\right)^n  \left(1-\frac{np}{n}\right)^{-k} \\
+		& = \frac{np \cdot np \cdot\left(1-\frac{1}{n}\right)\cdot \ldots \cdot np \cdot
+		\left(1-\frac{k+1}{n}\right)}{k!} \left(1-\frac{np}{n}\right)^n  \left(1-\frac{np}{n}\right)^{-k} \\
+		& \underset{\substack{n \to \infty \\ np=\lambda}}{\longrightarrow} \dfrac{\lambda^k}{k!} e^{-\lambda}1 .
+	\end{aligned}
+	\]
+	\begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
+		nodes={inner sep=1pt, align=center, font=\footnotesize}]
+		\draw[<-] (G.north) -- ++ (0,1) node[above] {$ k $ Faktoren}; 
+	\end{tikzpicture}
+	\begin{remark} 
+		Bemerke: \\
+		$ np=\lambda $, \\
+		$ \left(1-\frac{1}{n}\right)\rightarrow1, $ \\
+		$  e^{-x} = \lim_{n\to \infty} \left(1-\frac{x}{n}\right)^n$, \\
+		$ \left(1-\frac{pn}{n}\right)^n \approx \left(1-\frac{\lambda}{n}\right)^n \approx e^{-\lambda}$.
+		
+		\end{remark}
+\end{proof}
+
+\begin{example}[Daten von Berkson (1966)] Daten übernommen aus \textit{Rice (2007, S. 256)}.
+	$ \# \alpha $-Teilchen von Americum 241 innerhalb von $ 10 $ Sekunden. \\
+	Dieses Experiment wird $ 1207 $ mal (unabhängig) wiederholt.\\
+	$ n=1207 $ Beobachtung $ X_1,\ldots,X_n \ iid \ mit \ X_i \sim P(\lambda_0). $\\
+	Im Poisson Modell $ X_i \ iid \ P(\lambda_0) $ ist $ \E(X_i)=\lambda_0 \Var(X_i) = \lambda_0 $ \\
+	Für $ \bar{X}_n=\sum_{i=1}^{n}(X_i)$ ist $E(\bar{X}_n)=\lambda_0 $, $ \Var(\bar{X}_n) = \frac{\lambda_0}{n} $. \\
+	\\
+	Schätzer für $ \E(X_i)=\lambda_0: \ \ \hat{\lambda_n} =  \bar{X}_n  \leftarrow $ unverzerrte und konsistente Schätzer \\
+	Schätzer für $ Var(X_i)=\lambda_0: \ \bar{X}_n $ oder  $ \frac{1}{n-1} \sum_{i=1}^{n}(X_i - \hat{\mu})^2 = \hat{\sigma}_n^2 $\\
+
+	Man findet aus den Daten: $ \hat{\lambda_n} = 8.37, (\hat{\sigma}_n)^2 = 8.37, \tilde{\sigma}_n^2 = 8.53 $. \\
+
+	Konfidenzintervall für $ \lambda_0 $ mit nominaler Überdeckungswahrscheinlihkeit $1-\alpha $: 
+	
+	\begin{itemize}
+		\item Normalapproximation:
+		\[ \hat{\lambda_n} \pm \sqrt\frac{\hat{\sigma_n^2}}{n} \Phi^{-1} \left(1-\frac{\alpha}{2}\right) \ldots \text{für } \alpha = 0.05: [8.206,8.533] \] \\
+		\item Bootstrap:
+	\end{itemize}
+
+		\begin{tabular}{c|c}
+			Population & ''Bootstrap Population'' \\
+			\begin{tikzpicture}[every text node part/.style={align=center}]
+				\node[draw,circle,minimum size=1cm,inner sep=0pt] at (2,0) {$P(\lambda_0) $ \\ Mittelwert $ \lambda_0 $};
+			\end{tikzpicture} & \begin{tikzpicture}[every text node part/.style={align=center}]
+			\node[draw,circle,minimum size=1cm,inner sep=0pt] at (2,0) {$ X_1,\ldots,X_n $ \\ Mittelwert $ \hat{\lambda_n} $};
+		\end{tikzpicture}  \\
+			$ \downarrow $ & $ \downarrow $ \\
+			$ X_1,\ldots,X_n $ i.i.d. $ P(\lambda_0) $ & $ X_1^*,\ldots,X_n^* $ (ziehen mit Zurücklegen) \\
+			$ \downarrow $ & $ \downarrow $ \\
+			$ \bar{X} = \hat{\lambda_n} $ & $ \bar{X}^* = \hat{\lambda_n}^* $ \\
+			\hline
+			Fehler $ \hat{\lambda}-\lambda_0 $ & Fehler $ \hat{\lambda}^*-\hat{\lambda} $ \\
+			\hline
+			Wiederhole (u.a.), $ m $-mal: & Wiederhole (u.a.), $ m $-mal: \\
+			$ \hat{\lambda}^{(1)}-\lambda_0,\ldots,\hat{\lambda}^{(m)}-\lambda_0 $ & $ \hat{\lambda}^{*(1)}-\hat{\lambda},\ldots,\hat{\lambda}^{*(m)}-\hat{\lambda} $ \\
+			\hline
+			Schätze die Verteilungsfunktion & Schätze die Verteilungsfunktion\\
+			des Fehlers wie folgt: & des Fehlers wie folgt: \\
+			$\F(t) = \Prob(\hat{\lambda_n}-\lambda_0 \leq t) $ & $ \F(t) $ \\
+			$\hat{F}_M(t)=\frac{1}{m} \sum_{i=1}^{m}\mathbbm{1}{ \{ \hat{\lambda_n}^{(\cdot)}-\lambda_0 \leqslant t \} } $ &
+			$\hat{F}^{*m}_M(t)=\frac{1}{m} \sum_{i=1}^{m}\mathbbm{1}{ \{ \hat{\lambda_n}^{*}-\hat{\lambda_n} \leqslant t \} } $  \\
+			
+		\end{tabular}
+	\vspace{1cm} 
+	
+		$ 95\% $ Konfidenzintervall mit der Bootstrap-Methode: 
+		\[\left[ \hat{\lambda_n}-\hat{F_n}^{*m-1}(1-\frac{\alpha}{2} ),  \hat{\lambda_n}-\hat{F_n}^{*m-1}(\frac{\alpha}{2} ) \right] = \]
+		\[ \left[ 8.205,\; 8.531 \right] \]
+		
+
+	
+\end{example}
+
+
+
+\section{Parametrische Modelle und Parameterschätzung}
+		\label{parameterschaetzung}
+
+	\index{Parametrisches Modell}
+
+\begin{itemize}
+	\item Experiment:
+\end{itemize}
+Beobachtungen $ X_1,\ldots,X_n $\\
+
+\begin{itemize}
+	\item Parametrisches Modell:
+\end{itemize}
+Angenommen die $ X_1,\ldots,X_n $ sind i.i.d. Beobachtung einer Zufallsvariable $ X $, deren 
+Verteilung von einer bestimmten Form ist:
+	\[
+	X\sim \; \text{Verteilung abhängig von einem Parameter} \; \theta_0 \in \Theta \subseteq \R^p
+	\]
+	
+Die funktionale Form des Modells ist \underline{bekannt}, der Parameter $ \theta_0 $ ist \underline{unbekannt}!
+
+\begin{example}
+	Beispiele von parametrischen Modellen: \\
+	
+	\begin{center}
+	\begin{tabular}{l|l}
+			$ X\sim P(\lambda_0) $ 	& $ \lambda_0 = \theta_0 $ 				 \\
+									& $ \Theta = \left(0,\infty\right) $ 	\\
+			\midrule
+			$ X\sim B(p_0) $		& $ p_0= \theta_0 $							\\
+									& $ \Theta = \left(0,1\right) $ bzw. $ \left[0,1\right] $  \\
+			\midrule
+			$ X\sim \Bin(n,p)  $	& $ p_0= \theta_0 $						\\
+			& $ \Theta = \left(0,1\right) $ bzw. $ \left[0,1\right] $  \\	
+			\midrule
+			$ X \sim N(\mu,\sigma_0^2) $ & $ \sigma_0^2 = \theta_0 $	 \\
+									& $ \Theta = \left(0,\infty\right) $ bzw. $ [0,\infty) $  \\
+			\midrule
+			$ X \sim N(\mu_0,\sigma^2) $ & $ \mu_0 = \theta_0 $  \\
+			& $ \Theta = \R $  \\
+			\midrule
+			$ X \sim N(\mu_0,\sigma_0^2) $ & $ \begin{pmatrix}
+				\mu_0 \\ \sigma_0^2
+			\end{pmatrix}\ = \theta_0 \; \ldots $ 2-dim.	 \\
+			& $ \Theta = \R \times (0,\infty) $   		
+		\end{tabular}
+	\end{center}
+
+\end{example}
+
+\begin{remark}
+	Betrachte einen Schätzer $ \hat{\theta} $ für $ \theta_0 $; das ist eine Größe $ \hat{\theta}=\hat{\theta} \left(X_1,\ldots,X_n \right) $, die alleine aus den Daten $ X_1, \ldots, X_n $ berechenbar ist (oft auch $ \hat{\theta}_n $). \\
+	
+	Beachte: Für $ \theta_0 \in \R^p $ mit $ p>1 $ ist auch $ \hat{\theta} \in \R^p $.
+\end{remark}
+
+\begin{definition}[Unverzerrtheit]
+	\index{Unverzerrtheit}
+	
+	Der Schätzer $ \hat{\theta} $ für $ \theta_0 $ ist unverzerrt (bzw. erwartungstreu), wenn gilt: 
+	\[
+	\forall \theta \in \Theta, \forall i=1,...,p: \tikzmarknode{E}{\E_{\theta_n}}\left(\hat{(\theta)_i}\right) = (\theta)_i.
+	\]
+	
+	\begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
+	nodes={inner sep=1pt, align=center, font=\footnotesize}]
+	\draw[<-] (E.south) -- ++ (0,-.5) node[below] {Erwartungstreu, wenn $ \theta_n $ \\ der wahre Parameter ist.};
+	\end{tikzpicture}
+	\vspace{1cm}
+
+\end{definition}
+
+\begin{remark} Beachte:
+	Für $ \hat{\theta} = \begin{pmatrix}
+		\hat{\theta}_1 \\ \vdots \\ \hat{\theta}_p
+	\end{pmatrix} $ ist $ \E_{\theta_n} \left(\hat{\theta}\right) = \begin{pmatrix}
+	 \E_\theta \left(\hat{\theta}_1\right) \\ \vdots \\  \E_{\theta_n}  \left(\hat{\theta}_p\right)
+\end{pmatrix} $. \\
+Ist $ \hat{\theta} $ unverzerrt, dann ist die $ i $-te Komponente von $ \hat{\theta} $ ein unverzerrter Schätzer für die $ i $-te Komponente von $ \theta_0 $.
+\end{remark}
+
+\begin{definition}[Konsistenz]
+	\index{Konsistenz}
+	
+	Ein Schätzer $  \hat{\theta}_{\tikzmarknode{n}{n}} $ für $ \theta_0 $ heißt konsistent, wenn gilt:
+	
+	\begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
+		nodes={inner sep=1pt, align=center, font=\footnotesize}]
+		\draw[<-] (n.south) -- ++ (0,-.5) node[below] {Stichprobengröße};
+	\end{tikzpicture}
+	\vspace{1cm}
+	
+	\[
+	\forall \epsilon > 0, \forall i=1,...,p, \forall \theta \in \Theta : \Prob_{\theta_0} \left(||(\hat{\theta}_n)_i - (\theta)_i || > \epsilon \right) \overset{n\to\infty}{\longrightarrow} 0.
+	\]
+	
+	Kurz: \[\hat{\theta}_n \overset{p}{\rightarrow}\theta_0.\]
+\end{definition}
+
+\begin{remark}
+	Beachte: $ \hat{\theta}_n $ ist konsistent für $ \theta_0 $ genau dann, wenn $ \left(\hat{\theta}_n\right)_i $ konsistent ist für $ \left(\theta_0\right)_i $ für alle $ i=1,\ldots,p $.
+\end{remark}
+
+\begin{proof}[Nachrechnen]
+	Siehe Übung.
+\end{proof}
+
+\underline{Wunschliste für Schätzer:}
+\begin{itemize}
+	\item Unverzerrtheit $ \qquad \qquad \leftarrow $ keinen systematischen Fehler.
+	\item Konsistenz $ \qquad \qquad \qquad \leftarrow $ Genauigkeit wächst mit $ n $.
+	\item kleine Varianz
+	\item Verteilung des $ \hat{\theta_n}-\theta_0 $ bekannt oder approximierbar.
+\end{itemize}
+
+Zwei Strategien: 
+\begin{itemize}
+	\item Momentenmethode
+	\item Maximum-Likelyhood-Methode.
+\end{itemize}
+
+
+\section{Die Momenten-Methode (MM)}
+
+\begin{book}
+ Siehe zu diesem Kapitel S. 260-267. in	\textit{Rice (2007)}.
+\end{book}
+
+
+Betrachte ein parametrisches Modell wie in Abschnitt \ref{parameterschaetzung}:
+$ X_1,\ldots,X_n $ i.i.d. Kopien von $ X $, wobei $ X \sim $ Verteilung abhängig von $ \theta_0 \in \Theta \subseteq \R^p \quad (p\ge1) $.
+
+In vielen Fällen gibt es eine eindeutige Beziehung zwischen dem Parameter $ \theta_0 $ und den Momenten der zugrundlegende Verteilung  $ X \quad (1:1 Beziehung) $.
+
+\begin{example}
+	
+	\begin{center}
+	\begin{tabular}{l|ll}
+								& Parameter 	& Funktionen von $ \E(X), \E(X^2),\ldots $ \\
+		\midrule
+		$ X\sim P_{\lambda_0} $ 	& $ \lambda_0>0	$	& $ = \E_{\lambda_0}(X)={\lambda_0} $\\
+		\midrule
+		$ X\sim Bin(n,p_0) $ 		& $ p_0\in[0,1] $			& $ = \frac{1}{n} \E(X)_{p_0} $ weil $ E_{Bin}(X)=n*p_0 $\\
+		\midrule
+		$ X\sim N(\mu_0, \sigma_0^2) $ & $ \mu\in\mathbb{R} $	& $ = \E(X) $\\
+								& $ \sigma_0^2>0 $	& $ = \E(X^2)-(\E(X))^2=Var(X) $
+	\end{tabular}
+	\end{center}
+\end{example}
+	
+
+	\begin{remark}
+		Bemerkung: (MM) Allgemein:
+	
+		Für $ \theta \leq \Theta $ und $ k \geq 1$ setzt man
+		$ \E_{\theta_0}(X^k) = m_k(\theta_0) $ (Moment=Funktion des Parameters) \\
+		
+		Angenommen es gibt eine Funktion $f:\mathbb{R}^p \rightarrow \mathbb{R}^p $, sodass 
+		$
+		 f\left(\begin{pmatrix}
+			m_1(\theta_0) \\ \vdots \\ m_n(\theta_0)
+		\end{pmatrix}\right) = \theta_0
+		$
+		für jedes $\theta_0 \in \Theta$ die ''glatt''  ist. \\		
+		
+	\end{remark}
+
+
+Dann erhält man einen \textbf{Momenten-Methoden-Schätzer}  $ {\hat{\theta}}_{MM} $ 
+	\begin{itemize}
+		\item durch: \[ \hat{\theta} = {\hat{\theta}}_{MM} = f\left(\hat{m}_1,\ldots,\hat{m}_p \right) \] 
+		\item wobei  \[ \hat{m}_j = \frac{1}{n} \sum_{i=1}^{n} X_i^j \] für $ 1 \leq j \leq p  $.
+	\end{itemize}
+
+\begin{remark}
+	Bemerkung: Es gibt im Allgemeinem mehrere MM-Schätzer.
+\end{remark}
+
+\begin{example}[Gleichverteilung]
+	$ X_1, \ldots, X_n $ i.i.d. $ U([0,\theta]), \; \theta > 0 $.
+	
+	\[
+	\begin{aligned}
+		\E(X_1) &= \frac{\theta}{2} & \Rightarrow \theta & = 2\E\left(X_1\right) \\
+		& & {\hat{\theta}}_{MM} & = 2 \frac{1}{n} \sum_{i=1}^{n} X_i. \\
+		E(X_1^2) &= \frac{\theta^2}{3} & \Rightarrow \theta & = \sqrt{3\E\left(X_1^2\right)} \\
+		& & {\hat{\theta}}_{MM} & = \sqrt{3\frac{1}{n} \sum_{i=1}^{n} X_i^2}. \\
+		E(X_1^3) &= \ldots & \Rightarrow \ldots \\
+		& & \ldots
+	\end{aligned}
+	\]
+	
+\end{example}
+
+
+\begin{remark}
+	\index{Stetigkeit}
+	Erinnerung (Stetigkeit):\\
+	$ g: \R \rightarrow \R $ ist \textbf{stetig} im Punkt $ m \in \R $, wenn gilt: 
+	\[ \forall \epsilon > 0 \; \exists \, \delta >0 \colon |m^\prime - m| < \delta \Rightarrow |g(m^\prime) - g(m)| < \epsilon. \]
+	$ g: \R^p \rightarrow \R $ ist \textbf{stetig} im Punkt $ m \in \R^p $, wenn gilt: 
+	\[ \forall \epsilon > 0 \; \exists \, \delta >0 \colon ||m^\prime - m|| < \delta \Rightarrow |g(m^\prime) - g(m)| < \epsilon. \]
+	$ g: \R^p \rightarrow \R^q $ ist \textbf{stetig} im Punkt $ m \in \R^p $, wenn gilt: 
+	\[ \forall j={1,...,q} \ ist \ f(\cdot)_j: \R^p \rightarrow \R \ stetig \ im \ Punkt \ m. \]
+	\\
+	\\
+	\\
+\end{remark}
+
+\begin{lemma}
+	\label{lemma_stetig}
+	Sind $ X_1,\ldots, X_n $ i.i.d. mit $ \E(X^k) = m_k $ für $ k = 1,\ldots, p $ und ist $ g:\R^p \rightarrow \R $ stetig im Punkt $ \left(m_1, \ldots, m_p \right) = m $, dann gilt für jedes $ \epsilon > 0 $
+	\[
+	\Prob\left(|g(\hat{m})-g(m)| > \epsilon \right) \overset{n\to\infty}{\longrightarrow} 0.
+	\]
+	(Hier ist $ \hat{m}_k = \frac{1}{n} \sum_{i=1}^{n} X_i^k $ und   $ \hat{m}= \left(\hat{m}_1, \ldots, \hat{m}_p \right) $ )
+\end{lemma}
+
+\begin{proof}
+	Sei $ \epsilon > 0 $. Weil $ g $ stetig ist im Punkt $ m $, gibt es ein $ \delta > 0 $, sodass gilt: 
+	\[ ||m^\prime - m|| < \delta \Rightarrow |g(m^\prime) - g(m)| < \epsilon. \]
+	Setze $ \hat{m} = \begin{pmatrix}
+		\hat{m}_1 \\ \vdots \\ \hat{m}_p
+	\end{pmatrix} $. Dann gilt:
+
+	\[
+	\begin{aligned}
+		\; & \left\lbrace||\hat{m} - m|| < \delta \right\rbrace & \subseteq & \left\lbrace|g(\hat{m}) - g(m)| < \epsilon \right\rbrace \\
+		\Rightarrow	& \left\lbrace|g(\hat{m}) - g(m)| \ge \epsilon \right\rbrace & \subseteq & \left\lbrace||\hat{m} - m|| \ge \delta \right\rbrace
+	\end{aligned}
+	\]
+	
+	Also: 
+	\[
+	\begin{aligned}
+		\Prob\left(|g(\hat{m})-g(m)|>\epsilon \right) & \le \Prob\left(|g(\hat{m})-g(m)|\ge\epsilon \right) \\
+		& \le \Prob\left(||\hat{m}-m||\ge \delta \right) \\
+		& \leq \Prob(\sqrt{p}* max \{ |\hat{m}_k-m_k |, 1 \leq k \leq p \} \geq \delta ) \\
+		& = \Prob(\bigcup^{k=1}_{p} {|\hat{m}_k-m_k |} > \frac{\delta}{\sqrt{p}} ) \\
+		& \leq \sum_{k=1}^{p} \underbrace{\Prob(|\hat{m}_k-m_k |> \frac{\delta}{\sqrt{p}})}_{\overset{n\to\infty}{\longrightarrow} 0 \, (\text{wegen LLN})}  \overset{n\to \infty}{\longrightarrow} 0 \\
+	\end{aligned}
+	\]
+	
+	Mit dem Gesetz der großen Zahlen gilt: 
+	\[
+	\hat{m}_k = \frac{1}{n} \sum_{i=1}^{n} X_i^k \overset{p}{\longrightarrow} m_k \tag{$\hexstar\hexstar$}
+	\]
+	für jedes $ k=1,\ldots, p $. 
+	
+	\[
+	\begin{aligned}
+	\end{aligned}
+	\]
+\end{proof}
+
+
+
+\begin{satz}
+	Betrachte $ X_i, \, i\ge 1, $ i.i.d. wie in (MM).
+	
+	Ist die Funktion $ f:\R^p \rightarrow \R^p $ stetig in jedem Punkt der Menge $ \left\lbrace \tikzmarknode{M}{\left(m_1(\theta_0),\ldots,m_p(\theta_0)\right)}^\prime = \theta \in \tikzmarknode{T}{\Theta} \right\rbrace (\hexstar) $, dann ist $ \hat{\theta}_{MM} $ konsistent für $ \theta_0 $.
+	
+	\begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
+		nodes={inner sep=1pt, align=center, font=\footnotesize}]
+		\draw[<-] (M.south) -- ++ (-0.5,-0.5) node[below] {alle möglichen Werte \\ der Momente}; 
+		\draw[<-] (T.south) -- ++ (0.5,-0.7) node[below] {alle möglichen Werte \\ des Parameters}; 
+	\end{tikzpicture}
+	\vspace{1cm}
+	
+\end{satz}
+
+\begin{proof} \ \\
+	 Zz: Jede Komponente von $ \hat{\theta}_n $ ist konsistent für die entsprechende Komponente von $ \theta_0 $. \\
+	
+	Sei $j \in \{1,...,p\} $. Laut Voraussetzung ist $ f \colon \R^p \rightarrow \R^p $ stetig im jedem Punkt der Menge $ (\hexstar) $. 
+	Dann ist auch $ f(\cdot)_j : \colon \R^p \rightarrow \R^p $ stetig im jedem Punkt von $ (\hexstar) $. \\
+	
+	Sei $ \theta_0 \in \Theta $ sodass $ m \coloneqq (m_1(\theta_0),..., m_p(\theta_0)) \in (\hexstar) $. 								Mit dem Lemma 1.1 folgt dass \\
+	 \[ \forall \epsilon > 0 :  \Prob(| \underbrace{f(\hat{m})_j}_{=(\hat{\theta}_{n})_j} - \underbrace{f(m)_j}_{=(\theta_{0})_j} | > \epsilon ) \rightarrow 0  \]
+	 Also ist $(\hat{\theta}_{n})_j $ konsistenf für  $ (\theta_{0})_j $.
+ 	
+\end{proof}
+
+\begin{satz}
+	Betrachte ein parametrisches Modell wo X Verteilung abh. von $\theta \leq \Theta \in \R$. \\
+	Seien $X_1, X_2$ i.i.d. Kopien von X falls  $  \theta_0 = f (m_1(\theta_0) ) \ ( $ für $ \ \theta \in \Theta) $ für eine Funktion f, die auf der Menge $ \{m_1(\theta): \theta \in \Theta \}$ stetig ist. Dann ist der MM-Schätzer  \[ \hat{\theta}_n=f(\frac{1}{n} \sum_{i=1}^{n} X_i ) \]  kosistent für $\theta_0$.
+
+\end{satz}
+
+\begin{remark}
+	 Erinnerung aus GZ \\
+	 Falls $ X_n \overset{p}{\rightarrow} c $ und falls $ f: \R \rightarrow \R $ stetig ist im Punkt c, dann folgt aus $ f(X_n) \overset{p}{\rightarrow} f(c)$. \\
+	 Wissen: $ \bar{X_n} = \frac{1}{n} X_i $ ist ein konsistenter Schätzer für $ E_{\theta_0} (X) = m_1 (\theta_0)$. \\
+	 D.h. $ \bar{X}_n \overset{p}{\rightarrow} m_1 (\theta_0) $. Laut voraussetzung ist die Funktion $f(\cdot)$ stetig im Punkt $ m_1(\theta_0) =>$ \[  f (\bar{X}_n) \overset{p}{\rightarrow} f(m_1 (\theta_0) ) ,\ also \ \hat{\theta}_n \overset{p}{\rightarrow}  \theta_n \] 
+	 mit andere Wörten $\hat{\theta}_n$ ist ein konsistenten Schätzer für $ \theta_0 $.
+\end{remark}
+
+
+
+\begin{example}[Poissonverteilung]
+	
+	
+	$ X_1, \ldots, X_n $ i.i.d. $ P(\lambda_0), \quad \lambda_0 \in (0, \infty) $. 
+	
+	Beachte $ \E_{\lambda_0}(X_1) = \lambda_0 $, dass gibt dann der MM-Schätzer \[ \hat{\lambda}_n = \frac{1}{n} \sum_{i=1}^{n} X_i. \] 	
+	
+	Der Schätzer ist unverzerrt und konsistent. $ \checkmark $ \\
+	
+	Wissen: $ \lambda_0 = \Var_{\lambda_0} (X_1) = \E_{\lambda_0} (X_1^2) - (\E_{\lambda_0} (X_1))^2 $
+	daraus kann man einen witeren MM-Schätzer mit $ \lambda_0 $ erhalten. 
+	
+	
+\end{example}
+
+\begin{example}[Normalverteilung]
+	
+	$ X_1, \ldots, X_n $ i.i.d. $ N\left(\mu_0, \sigma_0^2\right) \ mit \ \mu_0 \in \R, \sigma_0^2 \in (0, \infty) $.
+	
+	$ \E_{\mu_0, \sigma_0^2}(X_1) = \mu_0,  \E_{\mu_0, \sigma_0^2}(X_1^2) = \sigma_0^2 - \mu_0$, 
+	
+	$ Var(X_1) = \E(X_1^2) - (\E(X_1))^2 =   \sigma_0^2 $
+		
+	Das gibt den MM-Schätzer: 
+	\[
+	\begin{pmatrix}
+		\hat{\mu}_n \\ \hat{\sigma}_n^2 
+	\end{pmatrix} 
+	= \begin{pmatrix}
+		\frac{1}{n} \sum_{i=1}^{n} X_i \\
+		\frac{1}{n} \sum_{i=1}^{n} X_i^2 - {\left(\frac{1}{n} \sum_{i=1}^{n} X_i\right)^2}
+	\end{pmatrix}.
+	\]
+	
+	
+	$ \E_{\mu_0, \sigma_0^2}(X_1) = \mu_0 $ \\
+	$ \E_{\mu_0, \sigma_0^2}(\hat{\sigma}_n^2) = \frac{n-1}{n} \sigma_0^2 \neq \sigma_0^2 ... verzerrt $ \\
+	$ \hat{\sigma}_n^2 = \frac{1}{n} \sum_{i=1}^{n} \left( X_i - \bar{X}_n \right)^2  $  Vo-GZS\\
+	
+	Konsistenz: \\ 
+	Die Funktion $ f  \begin{pmatrix} m_1 \\ m_2 \end{pmatrix} \mapsto \begin{pmatrix} m_1 \\ m_2-m_1^2 \end{pmatrix} $ ist stetig auf ganz $ \R^2 $. 
+	
+	Damit ist $ \begin{pmatrix} \hat{\mu} \\ \hat{\sigma}^2 \end{pmatrix} $ konsistent für $ \begin{pmatrix} \mu_0 \\ \sigma_0^2 \end{pmatrix} . \checkmark $
+	
+\end{example}
+
+
+\begin{example}[Geometrische Verteilung]
+	$ X_1, \ldots, X_n $ i.i.d. $ G(p_0), \quad p_0 \in (0,1) $.
+	
+	Wissen: Für $ X \sim G(p) $ ist 
+	
+	$ \E_{p_0} (X_1) = \frac{1}{p_0}, \quad \Rightarrow p_0 = \frac{1}{\E_{p_0} (X)} $
+	
+	
+	Das erzeugt den MM-Schätzer: 
+	\[
+	\hat{p}_0 = \frac{1}{\frac{1}{n} \sum_{i=1}^{n} X_i}.
+	\]
+	
+	Dieser Schätzer ist verzerrt!
+	$ \E(f(X)) \neq f(\E(X))$! \\
+	falls $f(\cdot)$ linear ist, also  $f(X)= aX+b$ ist, $\E(aX+b)=a\E(X)+b=f(\E(X))$; 
+	
+	\[
+	\begin{aligned}
+		\E_p(\hat{p}_n) \ne \frac{1}{\E_p\left(\frac{1}{n}\sum_{i=1}^{n}X_i \right) } = \frac{1}{\frac{1}{p}} = p.
+	\end{aligned}
+	\]
+
+	
+	Konsistenz: \\
+	
+	Die Funktion $ f(t) = \frac{1}{t} $ ist stetig auf $ (0,\infty) $. 
+	
+	Die möglichen Werte von $ \E_{p_0}(X_1) $ ist die Menge \[ \lbrace \frac{1}{p} \colon  p\in (0,1) \rbrace = (1, \infty). (\star)  \]
+	
+	Damit ist die Funktion $f(\cdot)$ stetig in jedem Punkt der Menge $ (\star) $ und mit dem letzten Satz ist 
+	\[  \hat{p}_n = f ( \frac{1}{n} \sum_{i=1}^{n} X_i) \] konsistent für  $ p_0 . \checkmark $
+
+	
+\end{example}
+	
+	
+\begin{example}
+
+	$ X_1 , \ldots, X_n $ i.i.d. $ \sim \mathcal{U} ( [\ \theta_0, \theta_0+1 ]\ ), \theta_0 \in \R $  \\
+	
+	Hier ist $\E_{\theta_0}(X_1)= \theta_0 + \frac{1}{2}$. Das gibt dem MM-Schätzer \[ \hat{\theta}_n=\frac{1}{n} \sum_{i=1}^{n}X_i - \frac{1}{2}. \]
+	
+	Der Schätzer ist unverzerrt (weil $f(x)=x-\frac{1}{2}$ linear ist) und es ist konsistent (weil $f(x)$ stetig ist auf ganz $\R$).	
+	
+
+\end{example}
+
+\textbf{Verteilung des Schätzfehlers/Konfidenzintervalls:}
+
+\begin{example}[Normalverteilung]
+	$ X_1, \ldots, X_n $ i.i.d. $ N(\mu_0, \sigma_0^2), \mu_0 \in \R, \sigma_0^2 > 0 $. 
+	
+	
+	\begin{itemize} \item Konfidenzintervall (KI) für $ \mu_0 $: \end{itemize}
+	
+	
+	Wissen: \[\sqrt{n}\frac{\bar{X}_n-\mu_0}{\hat{\sigma}_n} \sim t_{n-1},\] 
+	wobei $ \bar{X}_n = \frac{1}{n}\sum_{i=1}^{n} X_i = \hat{\mu}_{MM} $ und $ \tilde{\sigma}_n^2 = \frac{1}{n-1} \sum_{i=1}^{n} (X_i-\bar{X})^2 = \frac{n}{n-1}\hat{\sigma}_{MM}^2 $.
+	
+	Gegeben $ \alpha \in (0,1) $. Wähle $ a = \F_{t_{n-1}}^{-1} \left(\frac{\alpha}{2}\right) $ und $ b = \F_{t_{n-1}}^{-1} \left(1-\frac{\alpha}{2}\right) $ (Quantile der $ t_{n-1} $-Verteilung).
+	
+	Dann ist 
+	\[
+	\begin{aligned}
+		(\star) = \Prob\left(a\le\sqrt{n}\frac{\bar{X}_n-\mu_0}{\hat{\sigma}_n} \le b \right) & = \underbrace{ \F_{{n-1}}(b) - \F_{{n-1}}(a)}_{\text{Verteilungsfunktionen der } t_{n-1} } \\
+		& = 1 - \frac{\alpha}{2} - \frac{\alpha}{2} \\
+		& = 1 - \alpha.
+	\end{aligned}
+	\]
+	
+	\[
+	\begin{aligned}
+		(\star) & = \Prob\left(a\frac{\hat{\sigma}_n}{\sqrt{n}} \le \bar{X}_n - \mu_0 \le b\frac{\hat{\sigma}_n}{\sqrt{n}} \right) \\
+		& = \Prob\left(- \bar{X}_n + a\frac{\hat{\sigma}_n}{\sqrt{n}} \le - \mu_0 \le - \bar{X}_n + b\frac{\hat{\sigma}_n}{\sqrt{n}} \right) \\
+		& = \Prob\left(\bar{X}_n - b\frac{\hat{\sigma}_n}{\sqrt{n}} \le \mu_0 \le \bar{X}_n -a\frac{\hat{\sigma}_n}{\sqrt{n}} \right) \\
+		& = \Prob\left(\mu_0 \in [ \, \bar{X}_n - b\frac{\hat{\sigma}_n}{\sqrt{n}}  , \bar{X}_n - a\frac{\hat{\sigma}_n}{\sqrt{n}} ] \,  \right).
+	\end{aligned}
+	\]
+	Also: Das KI für $\mu_0$ mit Überdeckungswahrscheinlichkeit $1-\alpha :  \left[\bar{X}_n-b\frac{\hat{\sigma}_n}{\sqrt{n}}, \bar{X}_n-a\frac{\hat{\sigma}_n}{\sqrt{n}} \right] $ \\
+	Informell: $\left[\bar{X}_n \pm b\frac{\hat{\sigma}_n}{\sqrt{n}} \right] $, Beobachte: $ a=-b$ \\
+	
+	\newpage
+	\begin{itemize} \item KI für $ \sigma_0^2 $: \end{itemize}
+	
+	Wissen: 
+	\[
+	\begin{aligned} 
+		\sum_{i=1}^{n} (X_i-\bar{X}_n)^2 & \sim \sigma_0^2 \chi_{n-1}^2 \\
+		\Rightarrow \hat{\sigma}_n^2 & \sim \frac{\sigma_0^2 \chi_{n-1}^2}{n-1}  \\
+		(n-1) \frac{\hat{\sigma}_n^2}{\sigma_0^2} & \sim \chi_{n-1}^2 .
+	\end{aligned}
+	\]
+	
+	Gegeben $ \alpha \in (0,1) $  wählt man hier $ a = \F_{\chi_{n-1}^2}^{-1} \left(\frac{\alpha}{2}\right) $ und $ b = \F_{\chi_{n-1}^2}^{-1} \left(1-\frac{\alpha}{2}\right) $ (Quantile der $ \chi_{n-1}^2 $-Verteilung).
+	
+	Damit ist 
+	\[
+	\begin{aligned}
+		(\star)  = \Prob\left(a\le (n-1) \frac{\hat{\sigma}_n^2}{\sigma_0^2} \le b \right) & = \F_{\chi_{n-1}^2}(b) - \F_{\chi_{n-1}^2}(a) \\
+		& = 1 - \frac{\alpha}{2} - \frac{\alpha}{2} \\
+		& = 1 - \alpha.
+	\end{aligned}
+	\]
+	
+	\[
+	\begin{aligned}
+		(\star)  = & \Prob\left(\frac{a}{(n-1)\hat{\sigma}_n^2} \le \frac{1}{\sigma_0^2} \le \frac{b}{(n-1)\hat{\sigma}_n^2} \right) \\
+		& = \Prob\left(\frac{(n-1)\hat{\sigma}_n^2}{b} \le \sigma_0^2 \le \frac{(n-1)\hat{\sigma}_n^2}{a} \right)\\
+		& = \Prob\left(\sigma_0^2 \in [ \, \frac{(n-1)\hat{\sigma}_n^2}{b}, \frac{(n-1)\hat{\sigma}_n^2}{a}   ] \, \right).
+	\end{aligned}
+	\]
+	Also KI für $ \sigma_0^2 $ mit Überdeckungswahrscheinlichkeit $1 - \alpha: \left[\frac{(n-1)\hat{\sigma}_n^2}{b}, \frac{(n-1)\hat{\sigma}_n^2}{a} \right] $ .
+\end{example}
+
+
+\begin{example}[Poisson-Modell]
+	$ X_1,\ldots,X_n $ i.i.d. $ P(\lambda_0), \quad (\lambda_0 > 0) $. 
+	
+	Hier ist $ \E(X_1)=\lambda_0, \quad \Var(X_1)=\lambda_0 $. 
+	
+	
+	$ (\hexstar) $ \textit{Erinnerung aus der Vorlesung Grundzüge der Statistik:} 
+	Für $ Z_1,\ldots, Z_n $ i.i.d. mit $ \E(Z_1) = \mu_0 $ und $ \Var(Z_1) = \sigma^2 $. Ist ein KI für $ \mu $ mit \textbf{nominaler} \index{Konfidenzinterval!nominal} Überdeckungswahrscheinlichkeit $ 1 - \alpha $ 
+	\[
+	\left[\hat{\mu}_n - \frac{\tilde{\sigma}_n}{\sqrt{n}} \Phi^{-1}\left(1-\frac{\alpha}{2}\right), \hat{\mu}_n - \frac{\tilde{\sigma}_n}{\sqrt{n}}\Phi^{-1}\left(\frac{\alpha}{2}\right) \right]
+	\]
+	hierbei ist $ \hat{\mu}_n= \frac{1}{n}\sum_{i=1}^{n} Z_i $ und $ \hat{\sigma}_n^2 = \frac{1}{n-1} \sum_{i=1}^{n} (Z_i - \hat{\mu}_n)^2 $.
+	
+	Damit erhält man das KI für $ \lambda_0 $ nämlich
+	\[
+	\left[\bar{X}_n - \frac{\hat{\sigma}_n}{\sqrt{n}} \Phi^{-1}\left(1-\frac{\alpha}{2}\right), \bar{X}_n - \frac{\hat{\sigma}_n}{\sqrt{n}} \Phi^{-1}\left(\frac{\alpha}{2}\right) \right] \leftarrow \text{Generisches Intervall}
+	\]
+	mit nominaler Überdeckungswahrscheinlichkeit $ 1 - \alpha $  wobei $ \bar{X}_n= \frac{1}{n}\sum_{i=1}^{n} X_i , \  \hat{\sigma}_n^2 = \frac{1}{n-1} \sum_{i=1}^{n} (X_i - \bar{X}_n)^2 $ 	\\
+	
+	Beachte: $\bar{X}_n$ schätzt $ \E(X_1)= \lambda_0, \ \hat{\sigma}_n^2 $ schätzt $ \Var(X_1) = \lambda_0 $.
+	
+	Im Kontext von $ (\hexstar) $ gilt (Siehe VO GZ: Beispiel 8.8): 
+	
+	\[
+	\sqrt{n} \frac{\hat{\mu}_n-\mu}{\sigma} \overset{w}{\longrightarrow} N(0,1), 
+	\] und auch
+	\[
+	\sqrt{n} \frac{\hat{\mu}_n-\mu}{\hat{\sigma}_n} \overset{w}{\longrightarrow} N(0,1). 
+	\]
+	
+	Sei $ \tilde{\sigma}_n^2 $ ein anderer konsistenter Schätzer für $ \sigma^2 $
+	
+	\[
+	\sqrt{n} \frac{\hat{\mu}_n - \mu}{\tilde{\sigma}_n^2} = \sqrt{n} \underbrace{\frac{\hat{\mu}_n - \mu}{\sigma}}_{\xrightarrow{w}N(0,1)} 
+	\underbrace{\frac{\sigma}{\tilde{\sigma}_n^2}}_{ f( \tilde{\sigma}_n^2) }
+	\xrightarrow{p} 1.
+	\]
+	$f( \tilde{\sigma}_n^2)$ für $f(t) = \sqrt{\frac{\sigma^2}{t}} $: \\ 
+	f ist stetig auf $(0, \infty)$ und inbsbesondere im Punkt $\sigma^2$ \\ 	
+	Der Schätzer $\tilde{\sigma}_n^2$ ist konsistent für $\sigma^2 : \tilde{\sigma}_n^2 \xrightarrow{p} \sigma^2 $\\ 
+	Rechnenregel: $ f( \tilde{\sigma}_n^2 ) \xrightarrow{p} f( \sigma^2)$ \\ 	
+	M.a.W. $\frac{\sigma}{ \tilde{\sigma}_n} \xrightarrow{p} 1$. \\
+	
+	Mit Rechnenregeln aus GZ folgt: $ \sqrt{n} \frac{\hat{\mu}_n - \mu}{\tilde{\sigma}_n^2} \xrightarrow{w} N(0,1)\cdot 1 \equiv N(0,1). $)\\
+	
+	\underline{Also:} Im Poisson-Modell ist $ \bar{X}_n $ ein konsistenter Schätzer für $ \Var(X_1) = \lambda_0 $. 	
+	Damit gilt: 
+	\[
+	\sqrt{n} \frac{\bar{X}_n-\lambda_0}{\sqrt{\bar{X}_n}} \overset{w}{\longrightarrow} N(0,1). \tag{$\hexstar\hexstar$}
+	\]
+	
+	
+	Gegeben $ \alpha \in (0,1) $ wähle hier $ a = \Phi^{-1} \left(\frac{\alpha}{2}\right) $ und $ b = \Phi^{-1} \left( 1 - \frac{\alpha}{2} \right) $. 
+	
+	Dann ist 
+	\[
+	\begin{aligned}
+		\Prob\left(a \le \sqrt{n} \frac{\bar{X}_n - \lambda_0}{\sqrt{\bar{X}_n}} \le b \right) & \overset{(\hexstar\hexstar)}{=} \Prob\left(\sqrt{n} \frac{\bar{X}_n - \lambda_0}{\sqrt{\bar{X}_n}} \le b \right) - \Prob\left(\sqrt{n} \frac{\bar{X}_n - \lambda_0}{\sqrt{\bar{X}_n}} \le a \right) \\
+		& \approx \Phi (b) - \Phi (a) \\
+		& = 1 - \frac{\alpha}{2} - \frac{\alpha}{2} \\
+		& = 1 - \alpha.
+	\end{aligned}
+	\]
+	
+	\[
+	\begin{aligned}
+		&(\hexstar\hexstar) = \Prob \left(\sqrt{\frac{\bar{X}_n}{n}} a \le \bar{X}_n - \lambda_0 \le \sqrt{\frac{\bar{X}_n}{n}} b \right) \\
+		& = \Prob \left(- \bar{X}_n + \sqrt{\frac{\bar{X}_n}{n}} a \le  - \lambda_0 \le - \bar{X}_n + \sqrt{\frac{\bar{X}_n}{n}} b \right) \\
+		& = \Prob \left(\bar{X}_n - b \sqrt{\frac{\bar{X}_n}{n}}  \le   \lambda_0 \le  \bar{X}_n - a \sqrt{\frac{\bar{X}_n}{n}}  \right).
+	\end{aligned}
+	\]
+	Also ein KI für $ \lambda_0 $ mit nominaler Überdeckungswahrscheinlichkeit $ 1-\alpha $ ist $ \left[\bar{X}_n -b \sqrt{\frac{\bar{X}_n}{n}} , \bar{X}_n - a\sqrt{\frac{\bar{X}_n}{n}}  \right]  \leftarrow $ Spezielles Intervall im Poinsson-Modell   \\
+	(Beachte! -a=b)
+	
+	
+\end{example}
+
+\begin{example}[Geometrische Verteilung]
+	$ X_1, \ldots, X_n \sim G(p_0), \quad p_0 \in (0,1) $. 
+	
+	Wissen: $ \E(X_1) = \frac{1}{p_0} = \mu_0, (p_0= \frac{1}{\E(X_1)})\quad \Var(X_1) = \frac{1-p_0}{p_0^2} $, MM-Schätzer für $ p_0: \hat{p}_n = \frac{1}{\bar{X}_n} $ (nicht linear!).
+	
+	Hinweis zur geometrischen Verteilung: 
+	\begin{itemize}
+	\item $ \# $ Versuche bis zum 1. Erfolg (wird in der Vorlesung verwendet)
+	\item $ \# $ Misserfolge bis zum 1. Erfolg + 1 (wird in R verwendet).
+	\end{itemize}
+	
+	$ \frac{1-p_0}{p_0^2} = \frac{ \frac{1}{p_0} -1}{p_0} =  \frac{1}{p_0} (\frac{1}{p_0} -1) = \mu_0(\mu_0-1)$,\\
+	$ \E(X_1)= \mu_0, \ Var(X_1) =  \mu_0(\mu_0-1)$\\
+	
+	Suche KI für $ \mu_0=\E(X_1)=\frac{1}{p_0} $\\
+	Wie im letzten Beispiel erhält man das KI \\
+	\[
+	\left[ 
+	\bar{X}_n - \sqrt{\frac{\hat{\sigma}_n^2}{n}} \Phi^{-1} \left(1-\frac{\alpha}{2}\right), \bar{X}_n - \sqrt{\frac{\hat{\sigma}_n^2}{n}} \Phi^{-1} \left(\frac{\alpha}{2}\right)\right], 
+	\]
+	mit nominaler Überdeckungswahrscheinlichkeit $ 1-\alpha $, wobei \\
+	
+	$ \bar{X}_n = \frac{1}{n} \sum_{i=1}^{n} X_i \text{ und } \hat{\sigma}_n^2 = \frac{1}{n-1} \sum_{i=1}^{n} (X_i - \bar{X}-n)^2 $ \\
+	
+	Im geometrisches Modell ist $ \hat{\sigma}_n^2 = \bar{X}_n (\bar{X}_n - 1) $ ein Schätzer für $Var(X_1)$ der konsistent ist.\\
+	
+	Das gibt ein witeres KI für $\mu_0$ nämlch: \\
+	\[
+	\left[ 
+	\bar{X}_n - \sqrt{\frac{\tilde{\sigma}_n^2}{n}} \Phi^{-1} \left(1-\frac{\alpha}{2}\right), \bar{X}_n - \sqrt{\frac{\tilde{\sigma}_n^2}{n}} \Phi^{-1} \left(\frac{\alpha}{2}\right)\right]
+	\]
+	mit nominaler Überdeckungswahrscheinlichkeit $ 1-\alpha $.\\
+	
+	Betrachte: $Z_1,...,Z_n$ i.i.d; $\E(Z_1)=\mu, Var(Z_1)=\sigma^2$ \\
+	KI für $\mu:  \bar{Z}_n \mp \sqrt\frac{{\hat{\sigma}_n^2}}{n} \Phi^-1 (1-\frac{\alpha}{2}) $ \\
+	KI für $ f(m) =?$\\
+	
+\begin{itemize}
+	\item \underline{Fall 1:} $f(\cdot) \text{ linear}, f(t)=At+B, A>0, \text{A und B bekannt} $; \\
+		Wissen: $ 1- \alpha \approx \Prob \left( \bar{Z}_n - \sqrt{ \frac{ \hat{\sigma}_n^2}{n}}  \Phi^{-1} (1- \frac{\alpha}{2}) \leq \mu \leq \bar{Z}_n + \sqrt{ \frac{ \hat{\sigma}_n^2}{n}}  \Phi^{-1} (1- \frac{\alpha}{2}) \right) $ \\
+		$ = \Prob \left( A\left(\bar{Z}_n - \sqrt{ \frac{ \hat{\sigma}_n^2}{n}}  \Phi^{-1} (1- \frac{\alpha}{2})\right ) + B \leq f(\mu) \leq A\left(\bar{Z}_n + \sqrt{ \frac{ \hat{\sigma}_n^2}{n}}  \Phi^{-1} (1- \frac{\alpha}{2})\right) + B \right) $ \\
+		...gibt KI für $f(\mu)$ mit nominaler Überdeckungswahrscheinlichkeit $ 1-\alpha $\\
+		$f(\cdot)$ linear wie oben, $A<0$... analog.
+	
+	\item \underline{Fall 2:} $f(\cdot)$ nicht linear + Skizze
+	
+	\end{itemize}
+	
+	\end	{example}
+	
+	\newpage
+	
+	$ \bar{X}_n \pm \sqrt{\frac{\tilde{\sigma}_n^2}{n}} \Phi^{-1} (1- \frac{\alpha}{2})$ KI für $\frac{1}{p_0}$ für $X_1$ i.i.d. $G(p_0)$ \\
+
+\underline{1.Schätzer:} $ \frac{1}{n-1} \sum_{i=1}^{n} (X_1 - \bar{X}_n)^2 $\\
+\underline{2.Schätzer:} $ \bar{X}_n (\bar{X}_n-1) $\\
+
+Hinweis: $\frac{1-p_0}{p_0^2}= \frac{1}{p_0}(\frac{1}{p_0}-1)$\\
+
+$Z_1,...,Z_m $ i.i.d. und \begin{itemize}
+    \item $\E(Z_1)= q $... Überdeckungswahrscheinlichkeit
+    \item $Var(Z_1)=q(q-1)$
+    
+\end{itemize}
+
+$\bar{Z}_m$: KI für q: $\bar{Z}_m \pm  \underbrace{\sqrt{\frac{\cdot}{m}} \Phi^-1 (1- \frac{0.05}{2})}_{ \text{Typische Fehler}= 2 \frac{\text{std. Abweichung}}{\sqrt{m}}} $
+
+$X_1,...,X_n $ i.i.d. $G(p_0)$\\
+? KI für $p_0= \frac{1}{\E_{p_0}(X_1)}$
+\begin{itemize}
+    \item $f(\cdot)$ linear: $(f(x)=ax+b)$ \\
+        
+        $\sqrt{n}(\bar{X}_n -\E(X_1)) \xrightarrow{w} N(0, Var(X_1)) \\$
+        $\underbrace{\sqrt{n}(f(\bar{X}_n) -f(\E(X_1)))}_{\sqrt{n}(a\bar{X}_n + b -(a\E(X_1)+b)) } \xrightarrow{w} N(0, a^2 Var(X_1))\\$
+        $a\sqrt{n}(\bar{X}_n -\E(X_1)) \xrightarrow{w} \underbrace{N(0, Var(X_1))}_{\xrightarrow{w} N(0, a^2 Var(X_1)) }$
+        
+
+    \item $f(\cdot)$ nicht linear: siehe nächste Satz!
+    
+\end{itemize}
+	
+
+\begin{satz}[$\delta$-Methode]
+	\index{Delta-Methode}
+	
+	Es seien $ Z_i $ i.i.d. Kopien von $ Z $, mit $ \E(Z) = \mu_Z $ und $ \Var(Z) = \sigma_Z^2 > 0 $. 
+	
+	Ist die Funktion $ f\colon \R \rightarrow \R $ im Punkt $ \mu_Z $ \textbf{differenzierbar}, dann gilt: 
+	\[
+	\sqrt{n}\left(f(\bar{Z}_n)-f(\mu_Z)\right) \xrightarrow{w} N\left(0, \left(f^\prime \left(\mu_Z\right)\right)^2 \sigma_Z^2 \right), 
+	\]
+	wobei $ \bar{Z}_n = \frac{1}{n}\sum_{i=1}^{n}Z_i $. \\
+\end{satz}
+
+\begin{remark}
+	Illustration: Siehe R-script vom 22.04.2021. \\
+\end{remark}
+
+\newpage
+\begin{proof}
+
+	Erinnerung: 
+	\begin{center}
+	\begin{tabular}{l|l}
+		$ \sqrt{n}\left(\bar{Z}_n - \mu_z \right) \xrightarrow{w} N(0, \sigma_Z^2) $ & Zentraler Grenzwertsatz \\
+		\midrule
+		$ \bar{Z}_n \xrightarrow{p} \mu_Z $ & Gesetz der großen Zahlen	\\
+		\midrule
+		$ X_n \xrightarrow{p} c, f(\cdot) $ stetig in $ c $ & Rechenregeln für $\xrightarrow{p}, \xrightarrow{w}$, GZS S. 80 \\
+		$ \quad \Rightarrow f(X_n) \xrightarrow{p} f(c) $ & \\
+		$ X_n \xrightarrow{w} X, Y_n \xrightarrow{p} c $ & \\
+		$ \quad \Rightarrow X_n + Y_n \xrightarrow{w} X+c $ & \\
+		$ \quad \Rightarrow X_n \cdot Y_n \xrightarrow{w} X\cdot c $ & \\
+		\midrule
+		$ f^\prime(\mu_Z) = \lim_{Z\to\mu_Z} \frac{f(Z)-f(\mu_Z)}{Z-\mu_z} $ & VO Analysis	
+	\end{tabular}
+	\end{center}
+	
+	Definiere eine Funktion $ R(Z) $ als 
+	\[
+	R(Z)=\left\{\begin{array}{ll}
+		f^\prime(\mu_z) - \frac{f(Z)-f(\mu_z)}{Z-\mu_Z} & \colon Z \ne Z_0, \\
+		0 & \colon Z = \mu_Z .
+	\end{array}\right .
+	\]
+	
+	Dann ist $ R(\cdot) $ stetig im Punkt $ \mu_Z $: 
+	\[
+	\lim_{Z\to\mu_Z} R(Z) \tikzmarknode{D}{=} 0 \tikzmarknode{O}{=} R(\mu_Z).
+	\]
+	
+	\begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
+		nodes={inner sep=1pt, align=center, font=\footnotesize}]
+		\draw[<-] (D.south) -- ++ (-1, -1) node[below] {weil $ f $ differenzierbar \\ ist im Punkt $ \mu_Z $}; 
+		\draw[<-] (O.south) -- ++ (1, -1) node[below] {siehe \\ oben}; 
+	\end{tikzpicture}
+	\vspace{2cm}
+	
+	Ersetze Z durch $\bar{Z}_n$
+	
+	\[
+		f^\prime(\mu_Z)  = \frac{f(\bar{Z}_n)-f(\mu_Z)}{\bar{Z}_n-\mu_Z} + R(\bar{Z}_n) \\
+	\]
+	
+	Multiplizieren mit $\sqrt{n}(\bar{Z}_n- \mu_Z)$
+	\[
+	f^\prime(\mu_Z) \sqrt{n} (\bar{Z}_n-\mu_Z)= \sqrt{n} (f(\bar{Z}_n)-f(\mu_Z) ) + \sqrt{n} (\bar{Z}_n-\mu_Z)R(\bar{Z}_n) \\
+	\]
+	
+	\[
+	\begin{aligned}
+		\sqrt{n} \left(f(\bar{Z}_n)-f(\mu_Z)\right) & = \underbrace{f^\prime(\mu_Z)\underbrace{\sqrt{n}\left(\bar{Z}_n-\mu_Z\right)}_{\xrightarrow{w}N(0,\sigma_Z^2)}}_{\xrightarrow{w}N\left(0,(f^\prime(\mu_Z))^2\sigma_Z^2\right)} - \underbrace{\underbrace{\sqrt{n}(\bar{Z}_n-\mu_Z)}_{\xrightarrow{w}N(0,\sigma_Z^2)}\underbrace{R(\bar{Z}_n)}_{\xrightarrow{p}R(\mu_Z)=0}}_{\xrightarrow{w}N(0,\sigma_Z^2)\cdot 0 = 0} \\
+		&  \xrightarrow{w} N\left(0, (f^\prime(\mu_Z))^2\sigma_Z^2\right).
+	\end{aligned}
+	\]
+	
+\end{proof}
+ 
+ \newpage
+
+\begin{example}[Fortsetzung des oberen Beispiels - Geometrische Verteilung] 
+	
+	$ \\ X_i, \ i \ge 1 $, i.i.d. $ G(p_0), \ p_0 \in (0,1) $. 
+	
+	Wissen: 
+	\[ 
+	\bar{X}_n = \frac{1}{n} \sum_{i=1}^{n} X_i  \xrightarrow{p} \E_{p_0}(X_1) = \frac{1}{p_0}, \\
+	\]
+	\[ 
+	 \quad \underbrace{\hat{p}_0}_{\text{MM-Schätzer}}  = \frac{1}{\bar{X}_n} \xrightarrow{p} p_0. 
+	\]
+	
+	\[
+	\sqrt{n}\left(\bar{X}_n-\frac{1}{p_0}\right) \xrightarrow{w} N\left(0, \frac{1-p_0}{p_0^2} \right) .
+	\]
+	
+	Betrachte $ f(t) = \frac{1}{t} $, sodass \\
+	$\hat{p}_n = f(\bar{X}_n)$ und $p_0=f(\frac{1}{p_0})$ \\
+	$f(\cdot)$ ist stetig an der Stelle $\frac{1}{p_0}$ \\
+	$ f^\prime(t) {=} - \frac{1}{t^2} $\\
+	$ f^\prime(\frac{1}{p_0}) {=}  \frac{1}{-(\frac{1}{p_0})^1}   {=} - p_0^2 $\\
+	$ (f^\prime(\frac{1}{p_0}))^2 {=}   p_0^4 $\\
+	Mit $ \delta $-Methode: 
+	
+	\[
+	\begin{aligned}
+	& \sqrt{n} \Big( \underbrace{f\left(\bar{X}_n\right)}_{\hat{p}_n} 
+	-\underbrace{f\left(\frac{1}{p_0}\right)}_{p_0} \Big) \xrightarrow{w} 
+	N \Big(0, \underbrace{\left(f^\prime \left(\frac{1}{p_0}\right)\right)^2 \frac{1-p_0}{p_0^2} }
+	_{p_0^4\frac{1-p_0}{p_0^2}= p_0^2(1-p_0)} \Big)\\
+	& \text{Also: } \sqrt{n}\left(\hat{p}_n-p_0\right) \xrightarrow{w} N\left(0, p_0^2(1-p_0)\right).
+	\end{aligned}
+	\]
+	
+	\[
+	\text{bzw.}  \sqrt{n}\frac{\hat{p}_n - p_0}{\sqrt{p_0^2(1-p_0)}} \xrightarrow{w} N(0,1)
+	\]
+	
+	\[
+	\tilde{\sigma}_n^2 = {\hat{p}_n^2(1-\hat{p_n})}  \xrightarrow{p} {p_0^2(1-p_0)}
+	\]
+	\[
+	(\text{ weil } \hat{p}_n \xrightarrow{p} p_0 \text{ und weil } g(t)=t^2(1-t) \text{ stetig ist im Punkt } p_0  )
+	\]
+	\[
+	\text{Damit gilt auch } \sqrt{n}\frac{\hat{p}_n - p_0}{\sqrt{\hat{p}_n^2(1-\hat{p}_n)}} \xrightarrow{w} N(0,1)
+	\]
+
+	
+	Für $ \alpha \in (0,1) $ ist ein Konfidenzintervall für $ p_0 $ mit nominaler Überdeckungswahrscheinlichkeit $ 1-\alpha $ damit gegeben durch 
+	\[
+	\left[ 
+	\hat{p}_n \pm \sqrt{\frac{\hat{p}_n^2(1-\hat{p}_n)}{n}} \Phi^{-1} \left(1-\frac{\alpha}{2}\right), \right] .
+	\]
+\end{example}
+
+\begin{remark}
+	Bemerkung:
+	Das letzte Beispiel zeigt die Konstruktion von Konfidenzintervallen mit zentralem Grenzwertsatz und $ \delta $-Methode. Eine alternative Konstruktion liefert der Bootstrap.
+\end{remark}
+
+\begin{remark}
+	Bemerkung:
+	Es gibt auch eine multivariate Version der $ \delta $-Methode.
+\end{remark}
+
+Die tatsächliche U-Wkeit dieses Intervalls hängt von n und $p_0$ ab.\\ Wissen: für jedes $p_0 \in (0,1) $ gilt 
+\[ 
+\Prob_{p_0} \left( p_0 \in \hat{p}_n \pm \sqrt{\frac{\hat{p}_n^2(1-\hat{p}_n)}{n}} \Phi^{-1} \left( 1-\frac{\alpha}{2} \right) \right) 
+\xrightarrow{n \leftarrow \infty} 1 - \alpha 
+ \]
+Wie groß muss n sein, damit diese Wahrscheinlichkeit gleich $0.95 \pm 0.01$ ist.
+
+
+
+Simulation in R: \\
+
+\begin{center}
+\begin{tabular}{l|ccccccc}
+	$ n/p_0 $	& 5	& 20	& 80 	& 320	& 640 	& 1280 	& 2560 \\
+	\midrule
+	0.01		& $\checkmark$	& $\checkmark$	& $\checkmark$	& $\checkmark$	& $\checkmark$	& $\checkmark$	& $\checkmark$ \\
+	0.1			& $\checkmark$	& $\checkmark$	& $\checkmark$	& $\checkmark$	& $\checkmark$	& $\checkmark$	& $\checkmark$ \\
+	0.5			& $\times$	& $\checkmark$	& $\checkmark$	& $\checkmark$	& $\checkmark$	& $\checkmark$	& $\checkmark$ \\
+	0.9			& $\times$	& $\times$	& $\times$	& $\checkmark$	& $\checkmark$	& $\checkmark$	& $\checkmark$ \\
+	0.99		& $\times$	& $\times$	& $\times$	& $\times$	& $\times$	& $\times$	& $\checkmark$
+\end{tabular}
+\end{center}
+\vspace{0.5cm}
+
+
+
+Die Qualität der Approximation hängt von $n$ und $ p_0 $ ab. Beachte: $ p_0 $ ist konsistent schätzbar! \\
+Betrachte $n, \hat{p}_n$\\
+
+Diese Approximation (Überdeckungswahrscheinlichkeit $ \approx 1- \alpha $) ist punktwise: 
+\[
+\forall\; p_0 \colon \text{Fehler }(n, p_0) \xrightarrow{n\to\infty} 0,
+\]
+In eigenen Fällen ist auch eine gleichmäßige Approximation verfügbar.
+\[
+\underset{n, p_0}{\sup} \quad \text{Fehler }(p_0) \xrightarrow{n\to\infty} 0.
+\]
+In vorliegenden Fall (geom. Modell) gibt es leider keine gleichmäßige Approximation.
+
+
+\section{Die Maximum-Likelihood Methode (ML)}
+
+\begin{book}
+	Siehe zu diesem Kapitel S. 267-285. in	\textit{Rice (2007)}.
+\end{book}
+
+
+Betrachte i.i.d. Zufallsvariablen $ X_1,\ldots,X_n $ deren jeweilige Dichte bzw. Wahrscheinlichkeitsfunktion von folgender Form ist: 
+\[
+f(x|\theta_0), \qquad \theta_0 \in \Theta \subseteq \R^p.
+\]
+
+Die funktionale Form von $ f(x|\theta_0) $ ist bekannt, aber der Parameter $ \theta_0 $ ist unbekannt. 
+
+\begin{remark}
+	Idee: Gegeben Beobachtungen $ x_1,\ldots,x_n $ von $ X_1,\ldots,X_n $ schätzt man $ \theta_0 $ durch jenen Wert von $ \theta\in\Theta $, für welchen die Beobachtungen ''am Wahrscheinlichsten'' sind. Man wählt also jenes $ \theta\in\Theta $, das die Beobachtungen ''am Besten beschreibt''. 
+\end{remark}
+
+	
+\textbf{Diskrete Modelle:} \\
+
+Betrachte i.i.d.  Zufallsvariablen $ X_1,\ldots,X_n $, die diskret sind mit Wahrscheinlichkeitsfunktion 
+\[
+p(x|\theta_0), \quad \theta_0\in\Theta \leq \R^p, \quad x\in\N.
+\]
+
+Betrachte Beobachtungen $ x_1,\ldots,x_n $ von $ X_1,\ldots,X_n $. Ist der wahre Parameter gleich $ \theta\in\Theta $, dann ist die Wahrscheinlichkeit, die Werte $ x_1,\ldots,x_n $ zu beobachten, gegeben durch 
+\[
+p_\theta \left(X_1=x_1,X_2=x_2,\ldots,X_n=x_n\right) \coloneqq L(\theta).
+\]
+
+$ L(\theta) $ nennt man die \textbf{Likelihood}\index{Likelihood}. 
+
+Beachte $ L(\theta) = \Prob_{\theta}(X_1=x_1)\cdotp \Prob_{\theta}(X_2=x_2)\cdot\ldots\cdot \Prob_{\theta}(X_n=x_n) = p(x_1|\theta)\cdot p(x_2|\theta)\cdot\ldots\cdot p(x_n|\theta) $.
+
+Alternativ dazu betrachtet man oft die sogenannte Log-Likelihood
+\[\begin{aligned}
+	l(\theta) & = \log(L(\theta)) \\
+	& = \sum_{i=1}^{n}\log p(x_i|\theta_0).
+\end{aligned}
+\]
+
+\begin{remark}
+	Beachte: $ L(\theta) $ und $ l(\theta) $ hängen von den beobachteten Werten $ x_1,\ldots,x_n $ ab.
+\end{remark}
+
+Die Maximum-Likelihood Methode \index{Schätzer!Maximum-Likelihood Methode} maximiert $ L(\theta) $ bzw. $ l(\theta) $ über $ \theta\in\Theta $: \\
+\[
+\hat{\theta}_{ML} = \underset{\theta\in\Theta}{\operatorname{argmax}} \; L(\theta)
+=  \underset{\theta\in\Theta}{\operatorname{argmax}} \; l(\theta),
+\]
+wobei $ \hat{\theta}_{ML} $ ein Maximum-Likelihood-Schätzer für $ \theta $ ist. 
+
+\begin{remark}
+	Beachte: Ein Maximierer von $ L(\theta) $ ist auch ein Maximierer von $ l(\theta) $, und umgekehrt.
+\end{remark}
+
+\begin{remark}
+	Bemerkung: Manchmal gibt es mehr als einem Maximierer der Likelihood.
+\end{remark}
+
+\begin{remark}
+	Beachte: $ L(\theta) $ und $ l(\theta) $ häangen von den beobachteten Werten $ X_1,...,X_n $ ab.
+\end{remark}
+
+\begin{example}[Bernoulli-Verteilung]
+	$ X_1,\ldots,X_n $ i.i.d. $ B(\theta_0), \quad \theta_0 \in (0,1) $. Die Wahrscheinlichkeitsfunktion ist hier 
+	\[
+	\begin{aligned}
+	p(x|\theta_0) & =\left\{\begin{array}{ll}
+		\theta_0 & \colon x=1, \\
+		1-\theta_0 & \colon x=0 \end{array}\right .\\
+	& = \theta_0^x(1-\theta_0)^{1-x}.
+	\end{aligned}
+	\]
+	
+	Für Beobachtungen $ x_1,\ldots,x_n $ von $ X_1,\ldots,X_n $ ist die Likelihood gegeben durch 
+	
+		\begin{itemize}
+	
+	    \item  \[
+	\begin{aligned}
+		L(\theta) & = p(x_1|\theta)\cdot\ldots\cdot p(x_n|\theta) \\
+		& = \underbrace{\left(\theta^{x_1}(1-\theta)^{1-x_1}\right)\left(\theta^{x_2}(1-\theta)^{1-x_2}\right)\cdot\ldots\cdot \left(\theta^{x_n}(1-\theta)^{1-x_n}\right)}_{n \text{ Faktoren. Jeder Faktor ist entweder gleich }\theta \text{ oder } 1-\theta} \\
+		& = \theta^{S_n} (1-\theta)^{n-S_n}\\
+		& \text{wobei } S_n= {\sum_{i=1}^{n}x_i}\\
+	\end{aligned}
+	\] 
+	
+	    \item \[
+	\begin{aligned}
+		l(\theta) & = S_n \cdot \log(\theta) + (n-S_n)\log(1-\theta).
+	\end{aligned}
+	\]
+\vspace{0.5cm}	
+	
+	    \item \[
+	\begin{aligned}
+		l ' (\theta) & = {S_n} \frac{1}{\theta} + (n-S_n)\frac{-1}{1-\theta} 
+		& = \frac{S_n}{\theta} -\frac{n-S_n}{1-\theta}.		
+	\end{aligned}
+	\]
+\vspace{0.5cm}	
+	\[
+	\begin{aligned}
+		&& f'(\theta)& \overset{!}{=} 0 \\
+		& \Leftrightarrow & \frac{S_n}{\theta} & = \frac{n-S_n}{1-\theta} \\
+		& \Leftrightarrow & S_n(1-\theta) & = \theta (n-S_n) \\
+		& \Leftrightarrow & S_n -S_n \theta & = n\theta - S_n\theta \\
+		& \Leftrightarrow & \frac{S_n}{n} & = \theta_{\hexstar}.
+	\end{aligned}
+	\]
+\vspace{0.5cm}	
+	    \item \[
+	\begin{aligned}
+		f''(\theta) & = -\frac{S_n}{\theta^2} -(n-S_n)\frac{-1}{(1-\theta)^2}\\
+		& = - \underbrace{\left(\frac{S_n}{\theta^2}+\frac{n-S_n}{(1-\theta)^2}\right)}_{ \text{Nenner alle} >0 } \leq 0.	
+	\end{aligned}
+	\]
+	
+	\end{itemize} 
+	
+	Wissen: \\
+	
+	$ 0 \leq S_n \leq n$
+	
+	 $ 0 \leq n - S_n \leq n$
+	
+	$ \text{Weil } n \geq 1 \text{ und } S_n(n-S_n) =n \geq 1$
+	
+	ist entweder $ S_n >0 $ oder $n-S_n>0$. 
+	
+	Damit ist $f''(\theta)<0$
+	
+	Damit ist $\frac{S_n}{n}$ der eindeutige Maximierer von $L(\theta)$! \\
+	
+
+	Also 
+	\[
+	\hat{\theta}_{ML} = \underset{0< \theta <1}{\operatorname{argmax}} L({\theta}) = \bar{x}_n
+	\]
+	
+	Vor Durchfuhrung ders Experimentes ist 
+	\[
+	\hat{\theta}_{ML} = \bar{X}_n = \frac{1}{n} \sum_{i=1}^{n} X_i
+	\]
+	der ML-Schätzer.
+	
+	Beachte: $ \E_{\theta}(X_1)=\theta $. 
+	
+	\begin{remark}
+	Bemerkung: Hier stimmen ML- und MM- Schätzer überein.
+	\end{remark}
+	
+\end{example}
+
+
+\textbf{Stetige Zufallsvariablen:}
+
+Betrachte i.i.d. Zufallsvariablen $ X_i, i \geq 1 $ mit Dichte 
+\[
+f(x|\theta_0), \quad \theta_0\in\Theta \leq \R^p
+\]
+
+Gegeben Beobachtungen $ x_1,\ldots,x_n $ von $ X_1,\ldots,X_n $ ist die \textbf{Likelihood} definiert als 
+\[
+L(\theta) = f(x_1|\theta)\cdot f(x_2|\theta)\cdot\ldots\cdot f(x_n|\theta), \theta \in \Theta.
+\]
+
+Alternativ zu $ L(\theta) $ betrachtet man oft die Log-Likelihood 
+\[
+l(\theta) = \log L(\theta) = \sum_{i=1}^{n} \log f(x_i|\theta).
+\]
+
+\begin{remark}
+	Bemerkung: $ L(\theta) $ und $ l(\theta) $ hängen von den Daten $ x_1,\ldots,x_n $ ab.
+\end{remark}
+
+Der Maximum-Likelihood Schätzer $ \hat{\theta}_{ML}$ maximiert $ L(\theta) $ bzw. $ l(\theta) $ über $ \theta\in\Theta $: 
+
+\[
+\begin{aligned}
+	\hat{\theta}_{ML} & = \underset{\theta\in\Theta}{\argmax}\; L(\theta) \\
+	& = \underset{\theta\in\Theta}{\argmax}\; l(\theta) .
+\end{aligned}
+\]
+
+
+\begin{remark}
+	Bemerkung: Die Likelihood einer stetigen Zufallsvariable kann als Grenzfall der Likelihoods von diskreten Zufallsvariablen betrachtet werden. 
+\end{remark}
+
+\underline{Zur Approximation einer stetigen ZV durch diskrete ZV:}\\
+
+Sei $ X $ eine stetige ZV mit Dichte $f(x)$. \\
+Fur $\delta >0 $ definiert man eine diskrete ZV $X_\delta$ wie folgt: \\
+Der Wertebereich von $ X_{\delta} \text{ ist }  \{ k\delta: k \in \mathbb{Z}  \} $ , und die Wahrscheinlihkeitsfunktion $p_{\delta} (k\delta) $ ist:  \\
+
+\[
+p_\delta (k\delta) := \Prob( k \delta \leq X < (k+1)\delta )
+\]
+\[
+ = \int_{k\delta}^{(k+1)\delta} f(x) dx .
+\]
+
+Vergleichen nun die Dichte $f(x)$ mit dem "Histogramm $X_\delta$".\\
+Bei diesem "Histogramm"  wird über jedem Intervall $ [k\delta, (k+1)\delta)$ \\
+ein Balken mit Höhe $\frac{1}{\delta} \Prob_\delta (k\delta)$ gezeichnet. \\
+Die Fläche eines solcen Balkens ist damit $\Prob_\delta (k\delta)$. \\
+
+Fixiert man einen Punkt $x \in \R $, dann liegt dieser Punkt im Intervall \\ 
+$ [k\delta, (k+1)\delta)$ für $ k = \lfloor \frac{x}{\delta} \rfloor (\text{ da } \lfloor \frac{x}{\delta} \rfloor \leq \frac{x}{\delta} \leq \frac{x}{\delta}+1 \ \text{ist})$. \\
+Im Punkt x hat die Dichte den Wert $f(x)$.\\
+Im Punkt x hat das "Histogramm" die Höhe:\\
+\[
+ \frac{1}{\delta} \Prob_\delta (\lfloor \frac{x}{\delta} \rfloor) = \frac{1}{\delta} \int_{\lfloor \frac{x}{\delta} \rfloor}^{(\lfloor \frac{x}{\delta} \rfloor)+1} f(x) dx =
+\]
+\[
+=\frac{ F(\lfloor \frac{x}{\delta} \rfloor \cdot \delta + \delta) - F(\lfloor \frac{x}{\delta} \rfloor \cdot \delta)}{\delta}.
+\]
+...dies ist ein Differentialquotient.\\
+Für $\delta \downarrow 0$ kovergiet $ \lfloor \frac{x}{\delta} \rfloor \cdot \delta + \delta $ von oben gegn x, und $\lfloor \frac{x}{\delta} \rfloor \cdot \delta $ konvergiert von unten gegen x, sodass der Differentialquotient gegen die Ableitung von F an der stelle x konvergiert. \\
+M.a.W:  \[ \lim_{\delta \downarrow 0}  \frac{1}{\delta} \Prob_{\delta} (\lfloor \frac{x}{\delta} \rfloor)= f(x) \] 
+
+
+\begin{example}[Exponentialverteilung]
+	$ X_1,\ldots,X_n $ i.i.d. $ Exp(\lambda_0), \quad \lambda_0 >0 $. 
+	
+	D.h. $ \E(X_1)=\frac{1}{\lambda_0} $, und Dichte $ f(x|\lambda_0) = \lambda_0 e^{-\lambda_0 x} \quad (x\ge0) $.
+	
+	Für Beobachtungen $ x_1,\ldots,x_n $ ist 
+	\[
+	\begin{aligned}
+		L(\lambda) & = \prod_{i=1}^{n} f(x_i|\lambda) \\
+		& = \prod_{i=1}^{n} \lambda e^{-\lambda x_i} \\
+		& = \lambda^n e^{-\lambda S_n}
+	\end{aligned}
+	\]
+	wobei $ S_n = \sum_{i=1}^{n} x_i $.
+	
+	\[
+	l(\lambda) = n \log \lambda - \lambda S_n.
+	\]
+	
+	\[
+	\begin{aligned}
+		l^\prime (\lambda) & = \frac{n}{\lambda} - S &  \overset{!}{=} & 0 \\
+		& \Leftrightarrow \frac{n}{\lambda} & = & S_n \\
+		& \Leftrightarrow \lambda & = & \frac{1}{\frac{n}{S_n}} 
+	\end{aligned}
+	\]
+	
+	Setze:
+	\[
+	 \hat{\lambda}_ML = \frac{n}{S_n} = \frac{1}{\frac{1}{n} S_n} = \frac{1}{\bar{X}_n}.
+	\]
+	
+	\[
+	l^{\prime\prime} (\lambda) = \frac{d}{d\lambda} \left(\frac{n}{\lambda} - S \right) = - \frac{n}{\lambda^2} < 0.
+	\]
+	
+	Damit ist der Maximum-Likelihood-Schätzer für $ \lambda_0 $ gegeben durch 
+	\[
+	\hat{\lambda}_{ML} = \frac{1}{\bar{X}_n}.
+	\]
+\end{example}
+
+\begin{remark}
+	Beachte: Da $ \E(X_1)=\frac{1}{\lambda_0} $ ist, also $ \lambda_0 = \frac{1}{\E(X_1)} $, ist der Maximum-Likelihood-Schätzer für $ \lambda_0 $ auch ein Momentenmethoden-Schätzer.
+\end{remark}
+
+\begin{example}[Gleichverteiltes Skalenmodell]
+	$ X_i $ i.i.d. $ U([0,\theta_0]), \quad \theta_0 > 0 $. 
+	
+	Hier ist 
+	\[
+	f(x_1|\theta_0)=\left\{\begin{array}{ll}
+		\frac{1}{\theta_0} & \colon 0\le x\le \theta_0, \\
+		0 & \colon \text{sonst} .
+	\end{array}\right .
+	\]
+	und
+	\[
+	\E_{\theta_0} (X_i) = \frac{\theta_0}{2}
+	\]
+	
+	
+	\[
+	L(\theta) = \prod_{i=1}^{n} f(x_i|\theta_0)=\left\{\begin{array}{ll}
+	\theta^{-n} & \colon \underset{0 \leq min(x_i) \wedge max(x_i)= \theta }{\text{alle } x_i \text{ zwichen } 0 \text{ und } \theta } \\
+		0 & \colon  \text{sonst} .
+	\end{array}\right .
+	\]
+	
+	Achtung: $ L(\theta) $ ist nicht differenzierbar an der Stelle $ \theta = x_{(n)} $. 
+	
+	$ L(\theta) $ wird maximal für $\theta=max \{ x_i: 1 \leq i \leq n \} $.
+	
+	Damit ist der Max-Likelihood Schätzer $\hat{\theta}_ML$ gegeben durch \[  \hat{\theta}_{ML} = max \{ x_i: 1 \leq i \leq n \} \]
+	
+	$ \E(X_1) = \frac{\theta_0}{2} $, also $ \theta_0 = 2 \E (X_1) $, ist ein MM-Schätzer für $ \theta_0 $ gegeben durch $ \hat{\theta}_{MM} = 2 \bar{X}_n $.
+	
+	Hier ist $ \hat{\theta}_{ML} \ne \hat{\theta}_{MM} $.
+	
+	Bemerkungen:
+	\begin{itemize}
+		\item In dem Fall, wo $ 2\bar{X}_n < x_{(n)} $ liefert $ \hat{\theta}_{MM} $ einen unsinnigen Wert $ \hat{\theta}_{MM} < x_{(n)} $, also ist $\hat{\theta}_MM$ mit dem Daten nicht konsistent.
+		
+		Mit $ \hat{\theta}_{ML} $ kann genau das nicht passieren.
+		\item Dagegen ist $ \hat{\theta}_{MM} $ unverzerrt, $ \hat{\theta}_{ML} $ dagegen nicht.
+	\end{itemize}
+	
+\end{example}
+
+\begin{definition}
+	Betrachte ein Parametrisches Modell mit Parameter $ \theta_0 \in \Theta \leq \R $. Für einen Schätzer $ \hat{\theta}_n $ ist der \textbf{mittlere quadratische Fehler (MSE)} \index{MSE} definiert als 
+	\[
+	MSE(\hat{\theta}_n, \theta )=  \E_\theta \left[ \left(\hat{\theta}_n-\theta\right)^2 \right].
+	\]
+\end{definition}
+
+\begin{remark}
+	Bemerkung:
+	\begin{itemize}
+		\item Ist $ \hat{\theta}_n $ ein unverzerrter Schätzer dann ist:: 
+		\[
+			MSE(\hat{\theta}_n, \theta ) =  Var_\theta(\hat{\theta}_n).
+		\]
+		
+		\item Im Allgemeinem ist
+		\[
+		\begin{aligned}
+		MSE(\hat{\theta}_n, \theta ) =  Var_\theta(\hat{\theta}_n) + & \left(\E_\theta \left(\hat{\theta_n}\right)-\theta \right)^2 \\
+		\text{MSE}  = \text{Varianz}  + & \; \text{Bias}^2.
+		\end{aligned}
+		\]
+	\end{itemize}
+\end{remark}
+
+\begin{proof}[Nachrechnen]
+	\[
+	\begin{aligned}
+		E_\theta \left(\left(\hat{\theta}_n-\theta \right)^2\right) & = \E_\theta \left(\left(\left(\hat{\theta}_n -\E_\theta \left(\hat{\theta}_n \right)\right)+ \left(\E_\theta \left(\hat{\theta}_n \right)-\theta \right)\right)^2\right) \\
+		& = \E_\theta \left(\left(\hat{\theta}_n -\E_\theta \left(\hat{\theta}_n \right)\right)^2 \right)
+		+ 2 \E_\theta \left(\hat{\theta}_n -\E_\theta \left(\hat{\theta}_n\right) \right) \left( \E_\theta \left(\hat{\theta}_n -\theta \right)\right) 
+		+  \E_\theta \left( \left(  \E_\theta \left(  \hat{\theta}_n \right)-\theta \right)^2 \right)  \\
+		& = \underbrace{ Var_\theta (\hat{\theta}_n )}_{\text{Varianz}}
+		+ 2 \Bigg (\E_\theta \left(\hat{\theta}_n-\theta \right)\underbrace{\E_\theta \left(\hat{\theta}_n -\E_\theta \left(\hat{\theta}_n \right)\right)}_{=\E(\hat{\theta})-\E(\hat{\theta})=0} \Bigg)
+		+\underbrace{\left(\E_\theta \left(\hat{\theta}_n \right)-\theta \right)^2}_{\text{Bias}^2} .
+	\end{aligned}
+	\]
+
+\end{proof}
+
+\begin{example}
+	$ X_1,\ldots,X_n $	i.i.d. $ U\left([0,\theta_0]\right), \quad \theta_0 > 0 $. 
+	
+	2 Schätzer: \[ \hat{ \theta}_{MM} = 2 \bar {X}_n  \text{ und }   \hat{ \theta}_{ML} = \max_{ 1 \leq i \leq n } X_i = X(n) \]
+	
+	\underline {MSE von $ \hat{\theta}_{MM}$: } $ \hat{\theta}_{MM}$ ist unverzerrt, sodass:
+	\[
+	\begin{aligned}
+	MSE( \hat{\theta}_{MM}, \theta)=
+	\Var_\theta\left(\hat{\theta}_{MM}\right) & = \Var_\theta(2\bar{X_n}) \\
+	& = 4 \Var_\theta(\bar{X}_n) \\
+	& = 4 \frac{\Var_\theta(X_1)}{n}\\
+	& = 4 \frac{1}{n} \frac{\theta^2}{12} \\
+	& = \frac{\theta^2}{3n} \xrightarrow{wie \ \frac{1}{n}} 0. 
+	\end{aligned}
+	\]
+	
+	
+	Für $ Z\sim U\left([0,1]\right) $ ist $ \E(Z)=\frac{1}{2} $ und $ \Var(Z)=\frac{1}{12} $. 
+	
+	Nun ist $ \theta_0 Z \sim U\left([0,\theta_0]\right) $, sodass 
+	\[
+	\begin{aligned}
+	\E(X_1) &=\E(\theta_0 Z) = \theta_0 \E(Z) = \theta_0 \frac{1}{2} \\
+	\Var(X_1) &= \Var(\theta_0 Z) = \theta_0^2 \Var(Z) = \theta_0^2 \frac{1}{12}.
+	\end{aligned}
+	\]
+
+
+	\underline {MSE von $ \hat{\theta}_{ML}$:} Die ZV $X_{(n)}$ hat die Vertielingsfunktion  
+		\[
+		\begin{aligned}
+			F_\theta(t) & = \Prob_\theta \left(X_{(n)} \le t \right) \\
+			& = \Prob_\theta \left(X_1 \le t, \ldots, X_n \le t \right) \\
+			& = \underbrace{\Prob_\theta \left(X_1 \le t \right)}_{\frac{t}{\theta}}\cdot\ldots\cdot \underbrace{\Prob\left(X_n \le t \right)}_{\frac{t}{\theta}} \\
+			& = \left(\frac{t}{\theta}\right)^n \text{für} \  0 \le t \le  \theta_0 .
+		\end{aligned}
+		\] 
+		
+		$\Rightarrow$ Dichte von $ \hat{\theta}_{ML} $: 
+		\[
+		f_\theta(t) = F^\prime (t) = \frac{n\cdot t^{n-1}}{\theta^n}.
+		\]
+
+	\begin{itemize}
+	\item $ \E_\theta ({ \hat{\theta}_{ML}}) $
+	 \[  \E_\theta ({ \hat{\theta}_{ML}}) = \E_\theta(X_{(n)}) = \int_{0}^{\theta} t f_\theta (t) dt = \int_{0}^{\theta} t \frac{nt^{n-1}}{\theta^n}dt 	= \int_{0}^{\theta}  \frac{n}{\theta^n} t^n dt= \frac{n}{\theta^n}  \Big|_0^{\theta} =    \]
+	\[ = \frac{n}{\theta^n} \frac{\theta^{n+1}}{n+1} = \frac{n}{n+1} \theta < \theta \]
+	
+	\item $Var_\theta (\hat{\theta}_{ML})$
+	 \[ Var_\theta \left(\hat{\theta}_{ML} \right) = \E_\theta \left( \left( X_{(n)}-\frac{n}{n+1} \theta \right)^2 \right) = 
+	  \E_\theta \left( X_{(n)} \right)^2 - \left( \frac{n}{n+1} \theta \right)^2 = \]
+	 \[ = \int_{0}^{\theta} t^2 \frac{nt^{n-1}}{\theta^n} - \left( \frac{n}{n+1} \theta \right)^2 = \frac{n}{\theta^n} \frac{t^{n+2}}{n+2} \Big|_0^{\theta}  - \left( \frac{n}{n+1} \theta \right)^2 = \frac{n}{\theta^n} \frac{\theta^{n+2}}{n+2} -  \left( \frac{n^2}{(n+1)^2} \theta^2 \right) =\]
+	   \[ \frac{n}{n+2}\theta^2 - \left( \frac{n^2}{(n+1)^2} \theta^2 \right) = ... = \theta^2 \frac{n}{(n+1)^2 (n+2)} \]
+	   
+	 \item Also $MSE\left(\hat{\theta}_{ML}, \theta \right) $
+	 \[
+	\begin{aligned}
+		MSE\left(\hat{\theta}_{ML}, \theta \right) & = \E\left(\left(\hat{\theta}_{ML} - \theta\right)^2\right)
+		=\theta^2 \frac{n}{(n+1)^2 (n+2)} + \left(  \frac{n}{n+1} \theta -\theta \right)^2 \\
+			& = ... = \frac{2\theta^2}{(n+1)(n+2)} \xrightarrow{wie \ \frac{1}{n^2}} 0.
+	\end{aligned}
+	\]
+	
+	\end{itemize}
+		
+\end{example}
+
+\begin{example}
+	(Beispiel aus Vorjahr)
+	
+	 $ X_1,\ldots,X_n $ i.i.d. $ N(\mu_0,\sigma_0^2), \quad \mu_0 \in \R, \sigma_0^2 > 0 $. 
+	
+	Hier ist der unbekannte Parameter $ \theta_0 = \begin{pmatrix}
+		\mu_0 \\ \sigma_0^2
+	\end{pmatrix} \in \Theta = \R \times (0,\infty) $.
+	
+	Die Dichte von $ X_1 $ an der Stelle $ x $ ist 
+	\[
+	\Phi_{\mu_0,\sigma_0^2}(x) = \frac{1}{\sqrt{2\pi\sigma_0^2}} e^{-\frac{1}{2}\frac{(x-\mu_0)^2}{\sigma_0^2}}.
+	\]
+	
+	Für Beobachtungen $ x_1, \ldots, x_n $ von $ X_1,\ldots,X_n $ ist 
+	\[
+	\begin{aligned}
+		L\left(\mu,\sigma^2\right) & = \prod_{i=1}^{n} \Phi_{\mu,\sigma^2}(x_i) \\
+		& = \prod_{i=1}^{n} (2\pi\sigma^2)^{-\frac{1}{2}} e^{-\frac{1}{2}\frac{(x_i-\mu)^2}{\sigma^2}} \\
+		& = (2\pi\sigma^2)^{-\frac{n}{2}} e^{-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(x_i-\mu)^2}.
+	\end{aligned}
+	\]
+	
+	\[
+	l\left(\mu,\sigma^2\right) = -\frac{n}{2}\log(2\pi)-\frac{n}{2}\log(\sigma^2)-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(x_i-\mu)^2.
+	\]
+	
+	Man sieht:
+	
+	Für jeden festen Wert von $ \sigma^2 $ wird $ l\left(\mu,\sigma^2\right) $ als Funktion von $ \mu $ minimiert im Punkt $ \mu = \bar{X}_n $. (Alternativ: Berechne $ \frac{d}{d\mu}l\left(\mu,\sigma^2\right) $, Null setzen, nach $ \mu $ auflösen.)
+	
+	$ \mu = \bar{X}_n $ einsetzen ergibt 
+	\[
+	l\left(\bar{X}_n,\sigma^2\right) = -\frac{n}{2}\log(2\pi)-\frac{n}{2}\log(\sigma^2)-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(x_i-\bar{X}_n)^2.
+	\]
+	
+	Um dies in $ \sigma^2 $ zu maximieren, setzt man die $ 1. $ Ableitung gleich $ 0 $:
+	\[
+	\begin{aligned}
+		\frac{dl\left(\bar{X}_n,\sigma^2\right)}{d\sigma^2} & = 0-\frac{n}{2}\frac{1}{\sigma^2}+\frac{1}{2}\frac{1}{\sigma^4}\sum_{i=1}^{n}(x_i-\bar{X}_n)^2 \\
+		& = -\frac{n}{2}\frac{1}{\sigma^2}+\frac{1}{2}\frac{1}{\sigma^4}\sum_{i=1}^{n}(x_i-\bar{X}_n)^2.
+	\end{aligned}
+	\]
+	\[
+	\begin{aligned}
+		&& \frac{dl\left(\bar{X}_n,\sigma^2\right)}{d\sigma^2} & \overset{!}{=} 0 \\
+		&\Leftrightarrow& -\frac{n}{2}\frac{1}{\sigma^2}+\frac{1}{2}\frac{1}{\sigma^4}\sum_{i=1}^{n}(x_i-\bar{X}_n)^2 & = 0 \\
+		&\Leftrightarrow& \frac{1}{\sigma^2}\sum_{i=1}^{n}(x_i-\bar{X}_n)^2 & = n \\
+		&\Leftrightarrow& \frac{1}{n}\sum_{i=1}^{n}(x_i-\bar{X}_n)^2 & = \sigma^2 \\
+		& & & \coloneqq \tilde{\sigma}^2.
+	\end{aligned}
+	\]
+	
+	Ist $ \tilde{\sigma}^2 $ ein Maximierer?
+	\[
+	\begin{aligned}
+		\frac{d^2l\left(\bar{X}_n,\sigma^2\right)}{d\left(\sigma^2\right)^2} & = \frac{d}{d\sigma^2}\left(-\frac{n}{2}\frac{1}{\sigma^2}+\frac{1}{2}\frac{1}{\sigma^4}\sum_{i=1}^{n}(x_i-\bar{X}_n)^2\right) \\
+		& = \frac{n}{2}\frac{1}{\left(\sigma^2\right)^2}-\frac{1}{2}2\frac{1}{\left(\sigma^2\right)^3}\sum_{i=1}^{n}(x_i-\bar{X}_n)^2 \\
+		& = \frac{n}{2}\frac{1}{\left(\sigma^2\right)^2}-\frac{n}{\left(\sigma^2\right)^3}\frac{1}{n}\sum_{i=1}^{n}(x_i-\bar{X}_n)^2
+	\end{aligned}
+	\]
+	Setzt man hier für $ \sigma^2 $ den Wert $ \tilde{\sigma}^2 $ ein, dann erhält man 
+	\[
+	\frac{n}{2}\frac{1}{\left(\tilde{\sigma}^2\right)^2}-\frac{n}{\left(\tilde{\sigma}^2\right)^3}\tilde{\sigma}^2 = \frac{n}{2}\frac{1}{\left(\tilde{\sigma}^2\right)^2}-\frac{n}{\left(\tilde{\sigma}^2\right)^2} = \frac{n}{\tilde{\sigma}^4}\left(\frac{1}{2}-1\right) < 0.
+	\]
+	Also Maximum bei $ \sigma^2 = \tilde{\sigma}^2 $.
+	
+	Damit ist der Maximum-Likelihood-Schätzer für $ \begin{pmatrix}
+		\mu_0 \\ \sigma_0^2
+	\end{pmatrix} $ gegeben durch 
+	\[
+	\begin{pmatrix}
+		\hat{\mu}_{ML} \\ \hat{\sigma}_{ML}^2
+	\end{pmatrix} = \begin{pmatrix}
+	\bar{X}_n \\ \frac{1}{n} \sum_{i=1}^{n}(x_i-\bar{X}_n)^2
+\end{pmatrix}.
+	\]
+	
+	Beachte: Das ist auch ein Momentenmethoden-Schätzer für $ \begin{pmatrix}
+		\mu_0 \\ \sigma_0^2
+	\end{pmatrix} $.
+	
+\end{example}
+
+\begin{example}[Capture/Recapture-Methode]
+	(Beispiel aus Vorjahr)  
+	
+	Schätzung der Populationsgröße mit der Capture/Recapture Methode. 
+	
+	Gegeben eine Population von $ N $ Individuen.
+	
+	Zur Vorbereitung des Experiments werden davon $ m $ Individuen markiert (Capture). 
+	
+	Im Experiment selbst werden $ n $ Individuen zufällig ausgewählt, und die Anzahl der davon markierten Individuen wird ermittelt (Recapture). 
+	
+	Modell: 
+	\[
+	\tikzmarknode{X}{X} \sim HG(\tikzmarknode{n}{n}, \tikzmarknode{N}{N_0}, \tikzmarknode{m}{m})
+	\]
+	
+	\begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
+		nodes={inner sep=1pt, align=center, font=\footnotesize}]
+		\draw[<-] (X.south) -- ++ (-2,-0.5) node[below] {Anzahl der gezogenen \\ markierten Kugeln};
+		\draw[<-] (n.south) -- ++ (-1,-1.5) node[below]{$ n $ Kugeln \\ aus Urne ohne \\ zurücklegen ziehen};
+		\draw[<-] (N.south) -- ++ (1,-1.5) node[below]{Anzahl der Kugeln \\ in Urne};
+		\draw[<-] (m.south) -- ++ (2,-0.5) node[below]{Anzahl der \\ markierten Kugeln};
+	\end{tikzpicture}
+	\vspace{2.5cm}
+	
+	$ N_0 $ ist unbekannt. $ N_0 \ge \max\lbrace m,n \rbrace, \; N_0 \in \N $.
+	
+	Es ist $ \E(X) = \frac{m\cdot n}{N_0} $, also $ N_0 = \frac{m\cdot n}{\E(X)} $.
+	
+	Damit ist ein MM-Schätzer für $ N_0 $ gegeben durch 
+	\[
+	\hat{N}_{MM} = \frac{m\cdot n}{X}.
+	\]
+	
+	Beachte: Im Allgemeinem ist $ \hat{N}_{MM} \notin \N $.
+	
+	Suche nun ML-Schätzer.
+	
+	Gegeben eine Beobachtung $ x $ von $ X $ ist 
+	
+	\[
+	\begin{aligned}
+		L(N) & = \Prob_N (X=x) \\
+		& = \frac{\binom{m}{x}\binom{N-m}{n-x}}{\binom{N}{n}}.
+	\end{aligned}
+	\]
+	
+	\[
+	\begin{aligned}
+		D(N) & = \frac{L(N)}{L(N-1)} \\
+		& = \frac{\binom{m}{x}\binom{N-m}{n-x}}{\binom{N}{n}} \cdot \frac{\binom{N-1}{n}}{\binom{m}{x}\binom{N-1-m}{n-x}} \\
+		& = \frac{(N-m)!}{(n-x)!(N-m-n+x)!}\frac{n!(N-n)!}{N!}\frac{(N-1)!}{n!(N-1-n)!}\frac{(n-x)!(N-1-m-n+x)!}{(N-1-m)!} \\
+		& = \frac{(N-n)(N-m)}{N(N-m-n+x)}.
+	\end{aligned}
+	\]
+	
+	Es ist 
+	\[
+	\begin{aligned}
+		&& D(N) & > 1 \\
+		& \Leftrightarrow & \frac{(N-n)(N-m)}{N(N-m-n+x)} & > 1 \\
+		& \Leftrightarrow & (N-n)(N-m) & > N(N-m-n+x) \\
+		& \Leftrightarrow & N^2-nN-mN+mn & > N^2-mN-nN+xN \\
+		& \Leftrightarrow & N < \frac{m\cdot n}{x}.
+	\end{aligned}
+	\]
+	Also: 
+	\begin{itemize}
+		\item Für $ N < \frac{m\cdot n}{x} $ ist $ D(N) > 1 $
+		\item Für $ N > \frac{m\cdot n}{x} $ ist $ D(N) > 1 $
+		\item Für $ N = \frac{m\cdot n}{x} $ ist $ D(N) = 1 $.
+	\end{itemize}
+
+Zwei Fälle:
+	\begin{itemize}
+		\item Fall 1: 
+		$ \frac{m\cdot n}{x}\notin \N $. 
+		
+		Wähle $ N \in \N $, sodass $ \frac{m\cdot n}{x} \in (N, N+1) $. 
+		
+		Damit ist $ D(N) > 1 $ und auch $ D(\tilde{N}) > 1 $ für alle $ \tilde{N} < \frac{m\cdot n}{x} $. 
+		
+		Analog ist $ D(N+1) < 1 $ und auch $ D(\tilde{N}) < 1 $ für alle $ \tilde{N} > \frac{m\cdot n}{x} $.
+		
+		Schließlich ist $ D(N+1) = \frac{L(N+1)}{L(N)} < 1 $, also $ L(N+1) < L(N) $. 
+		
+		Damit wird das Maximum von $ L(\cdot) $ angenommen an der Stelle $ N = \lfloor\frac{m\cdot n}{x}\rfloor $.
+		\item Fall 2: 
+		$ \frac{m\cdot n}{x} \in \N $. 
+		
+		Setze $ N = \frac{m\cdot n}{x} $.
+		
+		Wie im Fall 1 ist $ D(\tilde{N}) > 1 $ für $ \tilde{N} < N $, 
+		
+		$ D(\tilde{N}) < 1 $ für $ \tilde{N} > N $.
+		
+		Schließlich ist $ 1 = D(N) = \frac{L(N)}{L(N-1)} $.
+		
+		$ \Rightarrow L(N) = L(N-1) $. 
+		
+		Hier wird $ L(\cdot) $ maximiert an den Stellen $ \frac{mn}{x} $ sowie $ \frac{mn}{x} -1 $. 
+	\end{itemize}
+
+	Zusammenfassend: 
+	\[
+	\hat{N}_{ML} = \lfloor\frac{mn}{x}\rfloor,
+	\]
+	wobei $ \hat{N}_{ML} $ nicht eindeutig ist wenn $ \frac{mn}{x} \in \N $.
+\end{example}
+
+
+\section{Zulässigkeit, Effizienz und die Cramér-Rao-Schranke}
+
+\begin{book}
+	Siehe zu diesem Kapitel S. 298-306. in	\textit{Rice (2007)}.
+\end{book}
+
+Was zeichnet einen ''guten'' Schätzer aus?
+
+Betrachte durchwegs ein parametrisches Modell:
+$ X_1,\ldots,X_n $ i.i.d. mit Dichte $ f(x | \theta_0)$ (bzw. Wahrscheinlichkeitsfunktion $ p(x | \theta_0)$ für $\theta \in \Theta \in \R^k $).
+
+Gegeben einen Schätzer $ \hat{\theta}_n = \hat{\theta}_n(X_1, \ldots, X_n) \in \R^k $ für $ \theta_0 $ betrachtet man den \textbf{mittleren quadratischen Fehler} \index{MSE} 
+	\[
+	MSE\left(\hat{\theta}_n,\theta_0\right) \coloneqq \E_{\theta_0} ||\hat{\theta}_n-\theta_0||^2=\left(\sum_{i=1}^{k} \E_{\theta_0} \left(\hat{\theta}_n -\theta_{0}\right)_i ^2\right) = \sum_{i=1}^{k} MSE_{\theta_0}\left(\left((\hat{\theta}_n)_i , (\theta_{0})_i \right)^2\right)
+	\]
+
+\begin{remark}
+	Beachte: $MSE(\hat{\theta}_n, \theta)$ ist eine Funktion von $\theta$.
+	
+\end{remark}
+
+Beim Vergleich zweier Schätzer $\hat{\theta}_n$ und $\tilde{\theta}_n$ muss man also die Funktionen $MSE(\hat{\theta}_n, \cdot) $ und $ MSE(\tilde{\theta}_n, \cdot)$ vergleichen. 
+
+\begin{example}
+
+\begin{tabular}{|cccc|}
+         \hline
+         A & B & C & D \\
+         \hline
+         4 & 2 & 1 & 2 \\
+         2 & 3 & 1 & 1 \\
+         1 & 1 & 1 & 1 \\
+         3 & 3 & 1 & 2 \\
+         \hline
+\end{tabular}
+\vspace{0.5cm}
+
+	
+	D ist besser als A.
+	
+	A und B sind nicht vergleichbar.
+	
+	C ist klassenbeste.
+	
+\end{example}
+
+Im Folgenden sei $ \kappa $ eine Klasse von Schätzern für $\theta_0 $, also Funktionen von $X_1,...,X_n $ die Werte in $ \Theta $ einnehmen. Oft ist $\kappa$ die Klasse aller Schätzer bzw. die Klasse aller unverzerrter Schätzer. 
+
+\begin{definition}
+	Sei $ \hat{\theta} $ ein Schätzer aus der Klasse $\kappa$. 
+	\begin{itemize}
+		\item $\hat{\theta}$ heißt \textbf{unzulässig} \index{Schätzer!Unzulässigkeit} (in der Klasse $\kappa$), wenn es einen Schätzer $\tilde{\theta}$ aus $\kappa$ gibt sodass:
+		
+		 $\forall\theta\in\Theta$ ist $MSE(\tilde{\theta}, \theta )\le MSE(\hat{\theta}, \theta) $, und $ \exists\theta\in\Theta$ sodass $MSE(\tilde{\theta}, \theta) < MSE(\hat{\theta}, \theta) $.
+		\item $ \hat{\theta} $ heißt \textbf{zulässig} (in der Klasse $\kappa$), wenn der vorherige Punkt nicht gilt.
+	\end{itemize}
+\end{definition}
+
+Ist $\kappa= \{ A,B,C,D \}$ dann ist C zulässig.
+
+Ist $\kappa= \{ A,D \}$ dann ist A unzulässig und D ist zulässig.
+
+Ist $\kappa= \{ A,B \}$ dann sind A und B beide zulässig.
+
+\begin{definition}
+	Sei $ \hat{\theta} $ ein Schätzer aus der Klasse $\kappa$. $\hat{\theta}$ heißt \textbf{effzient} \index{Schätzer!Effizienz} (in der Klasse $\kappa$), wenn gilt:
+	
+	\[ \forall\theta \in\Theta \text{ ist } MSE\left(\hat{\theta}, \theta\right) = \underset{\tilde{\theta}\in\kappa}{\min}\; MSE\left(\tilde{\theta},\theta\right). \] 
+\end{definition}
+
+Ist $\kappa= \{ A,B,C,D \}$ dann ist C effizient.
+
+Ist $\kappa= \{ A,B,D \}$ dann ist D effizient.
+
+Ist $\kappa= \{ A,B \}$ dann sind niemand effizient.
+
+\begin{remark}
+	Bemerkung: Effiziente Schätzer sind selten bekannt und müssen nicht unbedingt existieren.
+	
+	Aber es gibt einige Ausnahmen, die Konzeptionell wichtig sind.
+	
+	Oft kann man aber ''asymptotisch effiziente'' Schätzer finden.(für $n \rightarrow \infty  $)
+\end{remark}
+
+\begin{remark}
+	Bemerkung:
+	\begin{itemize}
+		\item effizient $ \Rightarrow $ zulässig; aber nicht umgekehrt.
+		\item Diese beiden Begriffe hängen von $\kappa$ und $\Theta$ ab.
+	\end{itemize}
+\end{remark}
+
+Betrachte bis auf weiteres die Klasse $\kappa$ derr unverzerrten Schätzer.
+
+\begin{definition}
+	Sei X eine Zufallsvariable $ X $ mit Dichte $ f(x|\theta_0), \; \theta_0\in\Theta\subseteq\R^1 $.
+	
+	Die Größe 
+	\[
+	I(\theta_0) \coloneqq \E_{\theta_{0}} \left[\left(\frac{d}{d\theta}\log f(x|\theta_0)\right)^2\right]	
+	\] ist die \underline{Fisher-Information} \index{Fisher-Information} (von $ X $ über $ \theta_0 $), sofern diese wohldefiniert ist.
+\end{definition}
+
+\begin{satz}[Cramér-Rao-Schranke] \index{Cramér-Rao-Schranke}
+	Seien $ X_1,\ldots,X_n $ i.i.d mit Dichte $ f(x|\theta_0), \; \theta_0\in\Theta\subseteq\R^1 $. Weiters sei $ \hat{\theta} $ ein unverzerrter Schätzer für $ \theta_0 $. 
+	
+	Dann gilt: \[
+	\Var_{\theta_0} (\hat{\theta}) \ge \frac{1}{n_0 I(\theta_0)},
+	\] 
+	unter geeigneten Glattheitsbedingungen an $ f(\cdot|\cdot) $, sodass die Schritte $ (\hexstar) $ und $ (\hexstar\hexstar) $ im Beweis gültig sind.
+\end{satz}
+
+\begin{corollary}
+	Ist $ \hat{\theta} $ ein unverzerrter Schätzer für $ \theta_0 $, sodass $ \forall\theta\in\Theta,\; \Var_\theta (\hat{\theta}) = \frac{1}{nI(\theta)} $, dann ist $\hat{\theta}$ effizient in der Klasse der unverzerrten Schätzer.
+\end{corollary}
+
+\begin{remark}
+	Es gibt auch eine multivariate Version der Cramér-Rao-Schranke, also für unverzerrte Schätzer, wo $\theta_0$ hochdimensional sein kann.
+\end{remark}
+
+\begin{proof}
+	Setze $ Z=\sum_{i=1}^{n}\frac{d}{d\theta} \log f(x_i|\theta_0) $. 
+	
+	Es gilt $ |\Corr_{\theta_0}(Z,\hat{\theta})|\le 1 $, also $ \frac{\Cov_{\theta_0}(Z,\hat{\theta})^2}{\Var_{\theta_0}(Z)\Var_{\theta_0}(\hat{\theta})} \le 1 $, bzw. $ \frac{\Cov_{\theta_0}(Z,\hat{\theta})^2}{\Var_{\theta_0}(Z)} \le \Var_{\theta_0}(\hat{\theta}) $. 
+	
+	Zu zeigen:
+	
+	(i) $ \Cov_{\theta_0}(Z,\hat{\theta}) = 1 $
+	
+	(ii) $ \Var_{\theta_0}(Z) = nI(\theta_0) $.
+	
+	\[
+	\begin{aligned}
+		\E_{\theta_0}(Z_i) & \overset{i.i.d.}{=} n\E_{\theta_0}\left(\frac{d}{d\theta}\log f(x_1|\theta_0)\right) \\
+		& = n\E_{\theta_0}\left(\frac{d}{d\theta}\Big|_{\theta=\theta_0}\log f(x_1|\theta_0)\right) \\
+		& = n \int \frac{d}{d\theta}\Big|_{\theta=\theta_0} \log f(x|\theta)f(x|\theta_0) dx \\
+		& = n \int \frac{\frac{d}{d\theta}\Big|_{\theta=\theta_0}f(x|\theta)}{f(x|\theta_0)} f(x|\theta_0) dx \\
+		& = n \int \frac{d}{d\theta}\Big|_{\theta=\theta_0}f(x|\theta) dx \\
+		& \overset{(\hexstar)}{=} \underbrace{n \frac{d}{d\theta}\Big|_{\theta=\theta_0} \underbrace{\int f(x|\theta) dx}_{=1}}_{=0} = n\cdot 0 = 0.
+	\end{aligned}
+	\]
+	Man sieht damit auch, dass $ \E_{\theta_0}\left(\frac{d}{d\theta}\Big|_{\theta=\theta_0} \log f(x_1|\theta)\right) = 0 $ ist. 
+	
+	\[
+	\begin{aligned}
+		\Var_{\theta_0}(Z) & = \sum_{i=1}^{n}\Var_{\theta_0}\left(\frac{d}{d\theta}\log f(x_1|\theta_0)\right) \\
+		& = n \Var_{\theta_0} \left(\frac{d}{d\theta}\log f(x_1|\theta_0)\right) \\
+		& = n \E_{\theta_0} \left(\left(\frac{d}{d\theta}\log f(x_1|\theta_0)\right)^2\right) \\
+		& = n I(\theta_0).
+	\end{aligned}
+	\]
+	Damit ist (ii) gezeigt. $ \checkmark $
+	
+	\[
+	\begin{aligned}
+		\Cov_{\theta_0}(Z,\hat{\theta}) & = \E_{\theta_0}(Z\hat{\theta})-\overbrace{\E_{\theta_0}(Z)}^{=0}\E_{\theta_0}(\hat{\theta}) \\
+		& = \underbrace{\int\ldots\int}_{n-{\text{mal}}}\hat{\theta}(x_1\ldots,x_n)\left(\sum_{i=1}^{n}\frac{d}{d\theta}\log f(x_i|\theta_0)\right)\prod_{j=1}^{n} f(x_j|\theta_0) dx_1,\ldots,dx_n \\
+		& = \int\ldots\int\hat{\theta}(x_1\ldots,x_n)\left(\sum_{i=1}^{n}\frac{\frac{d}{d\theta}f(x_i|\theta_0)}{f(x_i|\theta_0)}\right)\prod_{j=1}^{n} f(x_j|\theta_0) dx_1,\ldots,dx_n \\
+		& = \int\ldots\int\hat{\theta}(x_1\ldots,x_n)\left(\sum_{i=1}^{n}\frac{d}{d\theta}f(x_i|\theta_0)\right)\prod_{j=1,i\ne i}^{n} f(x_j|\theta_0) dx_1,\ldots,dx_n \\
+		& = \int\ldots\int\hat{\theta}(x_1\ldots,x_n)\frac{d}{d\theta}\Big|_{\theta=\theta_0}\prod_{j=1}^{n} f(x_j|\theta_0) dx_1,\ldots,dx_n \\
+		& \overset{(\hexstar\hexstar)}{=} \frac{d}{d\theta}\Big|_{\theta=\theta_0} \int\ldots\int\hat{\theta}(x_1\ldots,x_n)\prod_{j=1}^{n} f(x_j|\theta_0) dx_1,\ldots,dx_n \\
+		& = \frac{d}{d\theta}\Big|_{\theta=\theta_0} \E_{\theta_0}(\hat{\theta}) \\
+		& = \frac{d}{d\theta}\Big|_{\theta=\theta_0} \theta \\
+		& = 1.
+	\end{aligned}
+	\]
+	
+	Also gilt auch (i). $ \checkmark $
+	
+\end{proof}
+
+
+Eine alternative Formel für $ I(\theta_0) $: 
+
+\begin{lemma}
+	Die \textbf{Fisher-Information} \index{Fisher-Information} lässt sich auch berechnen als 
+	\[I(\theta_0)=-\E_{\theta_0}\left(\frac{d^2}{d\theta^2}\log f(x|\theta_0)\right)\] 
+	unter geeigneten Glattheitsbedingungen, sodass Schritte (a) und (b) im Beweis zulässig sind.
+\end{lemma}
+
+\begin{proof}
+	Für jedes $ \theta\in\Theta $ ist $ \int f(x|\theta)dx = 1 $. 
+	
+	\[
+	\begin{aligned}
+		0 & = \frac{d}{d\theta}\int f(x|\theta) dx \\
+		& \overset{(a)}{=} \int \frac{d}{d\theta} f(x|\theta) dx \\
+		& = \int \frac{\frac{d}{\theta}f(x|\theta)}{f(x|\theta)}f(x|\theta) dx \\
+		& = \int \left(\frac{d}{d\theta} \log f(x|\theta)\right) f(x|\theta) dx = (c).
+	\end{aligned}
+	\]
+	\[\begin{aligned}
+	\Rightarrow 0 & = \frac{d}{d\theta} (c) \\
+	& = \frac{d}{d\theta}\int \left(\frac{d}{d\theta} \log f(x|\theta)\right) f(x|\theta) dx \\
+	& \overset{(b)}{=} \int \left(\frac{d^2}{d\theta^2} \log f(x|\theta)\right) f(x|\theta) + \left(\frac{d}{d\theta}\log f(x|\theta)\right) \underbrace{\frac{d}{d\theta} f(x|\theta)}_{\overset{s.o}{=}\left(\frac{d}{d\theta}\log f(x|\theta)\right)f(x|\theta)} dx \\
+	& = \int \left(\frac{d^2}{d\theta^2} \log f(x|\theta)\right) f(x|\theta) dx + \int \left(\frac{d}{d\theta}\log f(x|\theta)\right)^2 f(x|\theta) dx \\
+	& = \E_{\theta_0} \left(\frac{d^2}{d\theta^2}\log f(x|\theta)\right)+\underbrace{\E_{\theta_0}\left(\left(\frac{d}{d\theta}\log f(x|\theta)\right)^2\right)}_{=I(\theta)} \\
+	\Rightarrow I(\theta) & = - \E_{\theta_0}\left(\frac{d^2}{d\theta^2}\log f(x|\theta)\right). 
+	\end{aligned}
+	\]
+	
+	
+\end{proof}
+
+
+\begin{remark}
+	Bemerkung: Die Cramér-Rao-Schranke gilt auch in diskreten Modellen: 
+	
+	Sind $ X_1,\ldots,X_n $ i.i.d. diskrete Zufallsvariablen mit Wahrscheinlichkeitsfunktion $ w(x|\theta_0), \; \theta_0\in\Theta\subseteq\R $, und ist $ \hat{\theta} $ ein unverzerrter Schätzer für $ \theta_0 $, dann gilt 
+	\[
+	\Var_{\theta_0}(\hat{\theta}) \ge \frac{1}{nI(\theta_0)},
+	\] 
+	wobei $ I(\theta_0) = \E_{\theta_0} \left(\left(\frac{d}{d\theta} \log w(x_1|\theta)\right)^2\right) $, unter analogen Glattheitsbedingungen wie im letzten Satz. 
+	
+	Details: Siehe Übung.
+\end{remark}
+
+\begin{example}[Bernoulli-Verteilung]
+	Seien $ X_1,\ldots,X_n $ i.i.d $ B(p_0), \; 0<p_0<1 $. 
+	
+	Wissen: $ \hat{p}_{ML} = \bar{X}_n = \hat{p}_{MM} $ ist unverzerrt für $ p_0 $ mit Varianz $ \Var_{p_0}(\bar{X}_n) = \frac{\Var_{p_0}(X_1)}{n} = \frac{p_0(1-p_0)}{n} $. 
+	
+	\[
+	\begin{aligned}
+		w(x|p) & =\left\{\begin{array}{ll}
+			p & \colon x=1, \\
+			1-p & \colon x=0 \end{array}\right .\\
+		& = p^x(1-p)^{1-x}, \; x\in\lbrace0,1\rbrace, \; 0<p<1.
+	\end{aligned}
+	\]
+	
+	\[
+	\log w(x|p) = x\log p + (1-x)\log(1-p).
+	\]
+	
+	\[\begin{aligned}
+	\frac{d}{dp}\log w(x|p) & = \frac{x}{p} - \frac{1-x}{1-p} \\
+	\left(\frac{d}{dp}\log w(x|p)\right)^2 & = \frac{x^2}{p^2} - 2\underbrace{\frac{x}{p}\frac{1-x}{1-p}}_{=0, \text{ da } x\in\lbrace0,1\rbrace} + \frac{(1-x)^2}{(1-p)^2}.
+	\end{aligned}
+	\]
+	
+	\[
+	\begin{aligned}
+		I(p_0) & = \E_{p_0} \left(\left(\frac{d}{dp}\log w(x_1|p_0)\right)^2\right) \\
+		& \overset{s.o.}{=} \E_{p_0} \left(\frac{x_1^2}{p_0^2} + \frac{(1-x_1)^2}{(1-p_0)^2}\right)\\
+		& = \frac{1}{p_0^2}p_0 +\frac{1}{(1-p_0)^2}(1-p_0) \\
+		& = \frac{1}{p_0} + \frac{1}{1-p_0} \\
+		& = \frac{1-p_0+p_0}{p_0(1-p_0)} \\
+		& = \frac{1}{p_0(1-p_0)}.
+	\end{aligned}
+	\]
+	
+	Die Cramér-Rao-Schranke in diesem Modell ist also 
+	\[
+	\frac{1}{nI(p_0)} = \frac{p_0(1-p_0)}{n}.
+	\]
+	
+	Insbesondere ist $ \hat{p}_{ML} = \bar{X}_n $ effizient in der Klasse der unverzerrten Schätzer!
+\end{example}
+
+\begin{example}[Exponentialverteilung]
+	$ X_1,\ldots,X_n $ i.i.d. $ Exp(\lambda_0), \; \lambda_0 > 0 $. 
+	
+	$ f(x|\lambda) = \lambda e^{-\lambda x}, \; (x > 0) $. 
+	
+	$ \log f(x|\lambda) = \log \lambda - \lambda x $. 
+	
+	$ \frac{d}{d\lambda} \log f(x|\lambda) = \frac{1}{\lambda} - x $. 
+	
+	\[
+	\begin{aligned}
+		I(\lambda_0) & = \E_{\lambda_0} \left(\left(\frac{d}{d\lambda}\log f(x|\lambda_0)\right)^2\right) \\
+		& = \E_{\lambda_0} \left(\left(\frac{1}{\lambda_0}-X\right)^2\right) \\
+		& = \Var_{\lambda_0}(X) \\
+		& = \frac{1}{\lambda_0^2}.
+	\end{aligned}
+	\]
+	
+	Cramér-Rao-Schranke: 
+	\[
+	\left(nI(\lambda_0)\right)^{-1} = \frac{\lambda_0^2}{n}.
+	\]
+	
+	Der Schätzer $ \frac{1}{\bar{X}_n} = \frac{1}{\frac{1}{n}\sum_{i=1}^{n}X_i} $, ein Momentenmethoden-Schätzer und auch der ML-Schätzer, ist verzerrt: 
+	\[
+	\E_{\lambda_0}\left(\frac{1}{\bar{X}_n}\right) \ne \frac{1}{\E_{\lambda_0}(\bar{X}_n)} = \frac{1}{\frac{1}{\lambda_0}}= \lambda_0 
+	\]
+	
+	Über diesen Schätzer liefert die Cramér-Rao-Schranke damit keine Information.
+\end{example}
+
+\begin{example}[Umparametrisierung der Exponentialverteilung]
+	$ X_1,\ldots,X_n $ i.i.d. $ Exp\left(\frac{1}{\theta_0}\right), \; \theta_0 > 0 $. 
+	
+	Hier ist
+	
+	$ \E_{\theta_0}(X_1) = \frac{1}{\frac{1}{\theta_0}} = \theta_0 $.
+	
+	$ \Var_{\theta_0} (X_1)  = \left(\frac{1}{\frac{1}{\theta_0}}\right)^2 = \theta_0^2 $.
+	
+	$ f(x|\theta) = \frac{1}{\theta} e^{-\frac{x}{\theta}}, \; (x > 0) $. 
+	
+	$ \log f(x|\theta) = -\log \theta -  \frac{x}{\theta} $. 
+	
+	$ \frac{d}{d\theta} \log f(x|\theta) = -\frac{1}{\theta} + \frac{x}{\theta^2} $. 
+	
+	\[
+	\begin{aligned}
+		I(\theta_0) & = \E_{\theta_0} \left(\left(\frac{d}{d\theta}\log f(x_1|\theta_0)\right)^2\right) \\
+		& = \E_{\theta_0} \left(\left(-\frac{1}{\theta} + \frac{X_1}{\theta^2}\right)^2\right) \\
+		& = \E_{\theta_0} \left(\left(\frac{\theta_0-X_1}{\theta_0^2}\right)^2\right) \\
+		& = \frac{1}{\theta_0^4}\E_{\theta_0} \left(\left(\theta_0-X_1\right)^2\right) \\
+		& =\frac{1}{\theta_0^4} \Var_{\theta_0}(X_1) \\
+		& = \frac{1}{\theta_0^4}\theta_0^2  = \frac{1}{\theta_0^2}.
+	\end{aligned}
+	\]
+	
+	Cramér-Rao-Schranke: 
+	\[
+	(nI(\theta_0))^{-1} = \frac{\theta_0^2}{n}.
+	\]
+	
+	$ \bar{X}_n = \frac{1}{n}\sum_{i=1}^{n}X_i $ ist ein unverzerrter Schätzer für $ \theta_0 $!
+	
+	\[
+	\Var_{\theta_0}(\bar{X}_n) = \frac{\Var_{\theta_0}(X_1)}{n} = \frac{\theta_0^2}{n}.
+	\]
+	
+	Beide stimmen also überein. 
+	
+	Hier ist also $ \bar{X}_n $ effizient (in der Klasse der unverzerrten Schätzer). 
+\end{example}
+
+\begin{remark}
+	Bemerkung: Die Existenz effizienter Schätzer kann von der Parametrisierung abhängen.
+\end{remark}
+
+\begin{example}[Normalverteilung - Varianz bekannt]
+	$ X_1,\ldots,X_n $ i.i.d. $ N(\mu_0,\sigma^2), \; \mu_0 \in \R,\; \sigma^2 $ bekannt.
+	
+	Wissen: $ \bar{X}_n = \hat{\mu}_{ML} $ ist unverzerrt für $ \mu_0 $. 
+	
+	$ f(x|\mu) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{1}{2\sigma^2}(x-\mu)^2} $. 
+	
+	$ \log f(x|\mu) = -\frac{1}{2}\log(2\pi\sigma^2)-\frac{1}{2\sigma^2}(x-\mu)^2 $. 
+	
+	$ \frac{d}{d\mu}\log f(x|\mu) = \frac{1}{2\sigma^2}2(x-\mu) = \frac{x-\mu}{\sigma^2} $.
+	
+	\[
+	\begin{aligned}
+		I(\mu_0) & = \E_{\mu_0} \left(\left(\frac{d}{d\mu}\log f(X_1|\mu_0)\right)^2\right) \\
+		& = \E_{\mu_0}\left(\left(\frac{X_1-\mu_0}{\sigma^2}\right)^2\right) \\
+		& = \frac{1}{\sigma^4}\Var_{\mu_0}(X_1) \\
+		& = \frac{\sigma^2}{\sigma^4} \\
+		& = \frac{1}{\sigma^2}. 
+	\end{aligned}
+	\]
+	
+	Cramér-Rao-Schranke:
+	\[
+	(nI(\mu_0))^{-1} = \frac{\sigma^2}{n}.
+	\]
+	
+	\[ \Var_{\mu_0}(\bar{X}_n) = \frac{\sigma^2}{n} . 
+	\]
+	
+	Beide stimmen also überein. 
+	
+	Also ist $ \bar{X}_n $ effizient (in der Klasse der unverzerrten Schätzer).
+\end{example}
+
+\begin{remark}
+	Bemerkung:
+	Die hier betrachtete Klasse von Schätzern ist 
+	\[
+	\kappa_+ = \left\lbrace \hat{\mu} = \hat{\mu}(X_1,\ldots,X_n, \sigma^2) \colon \hat{\mu} \text{ unverzerrt}\right\rbrace
+	\]
+	Der effiziente Schätzer $ \bar{X}_n $ hängt nicht von $ \sigma^2 $ ab.
+\end{remark}
+
+\begin{example}[Normalverteilung - Varianz unbekannt]
+	$ X_1,\ldots,X_n $ i.i.d. $ N(\mu_0,\sigma_0^2), \; \mu_0 \in \R, \; \sigma_0^2 > 0 $.
+	
+	Sei $ \kappa $ die Klasse aller unverzerrten Schätzer für $ \mu_0 $:
+	\[
+	\kappa = \left\lbrace \hat{\mu} = \hat{\mu}(X_1,\ldots,X_n) \colon \hat{\mu} \text{ unverzerrt}\right\rbrace
+	\]
+	
+	Wissen: 
+	
+	(1) $ \bar{X}_n \in \kappa $ (unverzerrt),
+	
+	(2) $ \Var_{\mu_0}(\bar{X}_n) = \underset{\hat{\mu}\in\kappa_+}{\min}\Var_{\mu_0}(\hat{\mu}) $,
+	
+	(3) $ \kappa \subseteq \kappa_+ $. 
+	
+	Also: 
+	\[
+	\begin{aligned}
+		\Var_{\mu_0,\sigma_0^2}(\bar{X}_n) & \underset{(2)}{=} \underset{\hat{\mu}\in\kappa_+}{\min}\Var_{\mu_0, \sigma_0^2}(\hat{\mu}) \\
+		& \underset{(3)}{\le} \underset{\hat{\mu}\in\kappa}{\min}\Var_{\mu_0,\sigma_0^2}(\hat{\mu}) \\
+		& \underset{(1)}{\le} \Var_{\mu_0,\sigma_0^2}(\bar{X}_n).
+	\end{aligned}
+	\]
+	
+	$ \Rightarrow \Var_{\mu_0,\sigma_0^2}(\bar{X}_n) = \underset{\hat{\mu}\in\kappa}{\min}\Var_{\mu_0,\sigma_0^2}(\hat{\mu}) $
+	
+	Insbesondere ist $ \bar{X}_n $ effizient (in der Klasse der unverzerrten Schätzer) für $ \mu_0 $, auch im Fall unbekannter Varianz.
+\end{example}
+
+\begin{remark}
+	Bemerkung: Es gibt eines Version der Cramér-Rao-Schranke für mehr-dimensionale Parameter und auch für multivariate Beobachtungen $ X_1,\ldots,X_n $. 
+	
+	Insbesondere gilt: 
+	
+	Für $ X_1,\ldots,X_n $ i.i.d. $ N(\mu,\sigma^2I_k) $ mit $ \mu_0 \in \R^k $ und $ \sigma^2 > 0 $ ist $ \bar{X}_n = \frac{1}{n}\sum_{i=1}^{n}X_i $ ein effizienter Schätzer für $ \mu_0 $ (in der Klasse der unverzerrten Schätzer).
+\end{remark}
+
+Betrachte nun auch möglicherweise verzerrte Schätzer.
+
+\begin{theorem}
+	Betrachte $ X\sim N(\mu_0,I_p) $ mit $ \mu_0 = \R^p $. Der Maximum-Likelihood-Schätzer $ \hat{\mu}_{ML} = X $ für $ \mu_0 $ ist zulässig in der Klasse aller Schätzer für $ \mu_0 $, wenn $ p=1,2. $
+\end{theorem}
+(Ohne Beweis). 
+
+? Was passiert für $ p\ge 3 $?
+
+\begin{remark}
+	Überraschung: (James, Stein, 1961)
+	
+	Für $ X\sim N(\mu_0,I_p), \;\mu_0\in\R^p,\;p\ge3 $, gibt es einen Schätzer $ \hat{\mu}_{JS} $ für $ \mu_0 $, sodass gilt:
+	\[
+	\forall \mu \in \R^p \colon MSE(\tikzmarknode{JS}{\hat{\mu}_{JS}},\mu) < MSE(\tikzmarknode{X}{X},\mu)
+	\]
+	\begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
+		nodes={inner sep=1pt, align=center, font=\footnotesize}]
+		\draw[<-] (JS.south) -- ++ (-0.2,-.5) node[below] {J-S-Schätzer};
+		\draw[<-] (X.south) -- ++ (0.2,-.5) node[below] {ML-Schätzer};
+	\end{tikzpicture}
+	\vspace{6ex}
+	
+	Dieser Schätzer ist gegeben durch 
+	\[
+	\hat{\mu}_{JS} = \underbrace{\left(1-\frac{p-2}{X^{\prime} X}\right)}_{\text{Kontraktionsfaktor}} \tikzmarknode{ML}{X}.
+	\]
+	\begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
+		nodes={inner sep=1pt, align=center, font=\footnotesize}]
+		\draw[<-] (ML.south) -- ++ (0.9,-.6) node[below] {ML-Schätzer};
+	\end{tikzpicture}
+	\vspace{6ex}
+	Insbesondere ist der Maximum-Likelihood-Schätzer in diesem Modell unzulässig wenn $ p\ge3 $.
+\end{remark}
+
+R-Beispiel:
+	\[
+	\begin{aligned}
+		MSE(\hat{\mu}_{JS},\mu) & = \E_\mu \left(||\hat{\mu}_{JS}-\mu||^2\right) \\
+		& \tikzmarknode{GZ}{\approx} \frac{1}{m}\sum_{i=1}^{m} ||\tikzmarknode{K}{\hat{\mu}_{JS}^{(i)}}-\mu||^2
+	\end{aligned}
+	\]
+	\begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
+		nodes={inner sep=1pt, align=center, font=\footnotesize}]
+		\draw[<-] (GZ.south) -- ++ (-0.5,-.5) node[below] {Gesetz der \\ großen Zahlen};
+		\draw[<-] (K.south) -- ++ (0.5,-.5) node[below] {i.i.d. Kopien \\ von $ \hat{\mu}_{JS} $};
+	\end{tikzpicture}
+	\vspace{6ex}
+	
+	
+	Man weiß: $ MSE(\hat{\mu}_{JS},\mu) $ hängt nur von $ ||\mu|| $ ab. 
+	
+	\begin{remark}
+		Bemerkung: 
+		
+		In der Praxis wird der James-Stein-Schätzer selten verwendet. Aber als so genannter Shrinkage-Schätzer lieferte $ \hat{\mu}_{JS} $ die Inspiration für zahlreiche moderne Methoden wie LASSO, SVM, LARS, Dantzig-Selektor, $ \ldots $
+	\end{remark}
+
+\begin{example}
+	Nochmal zu $ X_1,\ldots, X_n $ i.i.d. $ Exp(\lambda_0), \; n \ge 2 $; ein Spezialfall der s.g. $ \Gamma(1,\lambda_0) $-Verteilung. 
+	
+	Es gilt : $ S_n = \sum_{i=1}^{n}X_i \sim \Gamma(n,\lambda_0) $. 
+	
+	?$ \E\left(\frac{1}{S_n}\right)= ? $
+	
+	Dichte der $ \Gamma(n,\lambda_0) $-Verteilung: $ \frac{\lambda^n}{\Gamma(n)}t^{n-1}e^{-\lambda_0t} \; (t\ge0) $.
+	
+	\[
+	\begin{aligned}
+		\E\left(\frac{1}{S_n}\right) & = \int_{0}^{\infty}\frac{1}{t}\frac{\lambda_0^n}{\Gamma(n)}t^{n-1}e^{-\lambda_0t}dt \\
+		& = \int_{0}^{\infty}\frac{\lambda_0^n}{\Gamma(n)}t^{n-2}e^{-\lambda_0t}dt \\
+		& = \lambda_0 \frac{\Gamma(n-1)}{\Gamma(n)}\int_{0}^{\infty}\underbrace{\frac{\lambda_0^{n-1}}{\Gamma(n-1)}t^{n-2}e^{-\lambda_0 t}}_{\substack{\text{Dichte der} \\ \Gamma(n-1,\lambda_0)\text{-Verteilung}=1}}dt \\
+		& = \lambda_0 \frac{\Gamma(n-1)}{\Gamma(n)} \\
+		& =  \lambda_0 \frac{(n-2)!}{(n-1)!} = \frac{\lambda_0}{n-1}.
+	\end{aligned}
+	\]
+	
+	Für $ \hat{\lambda} = \frac{1}{\bar{X}_n} = \frac{n}{S_n} $ ist damit $ \E_{\lambda_0}(\hat{\lambda}) = n\E_{\lambda_0}\left(\frac{1}{S_n}\right) = \lambda_0 \frac{n}{n-1} > \lambda_0 \ldots $ verzerrt.
+	
+	Der Schätzer $ \tilde{\lambda} = \frac{n-1}{n}\hat{\lambda} $ dagegen ist unverzerrt. 
+	
+	\[ \tilde{\lambda} = \frac{n-1}{n}\frac{n}{S_n} = \frac{n-1}{S_n} = \frac{n-1}{\sum_{i=1}^{n}X_i} . \] 
+	
+	Frage: Erreicht $ \tilde{\lambda} $ die Cramér-Rao-Schranke $ (nI(\lambda_0))^{-1} = \frac{\lambda_0^2}{n} $?
+	
+	?$ \Var(\tilde{\lambda}) = \Var\left(\frac{n-1}{S_n}\right) = (n-1)^2 \Var\left(\frac{1}{S_n}\right) $. 
+	
+	\[
+	\begin{aligned}
+		\E\left(\left(\frac{1}{S_n}\right)^2\right) & =  \int_{0}^{\infty} \frac{1}{t^2}\frac{\lambda_0^n}{\Gamma(n)}t^{n-1}e^{-\lambda_0t}dt \\
+		& = \int_{0}^{\infty} \frac{\lambda_0^n}{\Gamma(n)}t^{n-3}e^{-\lambda_0t}dt \\
+		& = \lambda_0^2 \frac{\Gamma(n-2)}{\Gamma(n)} \int_{0}^{\infty} \underbrace{\frac{\lambda_0^{n-2}}{\Gamma(n-2)}t^{(n-2)-1}e^{-\lambda_0t}}_{\substack{\text{Dichte der } \\ \Gamma(n-2,\lambda_0) \text{ falls }n\ge3}} dt \\
+		& = \lambda_0^2 \frac{\Gamma(n-2)}{\Gamma(n)} \\
+		& = \lambda_0^2 \frac{(n-3)!}{(n-1)!} \\
+		& = \frac{\lambda_0^2}{(n-1)(n-2)}.
+	\end{aligned}
+	\]
+	
+	\[
+	\begin{aligned}
+		\Var\left(\frac{1}{S_n}\right) & = \E\left(\left(\frac{1}{S_n}\right)^2\right) - \left(\E\left(\frac{1}{S_n}\right)\right)^2 \\
+		& = \frac{\lambda_0^2}{(n-1)(n-2)} - \frac{\lambda_0^2}{(n-1)^2} \\
+		& = \frac{\lambda_0^2}{(n-1)}\left(\frac{1}{n-2}-\frac{1}{n-1}\right) \\
+		& = \frac{\lambda_0^2}{(n-1)}\left(\frac{n-1-n+2}{(n-1)(n-2)}\right) \\
+		& = \frac{\lambda_0^2}{(n-1)^2(n-2)} \; (\text{für }n\ge3).
+	\end{aligned}
+	\]
+	
+	$ \Rightarrow \Var(\tilde{\lambda}) = (n-1)^2\Var\left(\frac{1}{S_n}\right) = \frac{\lambda_0^2}{(n-2)} $. 
+	
+	Hier ist $ \Var(\tilde{\lambda}) > \frac{\lambda_0^2}{n} $; die Cramér-Rao-Schranke wird nicht erreicht.
+	
+	Allerdings ist 
+	\[
+	\begin{aligned}
+		MSE(\tilde{\lambda},\lambda_0) & < MSE(\hat{\lambda},\lambda_0) \\
+		\Var(\tilde{\lambda}) & < \Var(\hat{\lambda}) + (Bias(\hat{\lambda}))^2.
+	\end{aligned}
+	\]
+	Details: Übung.
+\end{example}
+
+\textbf{Zur Motivation des James-Stein-Schätzers:}
+
+	$ X\sim N(\mu,I_p), \; \hat{\mu}_{JS} = \left(1-\frac{p-2}{X^\prime X}\right)X $. 
+	
+	Betrachte eine Approximation, wo $ p\to\infty $ geht, und wo 
+	\[
+	\frac{\tikzmarknode{S}{||\mu||^2}}{\tikzmarknode{N}{p}} \xrightarrow{p\to\infty} \rho^2 > 0.
+	\]
+	
+	\begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
+		nodes={inner sep=1pt, align=center, font=\footnotesize}]
+		\draw[<-] (S.west) -- ++ (-0.5,.2) node[left] {Signal};
+		\draw[<-] (N.west) -- ++ (-0.6,-.1) node[left] {Noise};
+	\end{tikzpicture}
+	\vspace{0.3cm}
+	
+	Zerlege $ X $ als $ X = \mu + \epsilon $ (für $ \epsilon = X-\mu $), sodass $ \epsilon\sim N(0,I_p) $. 
+	
+	\begin{remark}
+		Beachte: Als Schätzer für $ \mu $ ist $ X $ ''zu lang'': 
+		\[
+		\begin{aligned}
+			\E(||X||^2) & = \E(X^\prime X) \\
+			& = \E\left((\mu+\epsilon)^\prime(\mu+\epsilon)\right) \\
+			& = \E\left(\mu^\prime\mu+2\mu^\prime\epsilon +\epsilon^\prime\epsilon\right) \\
+			& = \mu^\prime\mu + 0 + \underbrace{\E(\epsilon^\prime\epsilon)}_{\E\left(\sum_{i=1}^{p}\epsilon_i^2\right)=p} \\
+			& = \mu^\prime\mu + p > \mu^\prime\mu\;!
+		\end{aligned}
+		\]
+	\end{remark}
+
+	Betrachte das Dreieck $ 0,\mu,X $ bzw- $ 0,\frac{1}{\sqrt{p}}\mu, \frac{1}{\sqrt{p}}X $:
+	
+	\begin{center}
+	\begin{tikzpicture}
+		\draw[orange, ultra thick, ->] (0,0) -- (3,2);
+		\draw[gray, ultra thick, ->] (0,0) -- (5,1);
+		\draw[blue, ultra thick, ->] (3,2) -- (5,1);
+		\filldraw[black] (3,2) node[anchor=east] {$ \frac{1}{\sqrt{p}}\mu $};
+		\filldraw[black] (4.1,1.9) node[anchor=west] {$ \frac{1}{\sqrt{p}}\epsilon $};
+		\filldraw[black] (5,1) node[anchor=west] {$ \frac{1}{\sqrt{p}}X $};
+	\end{tikzpicture}
+	\end{center}
+
+	Approximatives Dreieck ($ p\to\infty $) (rechtwinklig):
+	
+	\begin{center}
+	\begin{tikzpicture}
+		\draw[orange, ultra thick, ->] (0,0) -- (4,2);
+		\draw[gray, ultra thick, ->] (0,0) -- (4.5,1);
+		\draw[blue, ultra thick, ->] (4,2) -- (4.5,1);
+		\filldraw[black] (2,1.4) node[anchor=east] {p};
+		\filldraw[black] (4.2,1.7) node[anchor=west] {1};
+		\filldraw[black] (2.5,0.3) node[anchor=west] {$ \sqrt{\rho^2+1} $};
+	\end{tikzpicture}
+	\end{center}
+	\vspace{0.5cm}
+
+	$ ||\frac{1}{\sqrt{p}}\mu||^2 = \frac{\mu^\prime\mu}{p} \rightarrow \rho^2 $. 
+	
+	$ ||\frac{1}{\sqrt{p}}\epsilon||^2 = \frac{1}{p}\epsilon^\prime\epsilon = \frac{1}{p}\sum_{i=1}^{p}\epsilon_i^2 \xrightarrow{p} 1 $ (LLN).
+	
+	$ ||\frac{1}{\sqrt{p}}X||^2 = \frac{1}{p}(\mu+\epsilon)^\prime(\mu+\epsilon) = \underbrace{\frac{1}{p}\mu^\prime\mu}_{\to\rho^2} + \underbrace{\frac{2}{p}\mu^\prime\epsilon}_{(\hexstar)} + \underbrace{\frac{1}{p}\epsilon^\prime\epsilon}_{\xrightarrow{p}1} \xrightarrow{p} \rho^2 +1 $.
+	
+	$ (\hexstar) \sim N\left(0,\frac{4}{p^2}\mu^\prime\mu\right) $, da $ \Var(\mu^\prime\epsilon)=\mu^\prime \VC(\epsilon)\mu = \mu^\prime\mu $.
+	
+	Damit gilt: Für $ c>0 $ ist 
+	\[
+	\begin{aligned}
+		\Prob\left(|\frac{2}{p}\mu^\prime\epsilon|>c\right) & \underset{Chebyshev}{\le} \frac{1}{c^2}\Var\left(\frac{2}{p}\mu^\prime\epsilon\right) \\
+		& = \frac{1}{c^2}\frac{3}{p^2}\mu^\prime\mu \\
+		& = \underbrace{\frac{4}{c^2}\frac{\mu^\prime\mu}{p}}_{\to \frac{4}{c^2}\rho^2} \underbrace{\frac{1}{p}}_{\to 0} \\
+		& \xrightarrow{p\to\infty} 0.
+	\end{aligned}
+	\] 
+	
+	Also ist $ (\hexstar) = \frac{2}{p}\mu^\prime\epsilon \xrightarrow{p} 0 $. 
+	
+	Das legt nahe, dass $ \sphericalangle \epsilon, \, \mu \to 0 $ strebt.
+	
+	Nachrechnen: Betrachte den Cosinus des Winkels: 
+	
+	$ \frac{\mu^\prime\epsilon}{||\mu||\cdot||\epsilon||} = \frac{\frac{1}{p}\mu^\prime\epsilon}{||\frac{1}{\sqrt{p}}\mu||\cdot||\frac{1}{\sqrt{p}}\epsilon||} = \frac{\frac{1}{p}\mu^\prime \epsilon}{\left(\frac{\mu^\prime\mu}{p}\right)^{\frac{1}{2}}\left(\frac{\epsilon^\prime \epsilon}{p}\right)^{\frac{1}{2}}} \rightarrow \frac{0}{(\rho^2)^{\frac{1}{2}}(1)^{\frac{1}{2}}} = 0 $.
+	
+	\[
+	\begin{aligned}
+		a^2-(\alpha c)^2 & = b^2 - ((1-\alpha)c)^2 \\
+		a^2-\alpha^2c^2 & = b^2 -(c^2-2\alpha c^2+\alpha^2c^2) \\
+		a^2-\alpha^2c^2 & = b^2-c^2+2\alpha c^2 - \alpha^2c^2 \\
+		\frac{a^2-b^2+c^2}{2c^2} & = \alpha.
+	\end{aligned}
+	\]
+	
+	\[ \Rightarrow \alpha = \frac{a^2-b^2+c^2}{2c^2} = \frac{2a^2}{2c^2} = \frac{c^2-b^2}{c^2} = 1 - \frac{b^2}{c^2} . \] 
+	
+	Im Dreieck $ 0,\mu,X $ ist 
+	\[
+	\begin{aligned}
+		\alpha & = 1- \frac{\epsilon^\prime\epsilon}{X^\prime X} \\
+		& = 1 - \frac{p}{X^\prime X}\underbrace{\frac{1}{p}\epsilon^\prime\epsilon}_{\xrightarrow{p} 1} \\
+		& \approx 1- \frac{p}{X^\prime X}.
+	\end{aligned}
+	\]
+	
+	Das legt folgenden Schätzer für $ \mu $ nahe:
+	\[
+	\tilde{\mu} = \left(1-\frac{p}{X^\prime X}\right)X
+	\]
+	- Das ist (fast) der James-Stein-Schätzer. 
+	
+	Fehler von $ X\colon ||\mu-X||^2 = \epsilon^\prime \epsilon $. 
+	
+	Fehler von $ \tilde{\mu}  \colon ||\tilde{\mu} -X||^2 $. 
+	
+	Relativer Fehler: 
+	\[
+	\frac{||\tilde{\mu}-X||^2}{||X-\mu||^2} = \frac{\frac{1}{p}||\tilde{\mu}-X||^2}{\frac{1}{p}||X-\mu||^2} \xrightarrow{p} 1-\frac{1}{1+\rho^2} < 1
+	\]
+	... hängt nur von $ \rho^2  \approx \frac{||\mu||^2}{p} $ ab.
+	
+	Es gilt sogar:
+	
+	$ \frac{MSE(\tilde{\mu},\mu)}{MSE(X,\mu)} $ bzw. 	$ \frac{MSE(\hat{\mu}_{JS},\mu)}{MSE(X,\mu)} $ hängen von $ \mu $ nur über $ ||\mu||^2 $ bzw. $ \frac{||\mu||^2}{p} $ ab.
+	
+	
+	\section{Das Verhalten von ML-Schätzer in großen Stichproben}
+	
+	\begin{book} 
+		Siehe zu diesem Kapitel S. 274-279 in	\textit{Rice (2007)}.
+	\end{book}
+	
+	Kurz gesagt: Unter geeigneten Voraussetzungen sind Maximum-Likelihood-Schätzer konsistent, asymptotisch normalverteilt, und ''asymptotisch effizient''.
+	
+	Betrachte durchwegs $ X_i, \; i \ge 1 $, i.i.d. mit Dichte (bzw. Wahrscheinlichkeitsfunktion)
+	\[
+	f(x|\theta_0), \; \theta_0\in\Theta\subseteq\R,
+	\] 
+	sowie für die Stichprobengröße $ n $ den Maximimum-Likelihood-Schätzer 
+	\[
+	\hat{\theta}_n = \hat{\theta}_n\left(X_1,\ldots,X_n\right).
+	\]
+	
+	\begin{satz}[Konsistenz]\index{Konsistenz!ML-Schätzer}
+		Unter geeigneten Voraussetzungen an $ f(\cdot|\cdot) $ ist der Maximum-Likelihood-Schätzer $ \hat{\theta}_n $ konsistent:
+		\[
+		\hat{\theta}_n \xrightarrow{p} \theta_0,
+		\]
+		für jeden Wert des wahren Parameters $ \theta_0\in\Theta $.
+	\end{satz}
+	
+	\begin{proof}[Beweisidee]
+		$ \hat{\theta}_n $ maximiert $ l_n(\theta)=\sum_{i=1}^{n} \log f(X_i|\theta) $ bzw. $ \frac{1}{n}l_n(\theta) $ über $ \theta\in\Theta $. 
+		
+		Mit dem Gesetz der großen Zahlen gilt
+		\[
+		\frac{1}{n}l_n(\theta) = \frac{1}{n}\sum_{i=1}^{n} \underbrace{\log f(X_i|\theta)}_{\substack{\text{i.i.d. mit } \\ \E_{\theta_0}(\log f(X_1|\theta))}} \xrightarrow{p} \E_{\theta_0}(\log f(X_1|\theta)) \coloneqq l_\infty(\theta).
+		\]
+		
+		Also:
+		\[
+		\frac{1}{n}l_n(\theta) \approx l_\infty(\theta), \quad (\theta\in\Theta).
+		\]
+		
+		Idee: 
+		\[
+		\underbrace{\text{Maximierer von }\frac{1}{n}l_n(\theta)}_{\hat{\theta}_n} \approx \underbrace{\text{Maximierer von }l_\infty(\theta)}_{?=\theta_0 \, \text{(siehe unten)}}.
+		\]
+		
+		\[
+		\begin{aligned}
+			\frac{d}{d\theta}l_\infty(\theta) & = \frac{d}{d\theta}\int\log f(x|\theta) f(x|\theta_0) dx \\
+			& = \int \frac{d}{d\theta}\log f(x|\theta)\cdot f(x|\theta_0) dx \\
+			& = \int \frac{\frac{d}{d\theta}f(x|\theta)}{f(x|\theta)}\cdot f(x|\theta_0) dx = (\hexstar).
+		\end{aligned}
+		\]
+		
+		Für $ \theta = \theta_0 $ ist also 
+		\[
+		\frac{d}{d\theta}l_\infty(\theta_0) = \frac{d}{d\theta}l_\infty(\theta)\Big|_{\theta=\theta_0} .
+		\]
+		
+		\[
+		\begin{aligned}
+			(\hexstar) & = \int \frac{\frac{d}{d\theta}f(x|\theta_0)}{\cancel{f(x|\theta_0)}} \cancel{f(x|\theta_0)} dx \\
+			& = \int \frac{d}{d\theta} f(x|\theta_0) dx \\
+			& = \frac{d}{d\theta} \underbrace{\int f(x|\theta_0) dx}_{=1} \\
+			& = 0.
+		\end{aligned}
+		\]
+		
+		\[
+		\begin{aligned}
+			\frac{d^2}{d\theta^2} l_\infty(\theta_0) & = \frac{d^2}{d\theta^2} \E_{\theta_0} \left(\log f(X_1|\theta_0)\right) \\
+			& = \E_{\theta_0}\left(\frac{d^2}{d\theta^2}\log f(X_1|\theta_0)\right) \\
+			& = - I(\theta_0) \le 0.
+		\end{aligned}
+		\]
+		
+		Im nicht-trivialen Fall, wo $ I(\theta_0)>0 $ ist also $ \theta_0 $ ein Maximierer von $ l_\infty(\theta) $. 
+		
+		Weitere Details zum Beweis folgen im Masterstudium.
+	\end{proof}
+	
+	\begin{satz}[Asymptotische Normalität]\index{Asymptotische Normalität}
+		Unter geeigneten Voraussetzungen an $ f(\cdot|\cdot) $, gilt:
+		\[
+		\sqrt{n}\left(\hat{\theta}_n-\theta_0\right) \xrightarrow{w} N\left(0,\frac{1}{I(\theta_0)}\right);
+		\]
+		d.h. für jedes $ t\in\R $ ist 
+		\[
+		\lim_{n\to\infty}\Prob_{\theta_0}\left(\sqrt{n}(\hat{\theta}_n-\theta_0)\le t\right) = \Phi_{0,\frac{1}{I(\theta_0)}}(t).
+		\]
+	\end{satz}
+
+	\begin{proof}[Beweisidee]
+		$ \hat{\theta}_n $ maximiert $ l_n(\theta)=\sum_{i=1}^{n}\log f(X_i|\theta) $. 
+		
+		\[
+		\begin{aligned}
+			\Rightarrow 0 & = l_n^\prime(\hat{\theta}_n) \\
+			& \tikzmarknode{T}{\approx} l_n^\prime(\theta_0) + l_n^{\prime\prime}(\theta_0)(\hat{\theta}_n-\theta_0)+ \, \cancel{Rest}.
+		\end{aligned}
+		\begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
+		nodes={inner sep=1pt, align=center, font=\footnotesize}]
+		\draw[<-] (T.south) -- ++ (-0.5,-.5) node[below] {Taylor-Entwicklung der \\ Ordnung 1 im Punkt $ \theta_0 $};
+		\end{tikzpicture}
+		\]
+		\vspace{0.3cm}
+		
+		\[
+		\Rightarrow \sqrt{n}(\hat{\theta}_n-\theta_0) \approx \frac{\sqrt{n}l_n^\prime(\theta_0)\frac{1}{n}}{-l_n^{\prime\prime}(\theta_0)\frac{1}{n}} = \frac{\textcolor{blue}{\frac{1}{\sqrt{n}}l_n^\prime(\theta_0)}}{\textcolor{red}{-\frac{1}{n}l_n^{\prime\prime}(\theta_0)}} \quad (\hexstar)
+		\]
+		
+		\[
+		\begin{aligned}
+			\textcolor{blue}{\frac{1}{\sqrt{n}}l_n^\prime(\theta_0)} & = \frac{1}{\sqrt{n}}\sum_{i=1}^{n}\underbrace{\frac{d}{d\theta}\log f(X_i|\theta_0)}_{\substack{\text{i.i.d. mit E-Wert} = 0 \, \text{und Varianz } \\ \E_{\theta_0}\left(\left(\frac{d}{d\theta}\log f(X_1|\theta_0)\right)^2\right)= I(\theta_0)}} \\
+			& \xrightarrow{w} N(0,I(\theta_0)) \; \text{wegen dem zentralen Grenzwertsatz.}
+		\end{aligned}
+		\]
+		
+		\[
+		\begin{aligned}
+			\textcolor{red}{-\frac{1}{n}l_n^{\prime\prime}(\theta_0)} & = \frac{1}{n}\sum_{i=1}^{n}\underbrace{\left(-\frac{d^2}{d\theta^2}\log f(X_i|\theta_0)\right)}_{\substack{\text{i.i.d. mit E-Wert} \\ -\E_{\theta_0}\left(\frac{d^2}{d\theta^2}\log f(X_1|\theta_0)\right)= I(\theta_0)}} \\
+			& \xrightarrow{p} I(\theta_0) \; \text{wegen dem Gesetz der großen Zahlen.}
+		\end{aligned}
+		\]
+		
+		Mit den Rechenregeln für $ \xrightarrow{p} $ und $ \xrightarrow{w} $ ergibt sich, dass
+		\[
+		\frac{\textcolor{blue}{\frac{1}{\sqrt{n}}l_n^\prime(\theta_0)}}{\textcolor{red}{-\frac{1}{n}l_n^{\prime\prime}(\theta_0)}} \xrightarrow{w} N\left(0,\frac{1}{I(\theta_0)}\right).
+		\]
+		
+		Wenn der Approximationsfehler in $ (\hexstar) $ für $ n\to\infty $ vernachlässigbar ist, dann folgt daraus auch, dass 
+		\[
+		\sqrt{n}(\hat{\theta}_n-\theta_0) \xrightarrow{w} N\left(0,\frac{1}{I(\theta_0)}\right).
+		\]
+	\end{proof}
+	
+	\begin{remark}
+		Bemerkung: Ein konsistenter Schätzer für $ I(\theta_0) $ ist (unter geeigneten Voraussetzungen) gegeben durch 
+		\[
+		\hat{I} = -\frac{1}{n}\sum_{i=1}^{n}\frac{d^2}{d\theta^2}\log f(X_i|\hat{\theta}_n)
+		\] oder durch
+		\[
+		\tilde{I} = \frac{1}{n}\sum_{i=1}^{n}\left(\frac{d}{d\theta}\log f(X_i|\hat{\theta}_n)\right)^2.
+		\]
+	\end{remark}
+
+	\begin{remark}
+		Bemerkung: Falls $ \hat{\theta}_n $ ein unverzerrter Schätzer für $ \theta_0 $ ist, dann folgt aus der Cramér-Rao-Schranke, dass $ \Var(\hat{\theta}_n) \ge \frac{1}{nI(\theta_0)}$ (unter Glattheitsbedingungen).
+		
+		\[ \Rightarrow \Var(\sqrt{n}(\hat{\theta}_n-\theta_0)) = n\Var(\hat{\theta}_n) \ge \frac{1}{I(\theta_0)} .
+		\] 
+		
+		Für allgemeine Maximum-Likelihood-Schätzer besagt der letzte Satz, dass 
+		\[
+		\Var(\text{Asymptotische Verteilung von }\sqrt{n}(\hat{\theta}_n-\theta_0))=\frac{1}{I(\theta_0)}.
+		\]
+		Diese Eigenschaft nennt man asymptotische Effizienz.
+		
+	\end{remark}
+
+%---------------------------------------------------------------------------
+
+\chapter{Testen von Hypothesen}
+
+\section{Neyman-Pearson Paradigma}
+	\begin{book}
+	Siehe zu diesem Kapitel S. 329-341 in	\textit{Rice (2007)}.
+\end{book}
+
+$\ldots$ ein allgemeines Schema zum Testen von Hypothesen. 
+\vspace{0.5cm}
+
+\begin{tabular}{ll}
+	\textbf{Gegeben:}	& 	\\
+	\midrule
+				& Zufallsvariable (Daten) $ X_1,\ldots, X_n $; \\
+				& Nullhypothese $ H_0 $ (über die Verteilung der $ X_i $); \\
+				& Alternativ-Hypothese $ H_1 $ (über die Verteilung der $ X_i $); \\
+				& Signifikanzniveau $ \alpha, \; 0<\alpha<1. $ \\
+	
+	\textbf{Wahl: }		& \\
+	\midrule
+				& Test-Statistik $ T = T(X_1,\ldots,X_n) $, sodass die \textbf{Verteilung von $ T $ unter $ H_0 $ bekannt} ist; \\
+				& Verwerfungsbereich $ R $, sodass $ \Prob(T\in R|H_0) = \alpha $ (bzw. $ \le \alpha $). \\
+	
+	\textbf{Test: }		& \\
+	\midrule
+				&  $ \xcancel{H_0} $ falls $ T\in R $; \\
+				& $ \rightsquigarrow H_0 $ falls $ T\notin R $.
+\end{tabular}
+\vspace{0.5cm}
+
+Dieser Test kann zwei Arten von Fehlern begehen:
+\begin{itemize}
+	\item $ \xcancel{H_0} $, aber $ H_0 $ trifft zu - Fehler 1. Art. (gut kontrollierbar)
+	\item $ \rightsquigarrow H_0 $ aber $ H_1 $ trifft zu - Fehler 2. Art. (schwierig zu kontrollieren)
+\end{itemize}
+
+Laut Konstruktion ist die Wahrscheinlichkeit 1. Art gleich 
+	\[
+	\Prob(\xcancel{H_0}|H_0) = \Prob(T\in R|H_0) = \alpha,
+	\]
+also das Signifikanzniveau des Tests.
+
+Die Wahrscheinlichkeit eines Fehlers 2. Art wird von der Wahl von $ T $ und $ R $ beeinflusst. 
+
+\begin{remark}
+	Bezeichnungen: 
+	\begin{itemize}
+		\item Für einen Test mit Signifikanzniveau $ \alpha $ nennt man $ \alpha $ auch die \textbf{''Size''} des Tests:
+		\[
+		\text{Size} = \Prob(\xcancel{H_0}|H_0)=\alpha \; (\text{je kleiner, desto besser}).
+		\]
+		\item Als \textbf{''Power''} des Tests bezeichnet man die Wahrscheinlichkeit, $ H_0 $ korrekterweise zu verwerfen:
+		\[
+		\text{Power} = \Prob(\xcancel{H_0}|H_1) \; (\text{je größer, desto besser}).
+		\]
+	\end{itemize}
+\end{remark}
+
+\begin{remark}
+	Bemerkung: 
+	\[
+	\text{Power} = 1-\Prob(\rightsquigarrow H_0|H_1) = 1- \text{Wahrscheinlichkei eines Fehlers 2. Art}.
+	\]
+\end{remark}
+
+\begin{remark}
+	Bemerkung:
+	Vergrößert man den Ablehnungsbereich $ R $ eines Tests, dann $\ldots$
+	
+	$\ldots$ steigt die Size \frownie, 
+	
+	$\ldots$ steigt die Power \smiley. 
+	
+	Power und Size verhalten sich ''antagonistisch''.
+\end{remark}
+
+\begin{example}[\href{https://doi.org/10.17713/ajs.v31i1.467}{Futschik, 2002, Ist der Euro fair?}]
+	
+	\textbf{Kreiselexperiment:}
+	\vspace{0.5cm}
+	
+\begin{center}
+	\begin{tabular}{c|c|c|c|c|c}
+		Land 	& $ n $ 	& $ T=\# $Kopf 	& $ c $ 	& $ T-\frac{n}{2} $ 	& \\
+		\midrule
+		AUT		& 100		& 50 			& 11		& 0						& $ \rightsquigarrow H_0 $ \\
+		GE		& 100		& 52 			& 11		& 2						& $ \rightsquigarrow H_0 $ \\
+		IT		& 250		& 103 			& 16		& -22					& $ \xcancel{H_0} $ \\
+		FR		& 250		& 158 			& 16		& 33					& $ \xcancel{H_0} $ \\
+	\end{tabular}
+\end{center}
+	\vspace{0.5cm}
+	
+	Für jedes Land ist $ X_1,\ldots,X_n $ i.i.d. $ B(p) $. 
+	\begin{itemize}
+		\item $ H_0\colon p=\frac{1}{2} $,
+		\item $ H_1\colon P\ne \frac{1}{2} $,
+		\item $ \alpha = 0.05 $.
+	\end{itemize}
+	
+	Wähle $ T=\sum_{i=1}^{n}X_i \sim B(n,p) $. (Unter $ H_0 $ ist $ T\sim B\left(n,\frac{1}{2}\right) $).
+	
+	Große Werte von $ |T-\frac{n}{2}| $ sprechen gegen $ H_0 $!
+	
+	Verwerfe $ H_0 $, wenn $ |T-\frac{n}{2}| \ge c $ ist. Also 
+	\[
+	R = \left(-\infty,\frac{n}{2}-c\right]\cup\left[\frac{n}{2}+c,\infty\right),
+	\]
+	und verwerfe $ H_0 $ falls $ T\in R $.
+	
+	Für $ n=100 $ ist $ c=11 $, 
+	
+	für $ n=250 $ ist $ c=16 $. 
+	
+	Bemerkung: Weil $ T $ diskret ist, kann das Signifikanzniveau $ \alpha $ nicht exakt erreicht werden (im Allgemeinem). 
+	
+	Hier ist $ c $ so gewählt, dass die Wahrscheinlichkeit eines Fehlers 1. Art $ \le\alpha $ ist, und so, dass $ c $ möglichst klein (also $ R $ möglichst groß) ist.
+	
+	\textbf{Katapultexperiment:}
+		\vspace{0.5cm}
+
+\begin{center}
+	\begin{tabular}{c|c|c|c|c|c}
+		Land 	& $ n $ 	& $ T=\# $Kopf 	& $ c $ 	& $ T-\frac{n}{2} $ 	& \\
+		\midrule
+		AUT		& 400		& 196 			& 21		& -4					& $ \rightsquigarrow H_0 $ \\
+		IT		& 150		& 71 			& 13		& -4					& $ \rightsquigarrow H_0 $ \\
+		FR		& 150		& 79 			& 13		& 4					& $ \rightsquigarrow H_0 $ \\
+	\end{tabular}
+\end{center}
+	\vspace{0.5cm}
+	
+	\textbf{Man sieht:} Die Nullhypothese kann nur verworfen werden aber nicht bestätigt werden.
+	
+	Was ist die Power dieses Tests:
+	\[
+	\text{Power}=\Prob\left(|T-\frac{n}{2}|\ge c|H_1\right)\ldots \text{hängt von }p\left(\ne\frac{1}{2}\right) \text{ ab.}
+	\]
+	
+	Setze
+	\[
+	\Pi(p)=\Prob\left(|T-\frac{n}{2}|\ge c|p\right) = \Prob\left(|B(n,p)-\frac{n}{2}|\ge c\right),
+	\]
+	falls $ X_i $ i.i.d. $ B(p) $.
+	
+	Beachte: 
+	\begin{itemize}
+		\item Für $ p\ne\frac{1}{2} $ ist $ \Pi(p) $ die Power des Tests.
+		\item Für $ p=\frac{1}{2} $ ist $ \Pi(p) $ die Size des Tests ($ \le\alpha $).
+	\end{itemize}
+	
+\end{example}
+
+\begin{remark}
+	Bemerkung: Viele Tests sind von der Form $ \xcancel{H_0} $ falls $ |S| \ge c $, oder $ S \ge c $, oder $ S \le c $. 
+	
+	Für solche Tests nennt man $ c $ den \textbf{kritischen Wert}\index{Kritischer Wert} des Tests (zum Signifikanzniveau $ \alpha $ des Tests).
+	
+	Beachte: $ \Prob(\xcancel{H_0}|H_0) = \alpha $.
+\end{remark}
+
+\begin{remark}
+	Bezeichnung: Für einen Test der oberen Form ist der \textbf{p-Wert}\index{p-Wert} des Signifikanzniveaus jenes Test, bei dem der kritische Wert $ c $ ersetzt wird durch den beobachteten Wert der Test-Statistik. 
+	
+	Beachte: $ 0\le \text{p-Wert} \le 1 $.
+\end{remark}
+
+\begin{center}
+\begin{tabular}{c|c|cl}
+	Test 	& beobachteter Wert	& p-Wert 	& \\
+	\midrule
+	$ \xcancel{H_0} $ falls $ |S|\ge c $ & $ |s| $ & $ \Prob(|S|\ge|s|\;|H_0) $ & $\ldots$ fällt in $ |s| $ \\
+	$ \xcancel{H_0} $ falls $ S\ge c $ & $ s $ & $ \Prob(S\ge s\;|H_0) $ & $\ldots$ fällt in $ s $ \\
+	$ \xcancel{H_0} $ falls $ S\le c $ & $ s $ & $ \Prob(S\le s\;|H_0) $ & $\ldots$ steigt in $ s $	
+\end{tabular}
+\end{center}
+\vspace{0.5cm}
+
+\begin{remark}
+	Bemerkung: Der p-Wert misst, wie stark die Daten der Nullhypothese wiedersprechen.
+\end{remark}
+
+\begin{example}[\href{https://doi.org/10.17713/ajs.v31i1.467}{Futschik, 2002, Ist der Euro fair?}]
+	$ S=T-\frac{n}{2}, \quad \xcancel{H_0} \text{ falls } |S|\ge c. \quad \alpha = 0.05 $.
+	
+	Kreiselexperiment:
+	\vspace{0.5cm}
+\begin{center}	
+	\begin{tabular}{c|c|c|c|c|c|l}
+		Land 	& $ n $ 	& $ T=\# $Kopf 	& $ c $ 	& $ |s| $ 	& & p-Wert \\
+		\midrule
+		AUT		& 100		& 50 			& 11		& 0						& $ \rightsquigarrow H_0 $ & 1 \\
+		GE		& 100		& 52 			& 11		& 2						& $ \rightsquigarrow H_0 $ & 0.69 \\
+		IT		& 250		& 103 			& 16		& 22					& $ \xcancel{H_0} $ & 0.0054 \\
+		FR		& 250		& 158 			& 16		& 33					& $ \xcancel{H_0} $ &  0.000028 \\
+	\end{tabular}
+\end{center}
+	\vspace{0.5cm}
+	
+	Katapultexperiment:
+		\vspace{0.5cm}
+\begin{center}	
+	\begin{tabular}{c|c|c|c|c|c|l}
+		Land 	& $ n $ 	& $ T=\# $Kopf 	& $ c $ 	& $ |s| $ 	& & p-Wert \\
+		\midrule
+		AUT		& 400		& 196 			& 21		& 4					& $ \rightsquigarrow H_0 $ & 0.69 \\
+		IT		& 150		& 71 			& 13		& 4					& $ \rightsquigarrow H_0 $ & 0.52 \\
+		FR		& 150		& 79 			& 13		& 4					& $ \rightsquigarrow H_0 $ & 0.52 \\
+	\end{tabular}
+\end{center}
+	\vspace{0.5cm}
+	
+	Berechnung des p-Wertes in diesem Beispiel:
+	
+	$ T\sim Bin\left(n, \frac{1}{2}\right) $ unter $ H_0 $. 
+	
+	\[
+	\begin{aligned}
+		\Prob\left(|S|\ge |s| \; |H_0\right) & = \Prob\left(|T-\frac{n}{2}|\ge |s| \; |H_0\right) \\
+		& = \Prob\left(|Bin\left(n, \frac{1}{2}\right)-\frac{n}{2}|\ge|s|\right) \\
+		& = \Prob\left(Bin\left(n, \frac{1}{2}\right)\le\frac{n}{2}-|s|\right) + \Prob\left(Bin\left(n, \frac{1}{2}\right)\ge\frac{n}{2}+|s|\right).
+	\end{aligned}
+	\]
+\end{example}
+
+\begin{remark}
+	Bemerkung: Liefert ein Test einen p-Wert von $ a\in(0,1) $, dann wird in dem Test die Null-Hypothese verworfen auf jedem Signifikanzniveau $ \alpha\ge a $.
+\end{remark}
+
+\begin{proof}[Nachrechnen]
+	Betrachte Test, wo $ \xcancel{H_0} $ falls $ S\ge c $ mit Signifikanzniveau $ \alpha $. 
+	
+	Nach Durchführung des Tests erhält man einen p-Wert von $ a $ und einen Wert $ s $ der Test-Statistik. 
+	
+	Es gilt: 
+	\[
+	\begin{aligned}
+		\Prob(S\ge c\; |H_0) = \alpha & \ge a = \Prob(S\ge s\; |H_0) \\
+		\Leftrightarrow c & \le s \\
+		\equiv s & \ge c \\
+		\Leftrightarrow \; & \xcancel{H_0}.
+	\end{aligned}
+	\]
+\end{proof}
+
+\begin{remark}
+	Bemerkung: Falls die Verteilungsfunktion $ F $ der Test-Statistik $ S $ (bzw. $ |S| $) invertierbar ist, dann ist der p-Wert vor der Durchführung des Experiments/Tests eine Zufallsvariable, die $ U([0,1]) $-verteilt ist.
+\end{remark}
+
+\begin{proof}[Nachrechnen]
+	Betrachte Test, wo $ \xcancel{H_0} $ falls $ S\le c $: 
+	
+	Nach der Durchführung des Experiments ist der p-Wert gegeben durch $ \Prob(S\le s \; |H_0)=F(s) $. 
+	
+	Vor der Durchführung des Experiments ist der p-Wert gegeben durch $ F(S) $.
+	
+	Betrachte die Verteilungsfunktion der Zufallsvariable $ Z=F(S) $:
+	\[
+	\begin{aligned}
+		\Prob(Z\le x) & = \Prob(F(S)\le x) \\
+		& = \Prob(S\le F^{-1}(x)) \\
+		& = F(F^{-1}(x))=x
+	\end{aligned}
+	\]
+	für $ 0\le x \le 1 $. 
+	
+	Für $ x<0 $ ist $ \Prob(Z\le x)=0 $ da $ Z\in[0,1] $,
+	
+	für $ x>1 $ ist $ \Prob(Z\le x)=1 $ da $ Z\in[0,1] $.
+	
+	Das heißt die Verteilungsfunktion von $ Z=F(S) $, also die Verteilungsfunktion des p-Werts vor der Durchführung, ist gerade die Verteilungsfunktion der $ U([0,1]) $; $ Z\sim U([0,1]) $.
+\end{proof}
+
+\begin{example}(Der z-Test)
+	(Testen des Mittelwerts im Gauß'schem Modell mit bekannter Varianz). 
+	
+	Betrachte $ X_1,\ldots,X_n $ i.i.d. $ N(\mu,\sigma^2), \; \mu\in\R, \;\sigma^2>0 $ bekannt. 
+	
+	$ H_0\colon \mu=\mu_0 $. 
+	
+	Die sogenannte z-Statistik ist gegeben durch 
+	\[
+	Z = \frac{1}{\sqrt{n}}\sum_{i=1}^{n}\frac{X_i-\mu_0}{\sigma} = \sqrt{n}\frac{\bar{X}_n-\mu_0}{\sigma}.
+	\]
+	
+	Beachte: Unter $ H_0 $ ist $ Z\sim N(0,1) $. 
+	
+	Zweiseitige Alternative: 
+	
+	$ H_1\colon \mu\ne\mu_0 $.
+	
+	$ \xcancel{H_0} $ falls $ |Z| $ groß ist. Für Signifikanzniveau $ \alpha $ wählt man $ c=\Phi^{-1}\left(1-\frac{\alpha}{2}\right) $ und verwirft, wenn $ |Z|\ge c $: 
+	\[
+	\begin{aligned}
+		\Prob(\xcancel{H_0}|H_0) & = \Prob(|Z|\ge c\;|H_0) \\
+		& = \Prob(|N(0,1)|\ge c) \\
+		& = \Prob(N(0,1)\le -c)+1-\Prob(N(0,1)\le c) \\
+		& = \Phi(-c)+1-\Phi(c) \\
+		& = 2\left(1-\Phi\left(\Phi^{-1}\left(1-\frac{\alpha}{2}\right)\right)\right) \\
+		& = 2\left(1-1+\frac{\alpha}{2}\right) = \alpha. \checkmark
+	\end{aligned}
+	\]
+	
+		\begin{center}
+		\begin{tikzpicture}
+			\begin{axis}[no markers, domain=0:10, samples=100,
+				axis lines*=left,height=4cm, width=7cm,
+				xtick={-2, 0, 2}, xticklabels={$-c$, 0, $c$}, ytick=\empty,
+				enlargelimits=false, clip=false, axis on top,
+				grid = major]
+				\addplot [fill=none, draw=cyan, domain=-3:3] {gauss(0,1)} \closedcycle;
+				\addplot [fill=orange!20, draw=none, domain=-3:-2] {gauss(0,1)} \closedcycle;
+				\addplot [fill=orange!20, draw=none, domain=2:3] {gauss(0,1)} \closedcycle;
+				\node[coordinate, pin={$\frac{\alpha}{2}$}] at (axis cs: 2.5, 0.01){};
+				\node[coordinate, pin={$\frac{\alpha}{2}$}] at (axis cs: -2.5, 0.01){};
+			\end{axis}
+		\end{tikzpicture}
+	\end{center}
+	
+	Linksseitige Alternative:
+	
+	$ H_1\colon \mu<\mu_0 $.
+	
+	$ \xcancel{H_0} $ falls $ Z $ klein ist. Für Signifikanzniveau $ \alpha $ wählt man $ c=\Phi^{-1}\left(\alpha\right) $ und verwirft, wenn $ Z \le c $.	
+	
+	\begin{center}
+		\begin{tikzpicture}
+			\begin{axis}[no markers, domain=0:10, samples=100,
+				axis lines*=left,height=4cm, width=7cm,
+				xtick={-1.5, 0}, xticklabels={$c$, 0}, ytick=\empty,
+				enlargelimits=false, clip=false, axis on top,
+				grid = major]
+				\addplot [fill=none, draw=cyan, domain=-3:3] {gauss(0,1)} \closedcycle;
+				\addplot [fill=orange!20, draw=none, domain=-3:-1.5] {gauss(0,1)} \closedcycle;
+				\node[coordinate, pin={$\alpha$}] at (axis cs: -2, 0.01){};
+			\end{axis}
+		\end{tikzpicture}
+	\end{center}
+	
+	Rechtsseitige Alternative:
+	
+	$ H_1\colon \mu>\mu_0 $.
+	
+	$ \xcancel{H_0} $ falls $ Z $ klein ist. Für Signifikanzniveau $ \alpha $ wählt man $ c=\Phi^{-1}\left(1-\alpha\right) $ und verwirft, wenn $ Z \ge c $.	
+	
+	\begin{center}
+		\begin{tikzpicture}
+			\begin{axis}[no markers, domain=0:10, samples=100,
+				axis lines*=left,height=4cm, width=7cm,
+				xtick={0,1.5}, xticklabels={0, $c$}, ytick=\empty,
+				enlargelimits=false, clip=false, axis on top,
+				grid = major]
+				\addplot [fill=none, draw=cyan, domain=-3:3] {gauss(0,1)} \closedcycle;
+				\addplot [fill=orange!20, draw=none, domain=1.5:3] {gauss(0,1)} \closedcycle;
+				\node[coordinate, pin={$\alpha$}] at (axis cs: 2, 0.01){};
+			\end{axis}
+		\end{tikzpicture}
+	\end{center}
+\end{example}
+
+
+\begin{example}(Der t-Test)
+	(Testen des Mittelwerts im Gauß'schen Modell mit unbekannter Varianz).
+	
+		Betrachte $ X_1,\ldots,X_n $ i.i.d. $ N(\mu,\sigma^2), \; \mu\in\R, \;\sigma^2>0 $. 
+	
+	$ H_0\colon \mu=\mu_0 $. 
+	
+	Setze \[ T = \frac{1}{\sqrt{n}}\sum_{i=1}^{n}\frac{X_i-\mu_0}{\hat{\sigma}} = \sqrt{n}\frac{\bar{X}-\mu_0}{\hat{\sigma}} \] für $ \hat{\sigma}^2 = \frac{1}{n-1}\sum_{i=1}^{n}(X_i-\bar{X})^2 $.
+	
+	Beachte: Unter $ H_0 $ ist $ T\sim t_{n-1} $ (siehe Kapitel 1).
+	
+	Zweiseitige Alternative:
+	
+	$ H_1\colon \mu\ne\mu_0 $.
+	
+	Für ein Signifikanzniveau $ \alpha $ wählt man $ c=F_{n-1}^{-1}\left(1-\frac{\alpha}{2}\right) $ und verwirft, wenn $ |T|\ge c $. 
+	
+	Linksseitige Alternative: 
+	
+	$ H_1\colon \mu < \mu_0 $. 
+	
+	Für Signifikanzniveau $ \alpha $ wählt man $ c=F_{n-1}^{-1}(\alpha) $ und verwirft wenn $ T\le c $. 
+	
+	Rechtsseitige Alternative:
+	
+	Für ein Signifikanzniveau $ \alpha $ wählt man $ c=F_{n-1}^{-1}\left(1-\alpha\right) $ und verwirft, wenn $ T\ge c $.
+	
+	
+\end{example}
+
+
+\begin{example}[2-Stichproben t-Test]
+	
+	Betrachte 2 Stichproben: 
+	\begin{itemize}
+		\item $ X_1,\ldots,X_n \;$ i.i.d. $ N\left(\mu_x, \sigma_x^2\right) $ 
+		\item $ Y_1,\ldots,Y_m \;$ i.i.d. $ N\left(\mu_y, \sigma_y^2\right) $ .
+	\end{itemize}
+
+	Beide Stichproben sind voneinander unabhängig.
+	
+	$ H_0 \colon \mu_x = \mu_y = \mu $ und $ \sigma_x^2=\sigma_y^2=\sigma^2 $.
+	
+	Unter $ H_0 $ gilt: 
+	\[
+	\bar{X}_n=\frac{1}{n}\sum_{i=1}^{n}X_i \sim N\left(\mu,\frac{\sigma^2}{n}\right),
+	\]
+	\[
+	\bar{Y}_m=\frac{1}{m}\sum_{i=1}^{m}Y_i \sim N\left(\mu,\frac{\sigma^2}{m}\right),
+	\]
+		\[
+	\bar{X}_n - \bar{Y}_m \sim N\left(0, \sigma^2\left(\frac{1}{n}+\frac{1}{m}\right)\right). 
+	\]
+	$ \bar{X}_n $ und $ \bar{Y}_m $ sind unabhängig voneinander.
+	
+	Schätze $ \sigma^2 $ durch 
+	\[
+	\hat{\sigma}^2 = \frac{1}{m+n-1}\left(\sum_{i=1}^{n}(X_i-\hat{\mu})^2+\sum_{i=1}^{m}(Y_i-\hat{\mu})^2\right)
+	\]
+	für $ \hat{\mu} = \frac{1}{m+n} \left(\sum_{i=1}^{n}X_i+\sum_{i=1}^{m}Y_i\right) $.
+	
+	Betrachte die Test-Statistik
+	\[
+	T=\frac{\bar{X}_n-\bar{Y}_m}{\hat{\sigma}\sqrt{\frac{1}{m}+\frac{1}{n}}}.
+	\]
+	
+	Beachte: 
+	\[
+	T = \frac{\bar{X_n}-\bar{Y}_m}{\underbrace{\sigma\sqrt{\frac{1}{m}+\frac{1}{n}}}_{\sim N(0,1)}} \cdot \overbrace{\frac{\sigma}{\hat{\sigma}}}^{\frac{1}{\frac{\chi^2_{m+n-1}}{m+n-1}}} \sim t_{m+n-1}.
+	\]
+	$ \hat{\sigma}^2 \sim \frac{\sigma^2}{m+n-1} \chi^2_{m+n-1} $, 
+	
+	$ \frac{\hat{\sigma}^2}{\sigma^2} \sim \frac{1}{m+n-1} \chi^2_{m+n-1} $. \\
+	
+	Linksseitige Alternative: $ H_1\colon \mu_x < \mu_y \quad (\sigma_x^2, \sigma_y^2 \; \text{egal}) $. 
+	
+	$ \xcancel{H_0} $ falls $ T \le c $ für $ c = F_{m+n-1}^{-1}(\alpha) $. \\
+	
+
+	Rechtsseitge Alternative: $ H_1\colon \mu_x > \mu_y \quad (\sigma_x^2, \sigma_y^2 \; \text{egal}) $. 
+	
+	$ \xcancel{H_0} $ falls $ T \ge c $ für $ c = F_{m+n-1}^{-1}(1-\alpha) $. \\
+	
+
+	Zweiseitige Alternative: $ H_1\colon \mu_x \ne \mu_y \quad (\sigma_x^2, \sigma_y^2 \; \text{egal}) $. 
+	
+	$ \xcancel{H_0} $ falls $ |T| \ge c $ für $ c = F_{m+n-1}^{-1}\left(1-\frac{\alpha}{2}\right) $.
+\end{example}
+
+\begin{example}[Der F-Test]
+	(Testen auf Gleichheit der Varianzen zweier normalverteilter Populationen).
+	
+	Betrachte zwei Stichproben:
+		\begin{itemize}
+		\item $ X_1,\ldots,X_n \;$ i.i.d. $ N\left(\mu_x, \sigma_x^2\right) $ 
+		\item $ Y_1,\ldots,Y_m \;$ i.i.d. $ N\left(\mu_y, \sigma_y^2\right) $ .
+	\end{itemize}
+	Beide Stichproben sind unabhängig voneinander.
+	
+	$ H_0 \colon \sigma_x^2 = \sigma_y^2 = \sigma^2 \quad (\mu_x,\mu_y \; \text{egal}) $.
+	
+	Unter $ H_0 $ ist 
+	\[ 
+	\hat{\sigma}_x^2 = \frac{1}{n-1}\sum_{i=1}^{n}(X_i-\bar{X}_n)^2 \sim \frac{\sigma^2}{n-1}\chi^2_{n-1} ,
+	\]
+		\[ 
+	\hat{\sigma}_y^2 = \frac{1}{m-1}\sum_{i=1}^{m}(Y_i-\bar{Y}_m)^2 \sim \frac{\sigma^2}{m-1}\chi^2_{m-1} ,
+	\] wobei $ \hat{\sigma}_x^2 $ und $ \hat{\sigma}_y^2 $ unabhängig voneinander sind.
+	
+	Betrachte die Teststatistik 
+	\[
+	\begin{aligned}
+		F = \frac{\hat{\sigma}_x^2}{\hat{\sigma}_y^2} & \sim \frac{\frac{\sigma^2}{n-1}\chi^2_{n-1}}{\frac{\sigma^2}{m-1}\chi^2_{m-1}} \\
+		& \sim \frac{\frac{\chi^2_{n-1}}{n-1}}{\frac{\chi^2_{m-1}}{m-1}} \\
+		& \sim F_{n-1,m-1}, 
+	\end{aligned}
+	\] wobei $ F_{n-1,m-1} $ die F-Verteilung mit $ n-1 $ und $ m-1 $ Freiheitsgraden ist. \\
+	
+	Linksseitige Alternative: $ \sigma_x^2 < \sigma_y^2 $. 
+	
+	$ \xcancel{H_0} $ falls $ F \le c $ für $ c = F_{n-1,m-1}^{-1} \left(\alpha\right) $. \\
+	
+	Rechtsseitige Alternative: $ \sigma_x^2 > \sigma_y^2 $. 
+	
+	$ \xcancel{H_0} $ falls $ F \ge c $ für $ c = F_{n-1,m-1}^{-1} \left(1-\alpha\right) $. \\
+	
+	Zweiseitige Alternative: $ \sigma_x^2 \ne \sigma_y^2 $. 
+	
+	$ \xcancel{H_0} $ falls $ F \le c_1 $ oder $ F \ge c_2 $ für $ c_1 = F_{n-1,m-1}^{-1} \left(\frac{\alpha}{2}\right) $ und $ c_2 = F_{n-1,m-1}^{-1} \left(1-\frac{\alpha}{2}\right) $. \\
+	
+	\begin{center}
+		\begin{tikzpicture}
+			[
+			declare function={
+				gamma(\z)=2.506628274631*sqrt(1/\z)+ 0.20888568*(1/\z)^(1.5)+ 0.00870357*(1/\z)^(2.5)- (174.2106599*(1/\z)^(3.5))/25920- (715.6423511*(1/\z)^(4.5))/1244160)*exp((-ln(1/\z)-1)*\z;
+			},
+			declare function={
+				beta(\x,\y)=gamma(\x)*gamma(\y)/gamma(\x+\y);
+			},
+			declare function={
+				fdst(\x,\a,\b) = 1 / beta(\a/2, \b/2) * (\a/\b)^(\a/2) * \x^(\a/2-1) * (1 + \a/\b*\x)^(-(\a + \b)/2);
+			}
+			]
+			\begin{axis}[no markers, domain=0:10, samples=100,
+				axis lines*=left,height=4cm, width=7cm,
+				xtick={0, 0.4, 2.5}, xticklabels={0,$ c_1$, $c_2$}, ytick=\empty,
+				enlargelimits=false, clip=false, axis on top,
+				grid = major]
+				\addplot [fill=none, draw=cyan, domain=0:5] {fdst(x,10,13)} \closedcycle;
+				\addplot [fill=orange!20, draw=none, domain=0:0.4] {fdst(x,10,13)} \closedcycle;
+				\addplot [fill=orange!20, draw=none, domain=2.5:5] {fdst(x,10,13)} \closedcycle;
+				\node[coordinate, pin={$\frac{\alpha}{2}$}] at (axis cs: 2.7, 0.015){};
+				\node[coordinate, pin={$\frac{\alpha}{2}$}] at (axis cs: 0.2, 0.05){};
+			\end{axis}
+		\end{tikzpicture}
+	\end{center}
+	
+\end{example}
+
+%----------------------------------------------------------------------------
+
+\section{Likelihood-Ratio-Tests und das Neyman-Pearson Lemma}
+
+Betrachte ein parametrisches Modell $ X_1,\ldots, X_n $ i.i.d. mit Dichte (Wahrscheinlichkeitsfunktion) $ f(x|\theta), \quad \theta \in \Theta $. 
+
+Testproblem: 
+
+$ H_0 \colon \theta\in\Theta_0 $ für $ \Theta_0\subseteq \Theta $,
+
+$ H_1 \colon \theta\in\Theta\setminus\Theta_0 $. \\
+
+Bisher hatten wir z.B.:
+\begin{itemize}
+	\item $ \Theta=\R, \quad \Theta_0 = \lbrace\mu_0\rbrace \quad $ (z-Test), 
+	
+	\item $ \Theta=\R\times(0,\infty), \quad \Theta_0 = \lbrace\mu_0\rbrace\times(0,\infty) \quad $ (t-Test), 
+	
+	\item $ \Theta=(0,\infty)\times(0,\infty), \quad \Theta_0 = \lbrace(\sigma^2,\sigma^2)\colon \sigma^2>0\rbrace \quad $ (F-Test).
+\end{itemize} 
+
+Die dazugehörige Likelihood-Ratio-Statistik (L-R-Statistik) \index{Likelihood-Ratio} ist definiert als 
+\[
+\Lambda = \frac{L(\hat{\theta}_0)}{L(\hat{\theta})}, 
+\] wobei $ \hat{\theta}_0 $ der ML-Schätzer für $ \theta $ unter $ H_0 $ ist, also $ \hat{\theta}_0 = \underset{\theta\in\Theta_0}{\argmax} \; L(\theta) $, 
+
+und wobei $ \hat{\theta} $ der (unrestringierte) ML-Schätzer für $ \theta $ ist, also $ \hat{\theta} = \underset{\theta\in\Theta}{\argmax} \; L(\theta) $.
+
+\begin{remark}
+Beachte: $ 0\le\Lambda\le 1 $, letzte Ungleichung gilt, da $ \Theta_0\subseteq\Theta $.
+\end{remark}
+
+Der L-R-Test verwirft $ H_0 $, wenn $ \Lambda\le c $ für einen geeigneten kritischen Wert $ c<1 $.
+
+\begin{remark}
+	Bemerkung: $ \Lambda $ kann interpretiert werden als 
+	\[
+	\frac{\text{Beste Beschreibung der Beobachtungen durch ein }\theta\in\Theta_0}{\text{Beste Beschreibung der Beobachtungen durch ein }\theta\in\Theta}.
+	\]
+\end{remark}
+
+\begin{remark}
+	Bemerkung: Einige der bisher vorgestellten Tests sind tatsächlich L-R-Tests.
+\end{remark}
+
+\begin{example}[z-Test mit zweiseitiger Alternative]
+	$ X_1,\ldots,X_n $ i.i.d. $ N(\mu,\sigma^2), \; \mu\in\R, \; \sigma^2 $ bekannt. 
+	
+	$ H_0\colon\mu=\mu_0 \equiv \mu\in\lbrace\mu_0\rbrace = \Theta_0 $, 
+	
+	
+	$ H_1\colon\mu\ne\mu_0 \equiv \mu\in\R\setminus\lbrace\mu_0\rbrace = \Theta\setminus\Theta_0 \in \R $. \\
+	
+	z-Test: $ \xcancel{H_0} $ falls $ \big|\frac{\sqrt{n}}{\sigma}(\bar{X}_n-\mu_0)\big| > \Phi^{-1}\left(1-\frac{\alpha}{2}\right) $.
+	
+	Likelihood: 
+	\[
+	\begin{aligned}
+		L(\mu) & = \prod_{i=1}^{n}\Phi_{\mu,\sigma^2}(X_i) \\
+		& = \prod_{i=1}^{n}(2\pi\sigma^2)^{-\frac{1}{2}} e^{-\frac{1}{2\sigma^2}(X_i-\mu)^2} \\
+		& = (2\pi\sigma^2)^{-\frac{n}{2}} e^{-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(X_i-\mu)^2} .
+	\end{aligned}
+	\]
+	
+	$ \hat{\mu}_0 = \underset{\mu\in\lbrace\mu_0\rbrace}{\argmax} \; L(\mu) = \mu_0 $. 
+	
+	$ \hat{\mu} = \underset{\mu\in\R}{\argmax} \; L(\mu) = \bar{X}_n $. 
+	
+	\[
+	\begin{aligned}
+		\Lambda & = \frac{L(\mu_0)}{L(\bar{X}_n)} \\
+		& = \frac{(2\pi\sigma^2)^{-\frac{n}{2}} e^{-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(X_i-\mu_0)^2}}{(2\pi\sigma^2)^{-\frac{n}{2}} e^{-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(X_i-\bar{X}_n)^2}} \\
+		& = \exp\left(-\frac{1}{2\sigma^2}\underbrace{\left(\sum_{i=1}^{n}(X_i-\mu_0)^2-\sum_{i=1}^{n}(X_i-\bar{X}_n)^2\right)}_{(\hexstar)}\right).
+	\end{aligned}
+	\]
+	
+	L-R-Test verwirft $ H_0 $, wenn $ \Lambda $ klein ist, also wenn $ (\hexstar) $ groß ist. 
+	\[
+	\begin{aligned}
+		(\hexstar) & = \sum_{i=1}^{n}\left(X_i^2-2\mu_0X_i+\mu_0^2-Xi^2+2\bar{X}_n X_i -\bar{X}_n^2\right) \\
+		& = -2\mu_0\bar{X}_n\cdot n + \mu_0^2\cdot n + 2\bar{X}_n\bar{X}_n\cdot n -\bar{X}_n^2\cdot n \\
+		& = n\left(\mu_0^2-2\mu_0\bar{X}_n+\bar{X}_n^2\right) \\
+		& = n\left(\bar{X}_n-\mu_0\right)^2.
+	\end{aligned}
+	\]
+	
+	Also verwirft der L-R-Test, wenn $ \left(\bar{X}_n-\mu_0\right)^2 $ bzw. $ |\bar{X}_n-\mu_0| $ groß ist. Das ist dieselbe Entscheidungsregel wie beim z-Test. 
+	
+	Also: L-R-Test ist hier der z-Test (bei zweiseitiger Alternative).
+	
+\end{example}
+
+\begin{remark}
+	Bemerkung: Auch der t-Test bei zweiseitiger Alternative ist ein L-R-Test.
+\end{remark}
+
+\begin{remark}
+	Bemerkung: Bei einseitigen Alternativen stimmen L-R-Test und z- (bzw. t-)Test ebenfalls überein. 
+\end{remark}
+
+\begin{example}
+	$ X_1,\ldots,X_n $ i.i.d. $ N(\mu,\sigma^2), \quad \sigma^2 $ bekannt. 
+	
+	\begin{center}
+	\begin{tabular}{lcl}
+		$ H_0 \colon \mu=\mu_0 $ & & $ \mu\in\{\mu_0\}=\Theta_0 $ \\
+			& $\equiv$ & \\
+		$ H_1 \colon \mu < \mu_0 $ & & $ \mu\in\Theta\setminus\Theta_0 $ für $ \Theta=\left(-\infty,\mu_0\right] $
+	\end{tabular}
+	\end{center}
+
+	Hier ist \[ \hat{\mu} = \underset{\mu\le\mu_0}{\argmax}\; L(\mu) = \min \; \{\bar{X}_n,\mu_0\}. \]
+	
+	Die L-R-Statistik ist hier gegeben durch 
+	\[
+	\Lambda = \frac{L(\mu_0)}{L(\hat{\mu})}.
+	\]
+	
+	Für $ c<1 $ verwirft der L-R-Test, wenn 
+	\[
+	\begin{aligned}
+	&& \Lambda & \le c & (<1) &	\\
+	& \Leftrightarrow & \frac{L(\mu_0)}{L(\min \; \{\bar{X}_n,\mu_0\})} & \le c & (<1) &\\
+	& & & & & \ldots \text{ kann nur auftreten, wenn }\bar{X}_n < \mu_0! \\
+	& \Leftrightarrow & \frac{L(\mu_0)}{L(\bar{X}_n)} & \le c &  &\text{und } \bar{X}_n < \mu_0 \\
+	& \Leftrightarrow & (\bar{X}_n-\mu_0)^2 & & & \text{groß und } \bar{X}_n < \mu_0 \\
+	& \Leftrightarrow & \bar{X}_n -\mu_0  & & & \text{klein (und negativ)} \\
+	& \Leftrightarrow & \underbrace{\frac{\sqrt{n}}{\sigma}(\bar{X}_n-\mu_0)}_{\text{z-Statistik}} & & & \text{klein ( und negativ)} \\
+	& \Leftrightarrow & \text{z-Test verwirft } H_0 .
+	\end{aligned}
+	\] 
+\end{example}
+
+Im folgenden \textbf{Neyman-Pearson Lemma}\index{Neyman-Pearson Lemma} betrachtet man sogenannte \textbf{simple Hypothesen}, unter denen die Verteilung der Daten vollständig spezifiziert ist:
+
+$ X_1,\ldots,X_n $ i.i.d. mit Dichte $ f_\theta(x) $ (bzw. Wahrscheinlichkeitsfunktion $ p_\theta(x) $), wobei $ \theta\in\Theta=\{0,1\} $. Teste:
+
+	\begin{center}
+	\begin{tabular}{lll}
+		$ H_0\colon\theta=0 $, & & \\
+		& $ \nwarrow $ & \\
+		&& simple Hypothesen \\
+		& $ \swarrow $ & \\
+		$ H_1\colon\theta=1 $.
+	\end{tabular}
+	\end{center}
+
+\begin{satz}[Neyman-Pearson Lemma]
+	Unter allen Tests zwischen zwei simplen Hypothesen mit Signifikanzniveau $ \alpha\in(0,1) $ hat der entsprechende L-R-Test die größtmögliche Power.
+\end{satz}
+
+\begin{remark}
+	Bemerkung:  Im Setting des Satzes ist die L-R-Statistik gegeben durch 
+	\[
+	\Lambda = \frac{L(0)}{\max\;\{L(0),L(1)\}}.
+	\]
+	Für $ c<1 $ ist $ \Lambda\le c \Leftrightarrow \frac{L(0)}{L(1)} \le c $.
+\end{remark}
+
+\begin{proof}
+	Zunächst für $ n=1 $. 
+	
+	Betrachte $ X=X_1 $. 
+	
+	$ L(\theta)=f_\theta(x), \quad \theta\in\{0,1\} $. 
+	
+	Sei $ \alpha\in(0,1) $ und sei $ c<1 $ so, dass der L-R-Test Signifikanzniveau $ \alpha $ hat: \\
+	\[
+	\alpha = \Prob(\Lambda\le c\;|H_0) = \Prob\left(\frac{f_0(x)}{f_1(x)}\le c \;|H_0\right).
+	\]
+	Diesen Test entspricht eine $ 0-1 $-wertige Zufallsvariable $ d_{LR}=d_{LR}(X) \colon $
+	
+	\[
+	d_{LR}(X)=\left\{\begin{array}{ll}
+		0 & \colon \rightsquigarrow H_0, \\
+		1 & \colon \xcancel{H_0},
+	\end{array}\right.
+	\]
+	wobei $ \Prob\left(d_{LR}=1\;|H_0\right)=\alpha $. 
+	
+	Betrachte nun einen anderen Test mit Signifikanzniveau $ \alpha $, sowie die diesem entsprechende $ 0-1 $-wertige Zufallsvariable $ d=d(X) $, wobei $ \Prob\left(d=1\;|H_0\right)=\alpha $. 
+	
+	Zu zeigen: 
+	\[
+	\begin{aligned}
+		\text{Power von }  d & \le \text{Power von } d_{LR} \\
+		\equiv \Prob(d=1\;|H_1) & \le \Prob(d_{LR}=1\;|H_1).
+	\end{aligned}
+	\]
+	
+	Hilfsmittel: 
+	\[
+	\Prob(A) = \Prob(A\cap B) +\Prob(A\cap B^\complement).
+	\]
+	
+	\[
+	\begin{aligned}
+		\Prob(d=1\;|H_1) & = \Prob(d=1,d_{LR}=1\;|H_1) + \Prob(d=1,d_{LR}=0\;|H_1) \\
+		& = \Prob(d_{LR}=1\;|H_1)-\Prob(d=0,d_{LR}=1\;|H_1) + \Prob(d=1,d_{LR}=0\;|H_1) \\
+		& = \Prob(d_{LR}=1\;|H_1) - \int_{\substack{x\colon d(x)=0, \\ d_{LR}(x)=1}} f_1(x) dx + \int_{\substack{x\colon d(x)=1, \\ d_{LR}(x)=0}} f_1(x) dx \\
+		& \le \Prob(d_{LR}=1\;|H_1) - \frac{1}{c}\int_{\substack{x\colon d(x)=0, \\ d_{LR}(x)=1}} f_0(x) dx + \frac{1}{c}\int_{\substack{x\colon d(x)=1, \\ d_{LR}(x)=0}} f_0(x) dx \\
+		& = \Prob(d_{LR}=1\;|H_1) - \frac{1}{c}\left(\Prob(d=0,d_{LR}=1\;|H_0)-\Prob(d=1,d_{LR}=0\;|H_0)\right) \\
+		& = \Prob(d_{LR}=1\;|H_1) - \frac{1}{c}\left(\Prob(d_{LR}=1\;|H_0)-\Prob(d=1,d_{LR}=1\;|H_0)-\Prob(d=1,d_{LR}=0\;|H_0)\right) \\
+		& = \Prob(d_{LR}=1\;|H_1) - \frac{1}{c}\left(\underbrace{\Prob(d_{LR}=1\;|H_0)}_{=\alpha}-\underbrace{\Prob(d=1\;|H_0)}_{=\alpha}\right) \\
+		& = \Prob(d_{LR}=1\;|H_1).
+	\end{aligned}
+	\]
+	
+	Also: $ \Prob(d=1\;|H_1)\le\Prob(d_{LR}=1\;|H_1) \;\checkmark $.
+	
+	Für den Fall $ n\ge 1 $ argumentiert man ganz genauso (siehe Übung).
+\end{proof}
+
+\begin{corollary}
+	Seien $ X_1,\ldots,X_n $ i.i.d. $ N(\mu,\sigma^2), \quad \mu \in \left(-\infty,\mu_0\right], \quad \sigma^2 > 0  $ bekannt.
+	
+	Teste $ H_0\colon \mu=\mu_0 $ gegen $ H_1\colon \mu < \mu_0 $. 
+	
+	Hier hat unter allen Tests mit Signifikanzniveau $ \alpha\in(0,1) $ der z-Test (L-R-Test) die größtmögliche Power (Uniformly most powerful test - UMP).  
+\end{corollary}
+
+\begin{proof}
+	Betrachte den L-R-Test $ d_{LR} $ und einen weiteren Test $ d $ mit $ \Prob(d_{LR}=1\;|H_0)=\Prob(d=1\;|H_0)=\alpha $.
+	
+	Sei $ \mu_1 < \mu_0 $. 
+	
+	Zu zeigen: 
+	\[
+	\Prob(d=1\;|\mu=\mu_1) \le \Prob(d_{LR}=1\|\mu=\mu_1).
+	\]
+	
+	Betrachte dazu ein neues Testproblem:
+	
+	\begin{center}
+		\begin{tabular}{lll}
+			$ \tilde{H}_0\colon\mu=\mu_0 $, & & \\
+			& $ \nwarrow $ & \\
+			&& simple Hypothesen \\
+			& $ \swarrow $ & \\
+			$ \tilde{H}_1\colon\mu=\mu_1 $.
+		\end{tabular}
+	\end{center}
+	
+	Hier gilt:
+	\begin{itemize}
+		\item $ \Prob(d=1\;|\tilde{H}_0) = \Prob(d=1\;|H_0) = \alpha $, 
+		
+		$ \Prob(d_{LR}=1\;|\tilde{H}_0) = \Prob(d_{LR}=1\;|H_0) = \alpha $. 
+		D.h. beim Testen von $ \tilde{H}_0 $ gegen $ \tilde{H}_1 $ haben $ d_{LR} $ und $ d $ beide Signifikanzniveau $ \alpha $. 
+		
+		\item Der L-R-Test zum Testen von $ \tilde{H}_0 $ gegen $ \tilde{H}_1 $, mit Signifikanzniveau $\alpha$, verwirft $ H_0 $, wenn 
+		\[
+		\begin{aligned}
+			& & \tilde{\Lambda} & = \frac{L(\mu_0)}{\max\;\{L(\mu_0),L(\mu_1)\}} & \le \tilde{c} & < 1 \\
+			&  \Leftrightarrow & & \frac{L(\mu_0)}{L(\mu_1)} & \le \tilde{c} \\
+			& \Leftrightarrow & & \frac{(2\pi\sigma^2)^{-\frac{n}{2}}e^{-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(X_i-\mu_0)^2}}{(2\pi\sigma^2)^{-\frac{n}{2}}e^{-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(X_i-\mu_1)^2}} & \le \tilde{c} \\
+			& \Leftrightarrow & & \exp\left(-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(X_i^2-2\mu_0X_i+\mu_0^2-X_i^2+2\mu_1X_i-\mu_1^2)\right) & \le \tilde{c} \\
+			& \Leftrightarrow & & \exp\left(-\frac{1}{2\sigma^2}\underbrace{(-2\mu_0n\bar{X}_n+n\mu_0^2+2\mu_1n\bar{X}_n-n\mu_1^2)}_{(\hexstar)}\right) & \le \tilde{c} \\
+			& \Leftrightarrow & & (\hexstar) \text{ groß} \\
+			& \Leftrightarrow & & n(\mu_0^2-\mu_1^2+2\bar{X}_n(\underbrace{\mu_1-\mu_0}_{<0})) \text{ groß} \\
+			& \Leftrightarrow && \bar{X}_n \text{ klein} \\
+			& \Leftrightarrow && \frac{\sqrt{n}}{\sigma}(\bar{X}_n-\mu_0) \text{ klein} \\
+			& \Leftrightarrow && \text{z-Test (zum Testen von }H_0 \text{ gegen } H_1 \text{) verwirft.} \\
+			& \Leftrightarrow && \text{L-R-Test (zum Testen von }H_0 \text{ gegen } H_1 \text{) verwirft.}\\
+			& \Leftrightarrow & & d_{LR} = 1.
+		\end{aligned}
+		\]
+		
+		Mit N-P-Lemma folgt:
+		\[
+		\begin{aligned}
+			\Prob(d=1\;|\tilde{H}_1) & \le \Prob(d_{LR}=1\;|\tilde{H}_1) \\
+			\equiv \Prob(d=1\;|\mu=\mu_1) & \le \Prob(d_{LR}=1\;|\mu=\mu_1).
+		\end{aligned}
+		\]
+	\end{itemize}
+
+\end{proof}
+
+\begin{remark}
+	Bemerkung: Die obige Aussage gilt auch für rechtsseitige Alternativen $ (\mu>\mu_0) $, sowie im Fall unbekannter Varianz, d.h. für den t-Test.
+\end{remark}
+
+\begin{remark}
+	Bemerkung: Seien $ X_1,\ldots,X_n $ i.i.d. $ N(\mu,\sigma^2), \; \mu\in\R , \; \sigma^2>0 $ bekannt. Teste $ H_0\colon \mu=\mu_0 $ gegen $ H_1\colon \mu\ne\mu_0 $.
+	
+	Hierfür existiert kein UMP-Test (Siehe hierzu auch R-Code vom 17.06.21).
+\end{remark}
+
+\begin{proof}[Beweisidee]
+	Fixiere $ \alpha\in(0,1) $. Angenommen es gibt einen UMP-Test. Sei $ d_{\hexstar} $ die diesem entsprechende $ 0-1 $-wertige Zufallsvariable.
+	
+	\begin{itemize}
+		\item Für Werte $ \mu_1<\mu_0 $ vergleicht man $ d_{\hexstar} $ mit dem L-R-Test $ d_{LR^-} $ zum Testen von $ \tilde{H}_0\colon \mu=\mu_0 $ gegen $ \tilde{H}_1\colon \mu=\mu_1 \;(<\mu_0) $. 
+		
+		Wegen dem Neyman-Pearson-Lemma ist 
+		\[
+		\Prob\left(d_{LR^-}=1\; |\mu=\mu_1\right) \ge \Prob\left(d_{\hexstar}=1\; |\mu=\mu_1\right).
+		\]
+		
+		Weil $ d_{\hexstar} $ UMP ist, gilt auch 
+		\[
+		\Prob\left(d_{LR^-}=1\; |\mu=\mu_1\right) \le \Prob\left(d_{\hexstar}=1\; |\mu=\mu_1\right).
+		\]
+		
+		Die Power von $ d_{\hexstar} $ und von $ d_{LR^-} $ ist gleich. 
+		
+		$ \underset{\text{informell}}{\Rightarrow} $ Die Tests $ d_{\hexstar} $ und $ d_{LR^-} $ stimmen überein.
+		
+		Also: 
+		\[
+		\begin{aligned}
+			d_{\hexstar} & = \left\{\begin{array}{ll}
+				1 & \colon d_{LR^-}=1, \\
+				0 & \colon d_{LR^-}=0,
+			\end{array}\right. \\
+			& = \left\{\begin{array}{ll}
+				1 & \colon \frac{\sqrt{n}}{\sigma}(\bar{X}_n-\mu_0)\le\Phi^{-1}(\alpha) \\
+				0 & \colon \text{sonst}.
+			\end{array}\right.
+		\end{aligned}
+		\]
+		
+		\item Für $ \mu_1>\mu_0 $ vergleicht man $ d_{\hexstar} $ mit dem L-R-Test $ d_{LR^+} $ zum Testen von $ \tilde{H}_0\colon \mu=\mu_0 $ gegen $ \tilde{H}_1\colon \mu=\mu_1 \; (>\mu_0) $. 
+		
+		Wie zuvor sieht man, dass $ d_{\hexstar} $ und $ d_{LR^+} $ übereinstimmen. 
+			Also: 
+		\[
+			d_{\hexstar} = \left\{\begin{array}{ll}
+				1 & \colon \frac{\sqrt{n}}{\sigma}(\bar{X}_n-\mu_0)\ge\Phi^{-1}(1-\alpha) \\
+				0 & \colon \text{sonst}.
+			\end{array}\right.
+		\]
+		
+		Die beiden Formeln für $ d_{\hexstar} $ widersprechen einander. 
+		
+		Damit kann $ d_{\hexstar} $ nicht einem UMP-Test entsprechen.
+	\end{itemize}
+\end{proof}
+
+\begin{remark}
+	Bemerkung: Das eben beobachtete Phänomen tritt auch im Fall unbekannter Varianz auf. 
+	
+	Darüber hinaus ist in vielen der hier beobachteten Modellen $ (B(p), F_{m-1,n-1}, \text{etc.}) $ bei einseitigen Alternativen der entsprechende L-R-Test UMP, und für zweiseitige Alternativen existiert kein UMP.
+\end{remark}
+
+
+\section{L-R-Tests in großen Stichproben}
+
+$ X_1,\ldots,X_n $ i.i.d. mit Dichte $ f(x|\theta) $ (bzw. Wahrscheinlichkeitsfunktion $ p(x|\theta) $), $ \theta\in\Theta\subseteq\R^p $. 
+
+Teste: 
+	\[\begin{aligned}
+	H_0 &\colon \theta\in\Theta_0 \quad (\Theta_0\subseteq\Theta) \\
+	H_1 &\colon \theta\in\Theta\setminus\Theta_0.
+	\end{aligned}
+	\]
+	
+\begin{satz}[Wilks' Theorem]\index{Wilks' Theorem}
+	Unter geeigneten Voraussetzungen gilt unter $ H_0 $:
+	\[
+	-2\log\Lambda \xrightarrow{w} \chi^2_{k-k_0},
+	\]
+	wobei $ k $ (bzw. $ k_0 $) die Anzahl der freien Parameter in $ \Theta $ (bzw. $ \Theta_0 $) bezeichnet. Oft $ k = \dim \Theta $, $ k_0 = \dim \Theta_0 $. 
+	
+	\[
+	\begin{aligned}
+		H_0\colon \mu & = \mu \quad , k_0 = 0 \\ 
+		& \\
+		& > \\
+		H_1\colon \mu & < \mu_0 \quad , k =1 .\\
+		& \ne
+	\end{aligned}
+	\]
+\end{satz}
+Der Beweis beruht auf dem zentralen Grenzwertsatz und der $ \delta $-Methode (VO Mathematische Statistik).
+
+\chapter{Zufallsvektoren und Zufallsmatrizen}
+
+\begin{book}
+	Siehe zu diesem Kapitel S. 564-574. in \textit{Rice, J. A. (2007). Mathematical statistics and data analysis. Belmont, CA: Thomson/Brooks/Cole.} 
+\end{book}
+
+
+
+
+\begin{remark}
+	Wissen: Für $ X_1, \ldots ,X_n $ i.i.d. $ N(\mu,\sigma^{2}), \; \mu\in\mathbb{R}, \; \sigma^2 > 0 $, ist 
+	\[ \bar{X}_n = \frac{1}{n} \sum_{i=1}^{n} X_i \sim N\left(\mu, \frac{\sigma^2}{n} \right),
+	\] 
+	\[ \hat{\sigma}_n^2 = \frac{1}{n-1} \sum_{i=1}^{n} ( X_i - \bar{X}_n)^2 \sim \frac{\sigma^2}{n-1} \chi_{n-1}^2 
+	\]  
+	und weiters sind $ \bar{X}_n $  und $ \hat{\sigma}^2_n $ unabhängig. Damit ist insbesondere 
+	\[ \frac{\sqrt{n}}{\hat{\sigma}_n}(\bar{X}_n-\mu) \sim t_{n-1}.
+	\]
+	
+\end{remark}
+ 
+ 
+ 
+
+
+\section{Erwartungswerte und Varianz/Kovarianz-Matrizen}
+
+
+\begin{definition}[Erwartungswert]
+	\index{Erwartungswert}
+	Für zufällige Vektoren bzw. Matrizen wird der Erwartungswert komponentenweise definiert. Also: \\
+	(i) Ist $ \textbf{X}= \left(X_1, \ldots ,X_n\right)^\prime $  ein Zufallsvektor, dann ist 
+\[ \mathbb{E}(\textbf{X}) = \begin{pmatrix} \mathbb{E}(X_1)\\
+		\mathbb{E}(X_2)\\
+		\vdots\\
+		\mathbb{E}(X_n)\\
+	\end{pmatrix}.
+\]
+	(ii) Ist $ \textbf{M}=(M_{ij})_{i=1,\, j=1}^{n \;\; m} $ eine zufällige Matrix, dann ist 
+	
+\[ 
+\mathbb{E}(\textbf{M})= \mathbb{E} \left((M_{ij})\right)_{i=1,\, j=1}^{n \;\; m}	
+\]
+\end{definition}
+
+\begin{remark}
+	Bemerkung: (i) ist ein Spezialfall von (ii), da man den $n$-Vektor
+$\textbf{X}$ auch als $n\times1$ Matrix betrachten kann.
+\end{remark}
+
+Für Zufallsvariable $Z$ ist der Erwartungswert linear für $a,b\in\R$,
+\[
+\mathbb{E}(aZ+b)=a\mathbb{E}(Z)+b.
+\]
+
+\begin{theorem}[Linearität des Erwartungswertes]
+	\label{th:linearitäterwartungswert}
+	\index{Erwartungswert!Linearität}	
+(i) Sei $\textbf{X}=(X_{1},\ldots,X_{n})^{\prime}$ ein Zufallsvektor, $\textbf{A}$
+eine $m\times n$-Matrix und $\textbf{b}$ ein $m$-dimensionaler Vektor, dann
+ist 
+\[
+\E(\textbf{A}\textbf{X}+\textbf{b})=\textbf{A}\E(\textbf{X})+\textbf{b}.
+\]
+
+(ii) Sei $\textbf{M}$ eine zufällige $(n\times m)$ Matrix,
+$\textbf{A}$ eine $k\times n$ Matrix und $\textbf{B}$ eine $k\times m$ Matrix, dann
+ist 
+\[
+\E(\textbf{A}\textbf{M}+\textbf{B})=\textbf{A}\E(\textbf{M})+\textbf{B}.
+\]
+
+Ist $\textbf{C}$ eine $m\times k$ Matrix und $\textbf{D}$ eine $n\times k$ Matrix,
+dann ist 
+\[
+\E(\textbf{M}\textbf{C}+\textbf{D})=\E(\textbf{M})\textbf{C}+\textbf{D}.
+\]
+
+\end{theorem}
+
+\begin{proof}
+	
+
+Es genügt, (ii) zu zeigen, da (i) ein Spezialfall von (ii) ist. 
+
+Zeige: $\mathbb{E}(\textbf{A}\textbf{M}+\textbf{B})=\textbf{A}\mathbb{E}(\textbf{M})+\textbf{B}.$
+
+Vergleiche Eintrag in Zeile $i$ und Spalte $j$ links und rechts.
+\begin{align*}
+	\left(\mathbb{E}(AM+B)\right)_{ij} & =\mathbb{E}\left((AM+B)_{ij}\right)\\
+	& =\mathbb{E}\left((AM)_{ij}+B{}_{ij}\right)\\
+	& =\mathbb{E}\left(\sum_{l=1}^{n}A_{il}M{}_{lj}+B{}_{ij}\right)\\
+	& =\sum_{l=1}^{n}A_{il}\mathbb{E}\left(M_{lj}\right)+B_{ij}\\
+	& =\left(A\mathbb{E}(M)\right)_{ij}+B_{ij}\\
+	& =\left(A\mathbb{E}(M)+B\right)_{ij}.
+\end{align*}
+
+Zeige: $\mathbb{E}(\textbf{M}\textbf{C}+\textbf{D})=\mathbb{E}(\textbf{M})\textbf{C}+\textbf{D}$.
+\begin{align*}
+	\left(\mathbb{E}(MC+D)\right)_{ij} & =\mathbb{E}\left((MC+D)_{ij}\right)\\
+	& =\mathbb{E}\left((MC)_{ij}+D{}_{ij}\right)\\
+	& =\mathbb{E}\left(\sum_{l=1}^{m}M_{il}C{}_{lj}+D{}_{ij}\right)\\
+	& =\sum_{l=1}^{m}\mathbb{E}\left(M_{il}\right)C_{lj}+D_{ij}\\
+	& =\left(\mathbb{E}(M)C\right)_{ij}+D_{ij}\\
+	& =\left(\mathbb{E}(M)C+D\right)_{ij}.
+\end{align*}
+
+\end{proof}
+
+
+\begin{example}
+	
+$X_{1},\ldots,X_{n}$ i.i.d. mit $\mathbb{E}\left(X_{1}\right)=\mu.$
+
+Betrachte $\textbf{X}=\begin{pmatrix}
+	X_{1}\\
+	\vdots\\
+	X_{n}
+\end{pmatrix}.$
+
+\[
+\mathbb{E}(\textbf{X})=\begin{pmatrix}\mathbb{E}(X_{1})\\
+	\vdots\\
+	\mathbb{E}(X_{n})
+\end{pmatrix}= \begin{pmatrix}
+	\mu \\ \vdots \\ \mu
+\end{pmatrix} = \mu\boldsymbol{\iota}
+\]
+für $\boldsymbol{\iota}=\begin{pmatrix}1, & \ldots, & 1\end{pmatrix}^{\prime}\in\mathbb{R}^{n}.$
+
+\[
+\mathbb{E}\left(\frac{1}{n}\boldsymbol{\iota}^{\prime}\textbf{X}\right)=\frac{1}{n}\boldsymbol{\iota}^{\prime}\mathbb{E}(\textbf{X})=\frac{1}{n}\boldsymbol{\iota}^{\prime}\mu\boldsymbol{\iota}=\frac{\mu}{n}\underset{=n}{\underbrace{\boldsymbol{\iota}^{\prime}\boldsymbol{\iota}}}=\mu.
+\]
+
+\end{example}
+
+\begin{remark}
+\[  
+\textbf{X} =\boldsymbol{\iota}\tikzmarknode{X}{\bar{X}}+(\tikzmarknode{x}{\textbf{X}}-\boldsymbol{\iota}\bar{X)}
+\]
+\begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
+	nodes={inner sep=1pt, align=center, font=\footnotesize}]
+	\draw[<-] (X.south) -- ++ (0.3,-.5) node[below] {orthogonal!};
+	\draw[<-] (x.south) -- ++ (-0.3,-.5) node[below]{};
+\end{tikzpicture}
+\vspace{6ex}
+\end{remark}
+
+\begin{example}
+
+\[
+\begin{aligned}
+\mathbb{E}(\underset{(n\times1)}{\underbrace{\boldsymbol{\iota}\bar{X}}}) & =\mathbb{E}\left(\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\textbf{X}\right)\\
+ & =\frac{1}{n}\boldsymbol{\iota}\boldsymbol{\iota}^{\prime}\mathbb{E}(\textbf{X})\\
+ & =\frac{1}{n}\boldsymbol{\iota}\boldsymbol{\iota}^{\prime}\mu\boldsymbol{\iota}\\
+ & =\mu\frac{1}{n}\boldsymbol{\iota}\boldsymbol{\iota}^{\prime}\boldsymbol{\iota}\\
+ & =\mu\boldsymbol{\iota}.
+\end{aligned}
+\]
+
+\end{example}
+
+\begin{example}
+	\label{example1.3}
+\[
+\begin{aligned}
+\mathbb{E}(\textbf{X}-\boldsymbol{\iota}\bar{X}) & =\mathbb{E}\left(\textbf{X}-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\textbf{X}\right) \\
+ & =\mathbb{E}\left(\left(\boldsymbol{I}_{n}-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\right)\textbf{X}\right) \\
+ & =\left(\boldsymbol{I}_{n}-\frac{1}{n}\boldsymbol{\iota}\boldsymbol{\iota}^{\prime}\right)\mathbb{E}(\textbf{X}) \\
+ & =\left(\boldsymbol{I}_{n}-\frac{1}{n}\boldsymbol{\iota}\boldsymbol{\iota}^{\prime}\right)\mu\boldsymbol{\iota} \\
+ & =\mu\left(\boldsymbol{\iota}-\frac{1}{n}\boldsymbol{\iota}\boldsymbol{\iota}^{\prime}\boldsymbol{\iota}\right) \\
+ & =\mu(\boldsymbol{\iota}-\boldsymbol{\iota}) \\
+ & =0.
+\end{aligned}
+\]
+
+\end{example}
+
+\begin{definition}[Varianz/Kovarianz-Matrix]
+	\label{varianzkovarianzmatrix}
+	\index{Varianz/Kovarianz-Matrix}
+
+Ist $\textbf{X}_{(n\times1)}$ ein Zufallsvektor, dann ist die so genannte
+Varianz/Kovarianz-Matrix von $\textbf{X}$ die $n\times n$ Matrix
+\[
+\VC(\textbf{X})=\left(\VC(X)_{ij}\right)_{i=1\qquad j=1}^{n\qquad\;\;\; n},
+\]
+wobei 
+\[
+\VC(\textbf{X})=\begin{cases}
+\Var(X_{i}) & :i=j\\
+\Cov(X_{i},X_{j}) & :i\ne j
+\end{cases}
+\]
+mit $1\le i,j\le n.$ 
+
+
+
+\[
+\VC(\textbf{X}) = 
+\begin{blockarray}{(ccccc)}
+		\tm[g]{} & \tm[d]{} &  & & \tm[e]{} \\
+		\tm[a]{} &  &  & \tm[k]{} &  \\
+		&  &  &  &  \\
+		& \tm[l]{} & & \tm[u]{} & \tm[f]{}\\
+		\tm[b]{} &  &  & \tm[c]{} & \tm[h]{} \\
+\end{blockarray}
+\]
+\begin{tikzpicture}[overlay, remember picture,]
+	\node(x)[fit=(a) (b),inner sep=0pt]{};
+	\node(y)[fit=(b) (c),inner sep=0pt]{};
+	\filldraw[opacity= .5,orange](x.north west)--(x.south west)--(y.south east)--(y.north east)--(x.north east)--cycle;
+	
+	\node(z)[fit=(d) (e),inner sep=0pt]{};
+	\node(i)[fit=(e) (f),inner sep=0pt]{};
+	\filldraw[opacity= .5,orange](z.north west)--(z.south west)--(i.south east)--(i.north east)--(z.north east)--cycle;
+	
+	\node(h)[fit=(g) (h),inner sep=0pt]{};
+	\filldraw[opacity=1, gray, ultra thick](h.north west)--(h.south east)--cycle;
+	
+	\node      (Kovarianzen)       [right=of z] {Kovarianzen};
+	\draw[->] (Kovarianzen.west) -- (l);
+	\draw[->] (Kovarianzen.west) -- (k);
+	
+	\node      (Varianzen)       [right=of h] {Varianzen};
+	\draw[->] (Varianzen.west) -- (u);
+	
+\end{tikzpicture}
+
+\end{definition}
+
+\begin{remark}
+	Bemerkung: Weil $ \Cov\left(X_i, X_j) \right)= \Cov\left(X_j,X_i \right) $ ist, ist $ \VC(\textbf{X}) $ immer symmetrisch:  \[ (\VC(\textbf{X}))^\prime = \VC(\textbf{X}) \]
+\end{remark}
+
+\begin{remark}
+	Bemerkung: Ist $\textbf{X}$ ein $1$-dimensionaler Vektor, dann ist $\VC(\textbf{X})$ die $1\times1$ Matrix $\Var(\textbf{X}).$
+\end{remark}
+
+\begin{theorem}
+    \[ \VC(\textbf{X})=\mathbb{E}\left((\textbf{X}-\mathbb{E}(\textbf{X}))(\textbf{X}-\mathbb{E}(\textbf{X}))^\prime \right).\]
+\end{theorem}
+
+\begin{proof}
+    Sei $i,j\in\lbrace1,\ldots,n\rbrace.$
+
+\[
+\begin{aligned}
+\left(\mathbb{E}(X-\mathbb{E}(X))(X-\mathbb{E}(X))^\prime\right)_{ij} & = \left(\mathbb{E}(X-\mathbb{E}(X))_i(X-\mathbb{E}(X))_j\right) \\
+ & = \left(\mathbb{E}(X_i-\mathbb{E}(X_i))(X_j-\mathbb{E}(X_j))\right) \\
+ &= \Cov(X_i,X_j) \\
+ &= (\VC(X))_{ij}. 
+\end{aligned}
+\]
+Beachte: Für $i=j$ ist $\Cov(X_i,X_j)=\Var(X_i). $
+    
+\end{proof}
+
+\begin{theorem}
+    Ist $\textbf{X}$ ein $n$-dimensionaler Zufallsvektor, $\textbf{A}$ eine $m\times n$ Matrix und $\textbf{b}\in\mathbb{R}^m,$ dann ist $\VC(\textbf{A}\textbf{X}+\textbf{b})=\textbf{A}\VC(\textbf{X})\textbf{A}^\prime$
+\end{theorem}
+   
+        
+\begin{proof}
+\begin{align*}
+    	\VC(\textbf{A}\textbf{X}+\textbf{b}) & = \mathbb{E}((\textbf{A}\textbf{X}+\textbf{b}-\mathbb{E}(\textbf{A}\textbf{X}+\textbf{b}))(\textbf{A}\textbf{X}+\textbf{b}-\mathbb{E}(\textbf{A}\textbf{X}+\textbf{b}))^\prime)) \\
+    	& = \mathbb{E}((\textbf{A}\textbf{X}+\textbf{b}-(\textbf{A}\mathbb{E}(\textbf{X})+\textbf{b})(\textbf{A}\textbf{X}+\textbf{b}-(\textbf{A}\mathbb{E}(\textbf{X})+\textbf{b})^\prime)) \\
+    	& = \mathbb{E}((\textbf{A}\textbf{X}-\textbf{A}\mathbb{E}(\textbf{X}))(\textbf{A}\textbf{X}-(\textbf{A}\mathbb{E}(\textbf{X}))^\prime)) \\
+    	& = \mathbb{E}(\textbf{A}(\textbf{X}-\mathbb{E}(\textbf{X}))(\textbf{X}-(\mathbb{E}(\textbf{X}))^\prime)\textbf{A}^\prime) \\
+    	& = \textbf{A}\mathbb{E}((\textbf{X}-\mathbb{E}(\textbf{X}))(\textbf{X}-(\mathbb{E}(\textbf{X}))^\prime)\textbf{A}^\prime) \\
+    	& = \textbf{A}\mathbb{E}((\textbf{X}-\mathbb{E}(\textbf{X}))(\textbf{X}-(\mathbb{E}(\textbf{X}))^\prime)\textbf{A}^\prime \\
+    	& = \textbf{A}\VC(\textbf{X})\textbf{A}^\prime.
+\end{align*} 
+\end{proof}
+
+\begin{example}
+	\label{example.vc}
+	
+	$ X_1,\ldots,X_n $ i.i.d., $ \mathbb{E}{(X_1)}= \mu $, $ \Var(X_1) = \sigma^2 $.
+	$ \textbf{X} = \begin{pmatrix}
+		X_1 \\ \vdots \\ X_n
+	\end{pmatrix} $ 
+
+\[	\mathbb{E}(\textbf{X}) = \begin{pmatrix}
+		\mu \\ \vdots \\ \mu
+	\end{pmatrix} = \mu\boldsymbol{\iota}. 
+\]
+
+\[ \VC(\textbf{X}) = \begin{pmatrix}
+		
+			\sigma^2 										\\
+			& \ddots  		& 			& \text{\huge0}		\\
+			& 				& \ddots               			\\
+			& \text{\huge0} & 			& \ddots           	\\
+			& 				& 			& 		& \sigma^2
+		
+	\end{pmatrix} = \sigma^2 \textbf{I}_n
+\]
+
+Betrachte $ \bar{X},\, \textbf{X}-\iota\bar{X} $. \\
+$ \begin{pmatrix}
+	\bar{\textbf{X}} \\ \textbf{X}-\boldsymbol{\iota}\bar{X}
+\end{pmatrix}\ldots $ ein $ (n+1) $-dimensionaler Vektor.
+
+
+\[
+\begin{pmatrix}\mathbb{E}\left(\bar{X}\right)\\
+	\mathbb{E}\begin{pmatrix}\textbf{X}-\boldsymbol{\iota}\bar{X}\end{pmatrix}
+\end{pmatrix}=\begin{pmatrix}\mu\\
+	\boldsymbol{0}
+\end{pmatrix}.
+\]
+
+Varianzkovarianzmatrix:
+
+\begin{align*}
+	\VC\left(\textbf{Z}\right) & =\mathbb{E}\left[\begin{pmatrix}\bar{X}-\mu\\
+		\textbf{X}-\boldsymbol{\iota}\bar{X}-\boldsymbol{0}
+	\end{pmatrix}\begin{pmatrix}\bar{X}-\mu & \left(\textbf{X}-\boldsymbol{\iota}\bar{X}-\boldsymbol{0}\right)\end{pmatrix}^{\prime}\right]\\
+	& =\mathbb{E}\left[\begin{pmatrix}\bar{X}-\mu\\
+		\textbf{X}-\boldsymbol{\iota}\bar{X}
+	\end{pmatrix}\begin{pmatrix}\left(\bar{X}-\mu\right) & \left(\textbf{X}-\boldsymbol{\iota}\bar{X}\right)\end{pmatrix}^{\prime}\right]\\
+	& =\mathbb{E}\left[\begin{pmatrix}\left(\bar{X}-\mu\right)\left(\bar{X}-\mu\right) & \left(\bar{X}-\mu\right)\left(\textbf{X}-\boldsymbol{\iota}\bar{X}\right)^{\prime}\\
+		\left(\textbf{X}-\boldsymbol{\iota}\bar{X}\right)\left(\bar{X}-\mu\right) & \left(\textbf{X}-\boldsymbol{\iota}\bar{X}\right)\left(\textbf{X}-\boldsymbol{\iota}\bar{X}\right)^{\prime}
+	\end{pmatrix}\right]\\
+	& =\begin{pmatrix}\mathbb{E}\left(\bar{X}-\mu\right)^{2} & \mathbb{E}\left(\left(\bar{X}-\mu\right)\left(\textbf{X}-\boldsymbol{\iota}\bar{X}\right)^{\prime}\right)\\
+		\mathbb{E}\left(\textbf{X}-\boldsymbol{\iota}\bar{X}\right)\left(\bar{X}-\mu\right) & \mathbb{E}\left(\left(\textbf{X}-\boldsymbol{\iota}\bar{X}\right)\left(\textbf{X}-\boldsymbol{\iota}\bar{X}\right)^{\prime}\right)
+	\end{pmatrix}\\
+	& =\begin{pmatrix}\textcolor{red}{\Var(\bar{X})} & \textcolor{cyan}{\mathbb{E}\left(\left(\bar{X}-\mu\right)\left(\textbf{X}-\boldsymbol{\iota}\bar{X}\right)^{\prime}\right)}\\
+		\textcolor{cyan}{\mathbb{E}\left(\textbf{X}-\boldsymbol{\iota}\bar{X}\right)\left(\bar{X}-\mu\right)} & \textcolor{orange}{\mathbb{E}\left(\left(\textbf{X}-\boldsymbol{\iota}\bar{X}\right)\left(\textbf{X}-\boldsymbol{\iota}\bar{X}\right)^{\prime}\right)}
+	\end{pmatrix}.
+\end{align*}
+
+
+
+\[
+\textcolor{red}{\Var(\bar{X})}=\frac{\sigma^{2}}{n}.
+\]
+
+
+
+\[
+\textcolor{cyan}{\mathbb{E}\left(\left(\bar{X}-\mu\right)\left(\textbf{X}-\boldsymbol{\iota}\bar{X}\right)^{\prime}\right)}=?
+\]
+
+Zwei Zwischenschritte:
+
+\begin{align*}
+	\bar{X}-\mu & =\left(\frac{1}{n}\boldsymbol{\iota}^{\prime}\textbf{X}\right)-\left(\frac{1}{n}\boldsymbol{\iota}^{\prime}\mu\boldsymbol{\iota}\right)\\
+	& =\left(\frac{1}{n}\boldsymbol{\iota}^{\prime}\textbf{X}\right)-\left(\frac{1}{n}\boldsymbol{\iota}^{\prime}\mathbb{E}(\textbf{X})\right)\\
+	& =\frac{1}{n}\boldsymbol{\iota}^{\prime}\left(\textbf{X}-\mathbb{E}(\textbf{X})\right),
+\end{align*}
+
+und
+
+\begin{align*}
+	\textbf{X}-\boldsymbol{\iota}\bar{X} & =\textbf{X}-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\textbf{X}\\
+	& =\left(\textbf{I}_{n}-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\right)\textbf{X}\\
+	& =\left(\textbf{I}_{n}-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\right)\left(\textbf{X}-\mathbb{E}(\textbf{X})\right),
+\end{align*}
+
+da
+\begin{align*}
+	\left(\textbf{I}_{n}-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\right)\mathbb{E}(\textbf{X}) & =\left(\textbf{I}_{n}-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\right)\mu\boldsymbol{\iota}\\
+	& =\mu\left(\textbf{I}_{n}\boldsymbol{\iota}-\frac{1}{n}\boldsymbol{\iota}\boldsymbol{\iota}^{\prime}\boldsymbol{\iota}\right)\\
+	& =\mu\left(\boldsymbol{\iota}-\frac{n}{n}\boldsymbol{\iota}\right)\\
+	& =\mu\left(\boldsymbol{\iota}-\boldsymbol{\iota}\right)\\
+	& =\boldsymbol{0}.
+\end{align*}
+
+\begin{align*}
+	\mathbb{E}\left(\left(\bar{X}-\mu\right)\left(\textbf{X}-\boldsymbol{\iota}\bar{X}\right)^{\prime}\right) & =\mathbb{E}\left(\left(\frac{1}{n}\boldsymbol{\iota}^{\prime}\left(\textbf{X}-\mathbb{E}(\textbf{X})\right)\right)\left(\left(\textbf{X}-\mathbb{E}(\textbf{X})\right)^{\prime}\left(\textbf{I}_{n}-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\right)\right)\right)\\
+	& =\frac{1}{n}\boldsymbol{\iota}^{\prime}\mathbb{E}\left(\left(\left(\textbf{X}-\mathbb{E}(\textbf{X})\right)\right)\left(\left(\textbf{X}-\mathbb{E}(\textbf{X})\right)^{\prime}\right)\right)\left(\textbf{I}_{n}-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\right)\\
+	& =\frac{1}{n}\boldsymbol{\iota}^{\prime}VC(\textbf{X})\left(\textbf{I}_{n}-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\right)\\
+	& =\sigma^{2}\frac{1}{n}\boldsymbol{\iota}^{\prime}\left(\textbf{I}_{n}-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\right)\\
+	& =\sigma^{2}\frac{1}{n}\left(\boldsymbol{\iota}^{\prime}-\boldsymbol{\iota}^{\prime}\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\right)\\
+	& =\sigma^{2}\frac{1}{n}\left(\boldsymbol{\iota}^{\prime}-\boldsymbol{\iota}^{\prime}\right)\\
+	& =\boldsymbol{0}.
+\end{align*}
+
+
+\begin{align*}
+	\textcolor{orange}{\mathbb{E}\left(\left(\textbf{X}-\boldsymbol{\iota}\bar{X}\right)\left(\textbf{X}-\boldsymbol{\iota}\bar{X}\right)^{\prime}\right)} & =VC(\textbf{X}-\boldsymbol{\iota}\bar{X})\\
+	& =VC(\textbf{X}-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\textbf{X})\\
+	& =VC\left(\left(\textbf{I}_{n}-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\right)\textbf{X}\right)\\
+	& =\left(\textbf{I}_{n}-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\right)VC(\textbf{X})\left(\textbf{I}_{n}-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\right)^{\prime}\\
+	& =\left(\textbf{I}_{n}-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\right)\sigma^{2}\left(\textbf{I}_{n}-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\right)^{\prime}\\
+	& =\sigma^{2}\left(\textbf{I}_{n}-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\right)\left(\textbf{I}_{n}-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\right)^{\prime}\\
+	& =\sigma^{2}\left(\textbf{I}_{n}-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}+\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\right)\\
+	& =\sigma^{2}\left(\textbf{I}_{n}-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}+\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\right)\\
+	& =\sigma^{2}\left(\textbf{I}_{n}-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\right).
+\end{align*}
+
+
+Also:
+
+\[
+\VC\begin{pmatrix}
+	\bar{X} \\ \textbf{X}-\boldsymbol{\iota}\bar{X}
+\end{pmatrix}=\begin{pmatrix}\frac{\sigma^{2}}{n} & \boldsymbol{0}^{\prime}\\
+	\boldsymbol{0}^{\prime} & \sigma^{2}\left(\textbf{I}_{n}-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\right)
+\end{pmatrix}.
+\]
+
+Man sieht: $ \bar{X} $ und $ \textbf{X}-\boldsymbol{\iota}\bar{X} $ sind komponentenweise unkorreliert.
+
+\end{example}
+
+\begin{remark}
+	Bezeichnung:
+Für zwei Zufallsvektoren $ \textbf{X}\in\mathbb{R}^n $ und $ \textbf{Y}\in\mathbb{R}^m $ ist die $ n\times m $ Matrix $ \Cov(\textbf{X},\textbf{Y}) $ definiert als $ \Cov(\textbf{X},\textbf{Y})=\mathbb{E}((\textbf{X}-\mathbb{E}(\textbf{X}))(\textbf{Y}-\mathbb{E}(\textbf{Y}))^\prime). $
+
+Weiters ist die $ m\times n $ Matrix $ \Cov(\textbf{Y},\textbf{X}) $ definiert als $ \Cov(\textbf{Y},\textbf{X})=\mathbb{E}((\textbf{Y}-\mathbb{E}(\textbf{Y}))(\textbf{X}-\mathbb{E}(\textbf{X}))^\prime). $
+
+Beachte: $ \Cov(\textbf{X},\textbf{Y}) = (\Cov(\textbf{Y},\textbf{X}))^\prime $
+\end{remark}
+
+\begin{remark}
+	Bemerkung: Zwei Zufallsvektoren $ \textbf{X}, \textbf{Y} $ sind unabhängig, wenn für beliebige Funktionen $ f(x) $ und $ g(y) $ die Beziehung $ \mathbb{E}(f(x)g(y))=\mathbb{E}(f(x))\mathbb{E}(g(y)) $ gilt.
+\end{remark}
+
+\begin{theorem}
+	Sind $ \textbf{X}, \textbf{Y} $ unabhängige Zufallsvektoren, dann ist $ \Cov(\textbf{X},\textbf{Y})=\boldsymbol{0}. $
+\end{theorem}
+
+\begin{proof}
+	Siehe Übung.
+\end{proof}
+
+\begin{theorem}
+	
+	Ist $ \textbf{X} $ ein Zufallsvektor mit $ \VC(\textbf{X})=\boldsymbol{\Sigma} $, dann gilt 
+	\[\begin{aligned}
+	\boldsymbol{\Sigma}^\prime &=\boldsymbol{\Sigma}, & \text{(symetrisch)} \\
+	\boldsymbol{\Sigma} & \ge0. & \text{(positiv semidefinit)}
+	\end{aligned}
+	\] 
+	
+\end{theorem}
+
+\begin{proof}
+	Sei $ \textbf{X} $ ein $n$-dimensionaler Zufallsvektor. 
+	\begin{align*}
+	\boldsymbol{\Sigma}^\prime &=(\VC(\textbf{X}))^\prime \\
+	& = (\mathbb{E}((\textbf{X}-\mathbb{E}(\textbf{X})))(\textbf{X}-\mathbb{E}(\textbf{X})^\prime))^\prime \\
+	& = \mathbb{E}((\textbf{X}-\mathbb{E}(\textbf{X}))(\textbf{X}-\mathbb{E}(\textbf{X}))^\prime)\\
+	& = \VC(\textbf{X})\\
+	& = \boldsymbol{\Sigma}.\checkmark
+\end{align*}
+
+$ \boldsymbol{\Sigma}\ge0\ldots $ d.h. für jeden Vektor $ \boldsymbol{\alpha}\in\mathbb{R}^n $ ist $ \boldsymbol{\alpha}^\prime\boldsymbol{\Sigma}\boldsymbol{\alpha}\ge0. $
+Sei also $ \boldsymbol{\alpha}\in\mathbb{R}^n\setminus\{0\}. $ Betrachte die Zufallsvariable $ \boldsymbol{\alpha}^\prime \textbf{X}: $
+
+\begin{align*}	
+	0 \le \Var(\boldsymbol{\alpha}^\prime \textbf{X}) & = \VC(\boldsymbol{\alpha}^\prime \textbf{X}) \\
+	&= \boldsymbol{\alpha}^\prime \VC(\textbf{X})\boldsymbol{\alpha}\\
+	&= \boldsymbol{\alpha}^\prime\boldsymbol{\Sigma}\boldsymbol{\alpha}.\checkmark	
+\end{align*}	
+
+\end{proof}
+
+\begin{remark}
+	Bemerkung: Ist $ \boldsymbol{\Sigma} = \VC(\textbf{X}) > 0 $, dann ist für jeden Vektor $ \boldsymbol{\alpha} \in \R^n, \, \boldsymbol{\alpha} \ne \boldsymbol{0} $, die Varianz von $ \boldsymbol{\alpha}^\prime \textbf{X} $ positiv (und umgekehrt): 
+	Für $ \boldsymbol{\alpha} \in \R^n\setminus\{0\} $ ist $ \Var(\boldsymbol{\alpha}^\prime \textbf{X}) = \boldsymbol{\alpha}^\prime \boldsymbol{\Sigma} \boldsymbol{\alpha} $.
+\end{remark}
+
+\begin{remark}
+	Erinnerung: Sei $ \textbf{A} $ eine symmetrische Matrix $ (n\times n) $. \\
+	Seien $ \lambda_1, \ldots, \lambda_n $ die Eigenwerte, und seien $ \textbf{u}_1,\ldots, \textbf{u}_n $ die entsprechenden Eigenvektoren. \\
+	Setze $ \textbf{U} = (\textbf{u}_1, \textbf{u}_2, \ldots, \textbf{u}_n)_{(n \times n)}$ , \\
+	sowie \[ \boldsymbol{\Omega} = \begin{pmatrix}
+		\lambda_1 & & 0  \\
+		& \ddots \\
+		0 & & \lambda_n
+	\end{pmatrix}_{(n\times n)}. \] \\
+	Dann gilt: $ \textbf{A} = \textbf{U} \boldsymbol{\Omega} \textbf{U}^\prime . $
+	
+\end{remark}
+
+Mit R-Beispiel vom 08.03.2021 (oder auch ganz allgemein) sieht man: \\
+Sind $ \lambda_i $ die Eigenwerte und $ \textbf{u}_i $ die Eigenvektoren von $ \textbf{A}_{(n \times n)} $, dann gilt 
+	\[
+	\begin{aligned}
+		&\textbf{A} \textbf{u}_i & = & \lambda_i \textbf{u}_i , \quad 1\le i \le n. &&\\
+		&& \equiv & \textbf{A}\underbrace{(\textbf{u}_1,\ldots,\textbf{u}_n)}_{\textbf{U}} & = & (\lambda_1 \textbf{u}_1, \ldots, \lambda_n \textbf{u}_n) \\
+		&& \equiv & \textbf{A} \textbf{U} & = & \textbf{U}\boldsymbol{\Omega}\\
+		&&\Rightarrow & \textbf{A} \underbrace{\textbf{U}\textbf{U}^\prime}_{\textbf{I}_n} & = & \textbf{U}\boldsymbol{\Omega} \textbf{U}^\prime 
+	\end{aligned}
+	\] 
+	Also: $ \textbf{A} = \textbf{U} \boldsymbol{\Omega} \textbf{U}^\prime $. 
+	\[
+	\textbf{A}x = \tikzmarknode{U}{\textbf{U}} \tikzmarknode{O}{\boldsymbol{\Omega}} \tikzmarknode{UP}{\textbf{U}^\prime} x
+	\]
+	\begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
+		nodes={inner sep=1pt, align=center, font=\footnotesize}]
+		\draw[<-] (U.south) -- ++ (-2,-.5) node[below] {Rücktransformation};
+		\draw[<-] (O.south) -- ++ (0,-1) node[below] {Stauchung/Streckung};
+		\draw[<-] (UP.south) -- ++ (2.2,-2) node[below] {Transformation in neues Koordinatensystem};
+	\end{tikzpicture}
+	\vspace{10ex}
+	
+	\[ \textbf{A}^2 = \textbf{A}\textbf{A} = \textbf{U} \boldsymbol{\Omega} \textbf{U}^\prime \textbf{U} \boldsymbol{\Omega} \textbf{U}^\prime = \textbf{U} \boldsymbol{\Omega}^2 \textbf{U}^\prime . \] 
+	
+	\[ \textbf{A}^{\frac{1}{2}} \coloneqq \textbf{U} \tikzmarknode{D}{\boldsymbol{\Omega}^{\frac{1}{2}}} \textbf{U}^\prime . \]
+	\begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
+		nodes={inner sep=1pt, align=center, font=\footnotesize}]
+		\draw[<-] (D.south) -- ++ (0,-.5) node[below] {diag$ \left( \sqrt{\lambda_1}, \ldots, \sqrt{\lambda_n} \right) $};
+	\end{tikzpicture}
+	\vspace{4ex}
+
+	\[ \textbf{A}^{\frac{1}{2}} \textbf{A}^{\frac{1}{2}} = \textbf{U} \boldsymbol{\Omega}^{\frac{1}{2}} \textbf{U}^\prime \textbf{U} \boldsymbol{\Omega}^{\frac{1}{2}} \textbf{U}^\prime = \textbf{U} \boldsymbol{\Omega}^{\frac{1}{2}} \boldsymbol{\Omega}^{\frac{1}{2}} \textbf{U}^\prime = \textbf{A}. \]
+	
+	Ist $ \textbf{A} $ invertierbar, dann sind alle $ \lambda_i \ne 0 $, sodass $ \boldsymbol{\Omega}^{-1} = \text{diag} \left(\frac{1}{\lambda_1}, \ldots, \frac{1}{\lambda_n} \right)  $ wohldefiniert ist.\\
+	Dann ist aber $ \textbf{A}^{-1} = \textbf{U} \boldsymbol{\Omega}^{-1} \textbf{U}^\prime $, denn 
+	\[
+	\begin{aligned}
+		\textbf{A} \textbf{U} \boldsymbol{\Omega}^{-1} \textbf{U} & = \textbf{U} \boldsymbol{\Omega} \underbrace{\textbf{U}^\prime \textbf{U}}_{\textbf{I}_n} \boldsymbol{\Omega}^{-1} \textbf{U}^\prime & = \textbf{U} \textbf{U}^\prime & = \textbf{I}_n. \\
+		\textbf{U} \boldsymbol{\Omega}^{-1} \textbf{U}^\prime \textbf{A} & = \ldots & & = \textbf{I}_n.
+	\end{aligned}
+	\]
+	
+	Weiters ist dann 
+	\[
+	\textbf{A}^{-\frac{1}{2}} = \textbf{U} \tikzmarknode{D2}{\boldsymbol{\Omega}^{-\frac{1}{2}}} \textbf{U}^\prime
+	\] 
+	\begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
+		nodes={inner sep=1pt, align=center, font=\footnotesize}]
+		\draw[<-] (D2.south) -- ++ (0,-.5) node[below] {diag$ \left( \frac{1}{\sqrt{\lambda_1}}, \ldots, \frac{1}{\sqrt{\lambda_n}} \right) $};
+	\end{tikzpicture}
+	\vspace{4ex}
+	
+	ebenfalls wohldefiniert und erfüllt die Beziehung 
+	\[
+	\textbf{A}^{-\frac{1}{2}} \textbf{A} \textbf{A}^{-\frac{1}{2}} = \textbf{I}_n \quad \text{(Details: Übung.)}
+	\]
+	
+	\begin{remark}
+		Bemerkung: Ist $ \textbf{X} $ ein $ n $-dimensionaler Zufallsvektor mit Mittelwert $ 0 $ und VC-Matrix $ \boldsymbol{\Sigma} > 0 $, dann gilt für den Zufallsvektor $ \textbf{Y} = \boldsymbol{\Sigma}^{-\frac{1}{2}} \textbf{X} $ ($ n $-dim.): 
+		\[ \begin{aligned}
+		\E(\textbf{Y}) & = \boldsymbol{0} \\
+		\VC(\textbf{Y}) & = \textbf{I}_n.
+		\end{aligned}
+		\]
+	\end{remark}
+	
+	\begin{proof}[Nachrechnen]
+	
+	\[ \E(\textbf{Y}) = \E\left(\boldsymbol{\Sigma}^{-\frac{1}{2}} \textbf{X}\right) = \boldsymbol{\Sigma}^{-\frac{1}{2}} \E(\textbf{X}) = \boldsymbol{\Sigma}^{-\frac{1}{2}} \cdot \boldsymbol{0} = \boldsymbol{0} \in \R^n. \checked \]
+	
+	\[ 
+	\begin{aligned}
+		\VC(\textbf{Y}) & = \VC\left(\boldsymbol{\Sigma}^{-\frac{1}{2}}\textbf{X}\right) \\
+		& = \boldsymbol{\Sigma}^{-\frac{1}{2}} \VC(\textbf{X}) \underbrace{\left(\boldsymbol{\Sigma}^{-\frac{1}{2}}\right)^\prime}_{\text{symmetrisch}} \\
+		& = \boldsymbol{\Sigma}^{-\frac{1}{2}} \VC(\textbf{X}) \boldsymbol{\Sigma}^{-\frac{1}{2}} \\
+		& = \boldsymbol{\Sigma}^{-\frac{1}{2}} \underbrace{\boldsymbol{\Sigma}}_{\boldsymbol{\Sigma}^{\frac{1}{2}}\boldsymbol{\Sigma}^{\frac{1}{2}}} \boldsymbol{\Sigma}^{-\frac{1}{2}} \\
+		& = \underbrace{\boldsymbol{\Sigma}^{-\frac{1}{2}} \boldsymbol{\Sigma}^{\frac{1}{2}}}_{\textbf{I}_n} \underbrace{\boldsymbol{\Sigma}^{\frac{1}{2}} \boldsymbol{\Sigma}^{-\frac{1}{2}}}_{I_n} \\
+		& = \textbf{I}_n. \checked
+	\end{aligned}
+	\]		
+	\end{proof}
+
+	\begin{remark}
+		Bemerkung: Ist $ \textbf{Y} $ ein Zufallsvektor der Dimension $ n $ mit $ \E(\textbf{Y}) = 0 $ und $ \VC(\textbf{Y}) = \textbf{I}_n $. Sei weiters $ \boldsymbol{\Sigma}_{(n \times n)} $, sodass $ \boldsymbol{\Sigma}^\prime = \boldsymbol{\Sigma} $ und $ \boldsymbol{\Sigma} \ge 0 $. \\
+		Für $ \textbf{X} = \boldsymbol{\Sigma}^{\frac{1}{2}} \textbf{Y} $ gilt dann: \[ \E(\textbf{X}) = \boldsymbol{0} \] und \[ \VC(\textbf{X}) = \boldsymbol{\Sigma}. \]
+	\end{remark}
+	
+	\begin{proof}[Nachrechnen]
+		\[
+		\E(\textbf{X}) = \E(\boldsymbol{\Sigma}^{\frac{1}{2}} \textbf{Y}) = \boldsymbol{\Sigma}^{\frac{1}{2}} \E(\textbf{Y}) = \boldsymbol{\Sigma}^{\frac{1}{2}} \boldsymbol{0} = \boldsymbol{0} \in \R^n. \checked
+		\]
+		\[ \VC(\textbf{X}) = \VC(\boldsymbol{\Sigma}^{\frac{1}{2}} \textbf{Y}) = \boldsymbol{\Sigma}^{\frac{1}{2}} \VC(\textbf{Y}) \boldsymbol{\Sigma}^{\frac{1}{2}} = \boldsymbol{\Sigma}^{\frac{1}{2}} \textbf{I}_n \boldsymbol{\Sigma}^{\frac{1}{2}} = \boldsymbol{\Sigma}^{\frac{1}{2}} \boldsymbol{\Sigma}^{\frac{1}{2}} = \boldsymbol{\Sigma}. \checked \]
+	\end{proof}
+	
+\section{Die Multivariate Normalverteilung}
+
+
+\begin{definition}
+	\index{Normalverteilung!Multivariate}
+	
+	Sei $\textbf{A}$ eine $n\times k$ Matrix und $\textbf{b}$ ein n-dim. Vektor. 
+	
+	Seien weiters $Z_{1},\ldots,Z_{k}$ iid. $N(0,1)$-verteilte reellwertige Zufallsvariablen. 
+	
+	Setze $\textbf{Z}=\left(Z_{1},\ldots,Z_{k}\right)^{\prime}$ und $\textbf{X}=\textbf{A}\cdot \textbf{Z}+\textbf{b}$
+	ein $n$- dim. Zufallsvektor.
+	
+	Die Verteilung von $\textbf{X}$ nennt man die (multivariate) Normalverteilung
+	mit Mittelwert $\textbf{b}$ und $VC$ Matrix $\textbf{A}\textbf{A}^{\prime}.$
+	
+	Kurz: 
+	\[
+	\textbf{X}\sim N(\textbf{b},\textbf{A}\textbf{A}^{\prime}).
+	\]
+	
+	Nomination:
+	
+	\[
+	\begin{array}{cc}
+		\text{univariat} & \text{multivariat}\\
+		\sigma^{2} & \boldsymbol{\Sigma}\\
+		\mu & \boldsymbol{\mu}\text{ (Vektor)}
+	\end{array}
+	\]
+	\end{definition}
+
+\begin{theorem}
+ Für $ \textbf{X}\sim N\left(\boldsymbol{\mu},\boldsymbol{\Sigma}\right) $ gilt:
+ 
+ \[
+ \mathbb{E}(\textbf{X})=\boldsymbol{\mu},
+ \]
+ 
+ \[
+ \VC(\textbf{X})=\boldsymbol{\Sigma}.
+ \]
+\end{theorem}
+\begin{proof}
+Sei $\boldsymbol{\mu}\in\mathbb{R}^{n}$ und $\boldsymbol{\Sigma_}{(n\times n)}.$
+
+Wähle $\textbf{Z}=\left(Z_{1},\ldots,Z_{n}\right)^{\prime},$ sodass $Z_{1},\ldots,Z_{n}$
+i.i.d. $N(0,1).$
+
+Weiters sei $\boldsymbol{\Sigma}^{\frac{1}{2}}$ die ``Wurzel`` von $\boldsymbol{\Sigma}.$
+
+Betrachte $\boldsymbol{\Sigma}^{\frac{1}{2}}\textbf{Z}+\boldsymbol{\mu}.$ 
+
+Laut Definition ist 
+\[
+\boldsymbol{\Sigma}^{\frac{1}{2}}\textbf{Z}+\boldsymbol{\mu}\sim N\left(\boldsymbol{\mu},\boldsymbol{\Sigma}^{\frac{1}{2}}\boldsymbol{\Sigma}^{\frac{1}{2}^{\prime}}\right)\equiv N\left(\boldsymbol{\mu},\boldsymbol{\Sigma}\right).
+\]
+
+Damit gilt:
+\begin{align*}
+	\mathbb{E}(\textbf{X}) & =\mathbb{E}\left(\boldsymbol{\Sigma}^{\frac{1}{2}}\textbf{Z}+\boldsymbol{\mu}\right)\\
+	& =\boldsymbol{\Sigma}^{\frac{1}{2}}\underset{\boldsymbol{0}\in\mathbb{R}^{n}}{\underbrace{\mathbb{E}(Z)}}+\boldsymbol{\mu}\\
+	& =\boldsymbol{\mu}.
+\end{align*}
+
+\begin{align*}
+	\VC(\textbf{X}) & =\VC\left(\boldsymbol{\Sigma}^{\frac{1}{2}}\textbf{Z}+\boldsymbol{\mu}\right)\\
+	& =\boldsymbol{\Sigma}^{\frac{1}{2}}\VC(\textbf{Z})\left(\boldsymbol{\Sigma}^{\frac{1}{2}}\right)^{\prime}\\
+	& =\boldsymbol{\Sigma}^{\frac{1}{2}}\textbf{I}_{n}\boldsymbol{\Sigma}^{\frac{1}{2}}\\
+	& =\boldsymbol{\Sigma}^{\frac{1}{2}}\boldsymbol{\Sigma}^{\frac{1}{2}}\\
+	& =\boldsymbol{\Sigma}.
+\end{align*}
+
+\end{proof}
+
+
+
+\begin{theorem}[Reproduktionseigenschaft]
+  \label{th:repoduktionseigenschaft}
+  \index{Reproduktionseigenschaft}
+  
+  Ist $\textbf{X}$ ein $n$-dim. Zufallsvektor mit $\textbf{X}\sim N(\boldsymbol{\mu},\boldsymbol{\Sigma}),$ ist
+  $ \textbf{A} $ eine $m\times n$ Matrix und $\textbf{b}$ ein $m$-dim. Vektor, dann ist
+  \[
+  \textbf{A}\textbf{X}+\textbf{b}\sim N\left(\textbf{A}\boldsymbol{\mu}+\textbf{b},\textbf{A}\boldsymbol{\Sigma} \textbf{A}^{\prime}\right).
+  \]
+\end{theorem}
+  \begin{proof}
+  
+  Sei $\textbf{Z}=\left(Z_{1},\ldots,Z_{n}\right)^{\prime}\in\mathbb{R}^{n}$
+  mit $Z_{1},\ldots,Z_{n}$ iid. $N(0,1).$
+  
+  Dann gilt:
+  \[
+  \boldsymbol{\Sigma}^{\frac{1}{2}}\textbf{Z}+\boldsymbol{\mu}\sim N\left(\boldsymbol{\mu},\boldsymbol{\Sigma}\right).
+  \]
+  
+  Also:
+  \[
+  \boldsymbol{\Sigma}^{\frac{1}{2}}\textbf{Z}+\boldsymbol{\mu}\sim \textbf{X}.
+  \]
+  
+  \begin{align*}
+  	\Rightarrow \textbf{A}\textbf{X}+\textbf{b} & \sim \textbf{A}\left(\boldsymbol{\Sigma}^{\frac{1}{2}}\textbf{Z}+\boldsymbol{\mu}\right)+\textbf{b}\\
+  	& =\textbf{A}\boldsymbol{\Sigma}^{\frac{1}{2}}\textbf{Z}+\textbf{A}\boldsymbol{\mu}+\textbf{b}\\
+  	& =\left(\textbf{A}\boldsymbol{\Sigma}^{\frac{1}{2}}\right)\textbf{Z}+(\textbf{A}\boldsymbol{\mu}+\textbf{b}).
+  \end{align*}
+  
+  Laut Definition ist die Verteilung von $\left(\mathbf{A}\boldsymbol{\Sigma}^{\frac{1}{2}}\right)\mathbf{Z}+(\mathbf{A}\boldsymbol{\mu}+\mathbf{b})$
+  gegeben durch
+  \begin{align*}
+  	N\left(\mathbf{A}\boldsymbol{\mu}+\mathbf{b},\left(\mathbf{A}\boldsymbol{\Sigma}^{\frac{1}{2}}\right)\left(\mathbf{A}\boldsymbol{\Sigma}^{\frac{1}{2}}\right)^{\prime}\right) & =N\left(\mathbf{A}\boldsymbol{\mu}+\mathbf{b},\mathbf{A}\boldsymbol{\Sigma}^{\frac{1}{2}}\left(\boldsymbol{\Sigma}^{\frac{1}{2}}\right)^{\prime}\mathbf{A}^{\prime}\right)\\
+  	& =N\left(\mathbf{A}\boldsymbol{\mu}+\mathbf{b},\mathbf{A}\boldsymbol{\Sigma} \mathbf{A}^{\prime}\right)\\
+  	& \equiv N\left(\mathbf{A}\boldsymbol{\mu}+\mathbf{b},\mathbf{A}\boldsymbol{\Sigma} \mathbf{A}^{\prime}\right).
+  \end{align*}
+  
+  Also:
+  \begin{align*}
+  	\mathbf{A}\mathbf{X}+\mathbf{b} & \sim \mathbf{A}\boldsymbol{\Sigma}^{\frac{1}{2}}\mathbf{Z}+\mathbf{A}\boldsymbol{\mu}+\mathbf{b}\\
+  	& \sim N\left(\mathbf{A}\boldsymbol{\mu}+\mathbf{b},\mathbf{A}\boldsymbol{\Sigma} \mathbf{A}^{\prime}\right).
+  \end{align*}
+\end{proof}
+  
+ 
+
+\begin{remark}
+ Bemerkung:
+
+Die $N(\boldsymbol{\mu},\boldsymbol{\Sigma})$-Verteilung kann degeneriert sein, nämlich genau
+dann, wenn $\boldsymbol{\Sigma}$ nicht vollen Rang hat $\left(N(\boldsymbol{\mu},\boldsymbol{0})\equiv\boldsymbol{\mu}\text{ ist ein degenerierter Fall}\right)$.
+\end{remark}
+
+Siehe die folgenden Beispiele.
+
+\begin{example}[ $\mathbf{Z}\sim N(\boldsymbol{0},\mathbf{1})$, $\mathbf{A}=\boldsymbol{0}$, $\mathbf{b}\in\mathbb{R}.$]
+  
+  
+  Laut Definition ist \[\mathbf{X}=\mathbf{A}_{(1\times1)}\mathbf{Z}_{(1\times1)}+\mathbf{b}_{(1\times1)}\sim N\left(\mathbf{b},\mathbf{AA}^{\prime}\right)=N(\mathbf{b},\boldsymbol{0}).\]
+  
+  \[
+  \mathbf{X}=\mathbf{A}\mathbf{Z}+\mathbf{b}=\boldsymbol{0}\cdot \mathbf{Z}+\mathbf{b}=\mathbf{b}.
+  \]
+  
+  Also: $N(\mathbf{b},\boldsymbol{0})\equiv \mathbf{b}.$
+  
+
+\end{example}
+
+\begin{example}
+	
+	Seien $X_{1},\ldots,X_{n}$ reellwertige Zufallsvariablen, i.i.d. mit
+	$X_{i}\sim N\left(\mu,\sigma^{2}\right),\,\sigma^{2}>0.$
+	
+	Setze $\mathbf{X}=\left(X_{1},\ldots,X_{n}\right)^{\prime}.$ 
+	
+	Beachte: 
+	\[
+	\mathbb{E}(\mathbf{X})=\begin{pmatrix}\mu\\
+		\vdots\\
+		\mu
+	\end{pmatrix}=\mu\boldsymbol{\iota}.
+	\]
+	
+	\[
+	\VC(\mathbf{X})=\begin{pmatrix}\sigma^{2} &  & 0\\
+		& \ddots\\
+		0 &  & \sigma^{2}
+	\end{pmatrix}=\sigma^{2}\mathbf{I}_{n}.
+	\]
+	
+	
+	Sei $\mathbf{Z}=\left(Z_{1},\ldots,Z_{n}\right)$ mit $Z_{i}$ iid. $N(0,1).$
+	
+	Betrachte
+	\begin{align*}
+		\sigma \mathbf{Z}+\mu\boldsymbol{\iota} & =\sigma \mathbf{I}_{n}\mathbf{Z}+\mu\boldsymbol{\iota}\\
+		& \sim N\left(\mu\boldsymbol{\iota},\sigma \mathbf{I}_{n}\left(\sigma \mathbf{I}_{n}\right)^{\prime}\right)\text{ (aus Def.)}\\
+		& \equiv N\left(\mu\boldsymbol{\iota},\sigma^{2}\mathbf{I}_{n}\right).
+	\end{align*}
+	
+	Weiters gilt: $(\sigma \mathbf{Z}+\mu\boldsymbol{\iota})_{i}=\sigma Z_{i}+\mu\sim N\left(\mu,\sigma^{2}\right)\sim X_{i}$, und $(\sigma \mathbf{Z}+\mu\boldsymbol{\iota})_{i}$, $1\le i\le n,$ sind unabhängig, und $X_{i}$, $1\le i\le n,$ sind unabhängig.
+	
+	Damit ist $\mathbf{X}\sim\sigma \mathbf{Z}+\mu\boldsymbol{\iota}\sim N\left(\mu\boldsymbol{\iota},\sigma^{2}\mathbf{I}_{n}\right).$
+	
+	Also ist $\mathbf{X}\sim N\left(\mu\boldsymbol{\iota},\sigma^{2}\mathbf{I}_{n}\right).$
+	
+	Zerlege $\mathbf{X}$ in $\mathbf{X}=\boldsymbol{\iota}\bar{X}+\left(\mathbf{X}-\boldsymbol{\iota}\bar{X}\right)$.
+	
+	Wissen:
+	\begin{align*}
+		\boldsymbol{\iota}\overline{X} & =\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\mathbf{X}\\
+		& \sim N\left(\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\mu\mathbf{\boldsymbol{\iota}},\left(\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\right)\sigma^{2}\mathbf{I}_{n}\left(\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\right)^{\prime}\right)\text{ (aufgrund der Reprod. Eigenschaft)}\\
+		& =N\left(\mu\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\boldsymbol{\iota},\sigma^{2}\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\right)\\
+		& =N\left(\mu\boldsymbol{\iota},\frac{\sigma^{2}}{n}\boldsymbol{\iota}\boldsymbol{\iota}^{\prime}\right),
+	\end{align*}
+	eine Normalverteilung die auf eine Gerade $[\iota]$ konzentriert
+	ist.
+	
+	Analog sieht man:
+	$\mathbf{X}-\bar{X}\boldsymbol{\iota}\ldots$ eine Normalverteilung in $ [\iota]^\perp. $\\
+	Wissen: \\
+	\[ \mathbb{E}\left( \mathbf{X}-\bar{X}\boldsymbol{\iota}\in\mathbb{R}^n\right) \]
+	\[ \VC\left(\mathbf{X}-\bar{X}\boldsymbol{\iota}\right)=\sigma^2\left(\mathbf{I}_n-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\right). \]
+	Nun ist $ \mathbf{X}-\bar{X}\boldsymbol{\iota}=\mathbf{X}-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\mathbf{X}=\left(\mathbf{I}_n-\boldsymbol{\iota} \frac{1}{n}\boldsymbol{\iota}^{\prime}\right)\mathbf{X} $, sodass \[ \mathbf{X}-\boldsymbol{\iota}\bar{X}\sim N\left(\boldsymbol{0},\sigma^2\left(\mathbf{I}_n-\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^{\prime}\right)\right)\ldots\text{ eine Normalverteilung in}[\iota]^{\perp}.\]
+	
+	\end{example}
+
+\begin{theorem}
+	\index{Normalverteilung!Unabhängigkeit}
+	
+	Betrachte einen $ m+n $-dimensionalen Zufallsvektor $ \begin{pmatrix} \mathbf{X} \\ \mathbf{Y}\end{pmatrix} $, wobei $ \mathbf{X} \in \mathbb{R}^m $ und $ \mathbf{Y} \in \mathbb{R}^n $, sodass 
+	\[ \begin{pmatrix}	\mathbf{X} \\ \mathbf{Y} \end{pmatrix} \sim N(\boldsymbol{\mu}, \boldsymbol{\Sigma}). \]
+	Ist $ \operatorname{Cov} (\mathbf{X} , \mathbf{Y}) = \boldsymbol{0} $, dann sind $ \mathbf{X} $ und $ \mathbf{Y} $ unabhängig.
+\end{theorem}
+
+\begin{remark}
+	
+	Erinnerung: Zufallsvektoren $ \mathbf{X} $, $ \mathbf{Y} $ sind unabhängig, wenn für jede reellwertige Funktion $ f(x) $  und für jede reellwertige Funktion $ g(y) $ die Beziehung $ \mathbb{E}\left(f(x)g(y)\right)=\mathbb{E}\left(f(x)\right) \mathbb{E}\left(g(y)\right)$ gilt.
+	
+	\end{remark}
+
+\begin{proof}
+	
+	Partitioniere $ \boldsymbol{\mu} = \mathbb{E} \begin{pmatrix} \mathbf{X} \\ \mathbf{Y} \end{pmatrix} =  \begin{pmatrix} \boldsymbol{\mu}_X \\ \boldsymbol{\mu}_Y \end{pmatrix}$ mit $ m+n $ Zeilen und $ m+n $ Spalten, sodass
+	$  \mathbb{E}(\mathbf{X})=\boldsymbol{\mu}_X $,
+	$ \mathbb{E}(\mathbf{Y}) = \boldsymbol{\mu}_Y $, sowie
+	\[ \boldsymbol{\Sigma}_{((m+n)\times (m+n))} = \begin{pmatrix}
+			\boldsymbol{\Sigma}_X & \boldsymbol{\Sigma}_{XY} \\ \boldsymbol{\Sigma}_{YX} & \boldsymbol{\Sigma}_Y
+		\end{pmatrix} \], sodass 
+	$ \VC(\mathbf{X})=\boldsymbol{\Sigma}_X $, $\VC(\mathbf{Y})=\boldsymbol{\Sigma}_Y $ und $ \operatorname{Cov}(\mathbf{X},\mathbf{Y}) = \boldsymbol{\Sigma}_{XY}. $
+	
+	Laut Voraussetzung ist $ \boldsymbol{\Sigma}_{XY} = \boldsymbol{0} \; (m \times n) $  und $ \boldsymbol{\Sigma}_{YX} = \boldsymbol{0} \; (n \times m). $
+	Seien $ Z_1,\ldots , Z_{(m+n)} $  i.i.d $ N(0,1) $ und $ \mathbf{Z}= \begin{pmatrix}
+		 Z_1 \\ \vdots \\ Z_{(m+n)}
+	\end{pmatrix} .$ \\
+	Partitioniere $ \mathbf{Z} =  \begin{pmatrix} \mathbf{Z}_X \\ \mathbf{Z}_Y \end{pmatrix} $  mit $ m+n $ Zeilen.
+	\[ \boldsymbol{\Sigma}^{\frac{1}{2}} = \begin{pmatrix}
+		\boldsymbol{\Sigma}_X & \boldsymbol{0} \\
+		\boldsymbol{0} & \boldsymbol{\Sigma}_Y
+	\end{pmatrix}^{\frac{1}{2}} 
+	\stackrel{\hexstar}{=}
+	 \begin{pmatrix}
+	\boldsymbol{\Sigma}_X^{\frac{1}{2}} & \boldsymbol{0} \\
+	\boldsymbol{0} & \boldsymbol{\Sigma}_Y^{\frac{1}{2}}
+	\end{pmatrix} \]
+Nachrechnen von $ \hexstar $:
+	\[ \begin{pmatrix}
+		\boldsymbol{\Sigma}_X^{\frac{1}{2}} & \boldsymbol{0} \\
+		\boldsymbol{0} & \boldsymbol{\Sigma}_Y^{\frac{1}{2}}
+	\end{pmatrix}
+	\begin{pmatrix}
+		\boldsymbol{\Sigma}_X^{\frac{1}{2}} & \boldsymbol{0} \\
+		\boldsymbol{0} & \boldsymbol{\Sigma}_Y^{\frac{1}{2}}
+	\end{pmatrix}
+	=
+	\begin{pmatrix}
+		\boldsymbol{\Sigma}_X & \boldsymbol{0} \\
+		\boldsymbol{0} & \boldsymbol{\Sigma}_Y
+	\end{pmatrix}. \checkmark \] \\
+
+Betrachte den Zufallsvektor 
+	\begin{align*}
+	\mathbf{ \Sigma}^{\frac{1}{2}} \mathbf{Z} + \boldsymbol{\mu} & \sim N\left(\boldsymbol{\mu} , \boldsymbol{\Sigma}^{\frac{1}{2}} \boldsymbol{\Sigma}^{\frac{1}{2}} \right) \\ 
+	& = 
+	N\left(\boldsymbol{\mu} , \boldsymbol{\Sigma} \right) \\
+	& \sim 
+	\begin{pmatrix}
+		\mathbf{X} \\ \mathbf{Y}
+	\end{pmatrix}. 
+\end{align*}
+	Beachte:
+	\begin{align*}
+		\boldsymbol{\Sigma}^{\frac{1}{2}} \mathbf{Z} + \boldsymbol{\mu} & = \begin{pmatrix}
+			\boldsymbol{\Sigma}_X^{\frac{1}{2}} & \boldsymbol{0} \\
+			\boldsymbol{0} & \boldsymbol{\Sigma}_Y^{\frac{1}{2}}
+		\end{pmatrix} \begin{pmatrix} \mathbf{Z}_X \\ \mathbf{Z}_Y \end{pmatrix} + \begin{pmatrix} \boldsymbol{\mu}_X \\ \boldsymbol{\mu}_Y \end{pmatrix}\\
+	& = \begin{pmatrix}
+		\boldsymbol{\Sigma}_X^{\frac{1}{2}} \mathbf{Z}_X + \boldsymbol{\mu}_X \\
+		\boldsymbol{\Sigma}_Y^{\frac{1}{2}} \mathbf{Z}_Y + \boldsymbol{\mu}_Y
+	\end{pmatrix} \sim \begin{pmatrix}
+	\mathbf{X} \\ \mathbf{Y} \end{pmatrix}.
+	\end{align*}
+
+Nun sind $ \mathbf{Z}_X, \mathbf{Z}_Y $ unabhängig. \\
+$ \Rightarrow \boldsymbol{\Sigma}_X^{\frac{1}{2}} \mathbf{Z}_X + \boldsymbol{\mu}_X, \; \boldsymbol{\Sigma}_Y^{\frac{1}{2}} \mathbf{Z}_Y + \boldsymbol{\mu}_Y \text{ unabhängig}. $ \\
+$ \Rightarrow \mathbf{X},\mathbf{Y} \text{ unabhängig}. $ \\
+Zu zeigen: $ \mathbf{X}, \mathbf{Y} $ unabhängig. \\
+Sei: $ f(x) $ eine reellwertige Funtion von $ X $ und $ g(y) $ eine reellwertige Funktion von Y.
+Zu zeigen: $ \E(f(x)g(y)) = \E(f(x))E(g(y)). $
+
+\begin{align*} \mathbb{E}(f(x)g(y)) & = \mathbb{E}\left( f\left( \boldsymbol{\Sigma}_X^{\frac{1}{2}} \mathbf{Z}_X + \boldsymbol{\mu}_X \right)g\left( \boldsymbol{\Sigma}_Y^{\frac{1}{2}} \mathbf{Z}_Y + \boldsymbol{\mu}_Y \right) \right) \\
+	& = \mathbb{E}\left( f\left( \boldsymbol{\Sigma}_X^{\frac{1}{2}} \mathbf{Z}_X + \boldsymbol{\mu}_X \right)\right) \mathbb{E}\left( g\left( \boldsymbol{\Sigma}_Y^{\frac{1}{2}} \mathbf{Z}_Y + \boldsymbol{\mu}_Y \right)\right) \\
+	& = \mathbb{E}(f(x)) \mathbb{E}(g(y)).
+\end{align*}
+\end{proof}
+
+\begin{example}
+	$ X_1, \ldots, X_n $ i.i.d. $ N(\mu, \sigma^2), \mu \in \R, 0 < \sigma^2 < \infty $.
+	Setze $ \mathbf{X} = \begin{pmatrix}
+		X_1 \\ \vdots \\ X_n
+	\end{pmatrix} \sim N(\boldsymbol{\mu}\boldsymbol{\iota}, \sigma^2 \mathbf{I}_n) $.
+
+	Wissen:  
+	\[
+	\begin{aligned}
+	\begin{pmatrix}
+		\bar{X} \\ \mathbf{X}- \boldsymbol{\iota} \bar{X}
+	\end{pmatrix} & \ldots \quad \text{eine lineare Funktion von } \mathbf{X} \\
+	& = \begin{pmatrix}
+		\frac{1}{n} \boldsymbol{\iota}^\prime \\ \mathbf{I}_n - \boldsymbol{\iota} \frac{1}{n} \boldsymbol{\iota}^\prime
+	\end{pmatrix} \mathbf{X} \sim \quad \text{Normalverteilung.}
+	\end{aligned}
+	\] 
+	
+	Siehe Beispiel \href{example1.3}{\ref{example1.3}} und \href{example.vc}{\ref{example.vc}}.
+	
+	$ \Rightarrow \bar{X}, \mathbf{X}-\iota\bar{X} $ sind unabhängig!\\
+	$ \Rightarrow \bar{X}, \hat{\sigma}_n^2 = \frac{1}{n-1} \sum_{i=1}^{n} (X_i-\bar{X})^2 =  ||\mathbf{X}-\boldsymbol{\iota}\bar{X}||^2 $ sind unabhängig!
+\end{example}
+
+\begin{remark}
+	Erinnerung: Für $ Z_1, \ldots, Z_n $ i.i.d. $ N(0,1) $, ist 
+	\[
+	\sum_{i=1}^{n} Z_i^2 \sim \chi_k^2.
+	\]
+\end{remark}
+\begin{lemma}
+	\index{Orthogonalprojektion}
+	
+	Ist $ \mathbf{P}_{(n \times n)} $ die Matrix einer Orthogonalprojektion, dann gilt: $ \mathbf{P}^2=\mathbf{P} $  und $ \mathbf{P}=\mathbf{P}^\prime $.
+\end{lemma}
+
+\begin{proof}
+	Für $ \mathbf{X},\mathbf{Y} \in \R^n $ ist 
+	\[ \begin{aligned}
+		\mathbf{X} & = \mathbf{P}\mathbf{X} + (\mathbf{I}_n - \mathbf{P})\mathbf{X} \quad \text{(orthogonale Zerlegung).} \\
+		\mathbf{Y} & = \mathbf{P}\mathbf{Y} + (\mathbf{I}_n - \mathbf{P})\mathbf{Y} \quad \text{(orthogonale Zerlegung).}
+	\end{aligned}	
+	\]
+	
+	\[
+	\begin{aligned}
+		\mathbf{X}^\prime \mathbf{P}\mathbf{Y} & = (\mathbf{X})^\prime \mathbf{P}\mathbf{Y} \\
+		& = (\mathbf{PX}+(\mathbf{I}_n-\mathbf{P})\mathbf{X})^\prime \mathbf{P}\mathbf{Y} \\
+		& = (\mathbf{X}^\prime \mathbf{P}^\prime +\mathbf{X}^\prime(\mathbf{I}_n-\mathbf{P})^\prime)\mathbf{P}\mathbf{Y} \\
+		& = \mathbf{X}^\prime \mathbf{P}^\prime \mathbf{P}\mathbf{Y} + \underbrace{\mathbf{X}^\prime (\mathbf{I}_n-\mathbf{P})^\prime \mathbf{PY}}_{\substack{=((\mathbf{I}_n-\mathbf{P})\mathbf{X})^\prime \mathbf{PY} \\ = \boldsymbol{0}}} \\
+		& = \mathbf{X}^\prime \mathbf{P}^\prime \mathbf{PY}.
+	\end{aligned}
+	\]
+	
+	\[
+	\begin{aligned}
+		\mathbf{X}^\prime \mathbf{P}^\prime \mathbf{Y} & = (\mathbf{P}\mathbf{X})^\prime \mathbf{Y} \\
+		& = (\mathbf{P}\mathbf{X})^\prime (\mathbf{P}\mathbf{Y} + (\mathbf{I}_n - \mathbf{P})\mathbf{Y}) \\
+		& = (\mathbf{X}^\prime \mathbf{P}^\prime (\mathbf{P}\mathbf{Y} + (\mathbf{I}_n - \mathbf{P})\mathbf{Y})\\
+		& = \mathbf{X}^\prime \mathbf{P}^\prime \mathbf{P}\mathbf{Y} + \underbrace{\mathbf{X}^\prime \mathbf{P}^\prime (\mathbf{I}_n-\mathbf{P})\mathbf{Y}}_{\substack{=(\mathbf{P}\mathbf{X})^\prime (\mathbf{I}_n-\mathbf{P})\mathbf{Y} \\ = \boldsymbol{0}}} \\
+		& = \mathbf{X}^\prime \mathbf{P}^\prime \mathbf{P}\mathbf{Y}.
+	\end{aligned}
+	\] 
+	
+	$ \Rightarrow \mathbf{X}^\prime \mathbf{P}\mathbf{Y} = \mathbf{X}^\prime \mathbf{P}^\prime \mathbf{Y}. $  \\
+	
+	Da dies für beliebige $ \mathbf{X}, \mathbf{Y} \in \R^n  $ gilt, folgt $ \mathbf{P} = \mathbf{P}^\prime $. \\
+	
+	Weiters ist $ \mathbf{X}^\prime \mathbf{P}\mathbf{Y} = \mathbf{X}^\prime \mathbf{P}^\prime \mathbf{P}\mathbf{Y} $ \\
+	
+	$ \Rightarrow \mathbf{P} = \mathbf{P}^\prime \mathbf{P} \tikzmarknode{P}{=} \mathbf{P}\mathbf{P} = \mathbf{P}^2 $.
+	\begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
+		nodes={inner sep=1pt, align=center, font=\footnotesize}]
+		\draw[<-] (P.south) -- ++ (0,-.5) node[below] {$ \mathbf{P}^\prime = \mathbf{P} $};
+	\end{tikzpicture}
+	\vspace{4ex}
+	
+\end{proof}
+
+\begin{remark}
+	Es gilt auch die Umkehrung:
+		Ist $ \mathbf{P}_{(n \times n)} $ mit $ \mathbf{P}^2=\mathbf{P} $  und $ \mathbf{P}=\mathbf{P}^\prime $, dann ist $ \mathbf{P} $ die Matrix einer Orthogonalprojektion (ohne Beweis).
+	\end{remark}
+
+
+
+\begin{corollary}
+	
+	Ist $ \mathbf{P}_{(n\times n)} $ die Matrix einer Orthogonalprojektion auf einen $ k $-dimensionalen Teilraum $ (0 \le k \le n) $, dann sind genau $ k $ Eigenwerte von $ \mathbf{P} $ gleich 1 und der Rest ist 0.
+	
+\end{corollary}
+
+\begin{proof}
+	Spektralzerlegung $ \mathbf{P} = \mathbf{U} \mathbf{\Omega} \mathbf{U}^\prime $ $ (\mathbf{U} \, \text{orthogonal}: \mathbf{U}^\prime \mathbf{U} = \mathbf{U} \mathbf{U}^\prime = \mathbf{I}_n, \quad \mathbf{\Omega} = \text{diag}(\lambda_1,\ldots, \lambda_n)) $. 
+	$ \mathbf{P}^2 = \mathbf{P} $, d.h. 
+	\[
+	\begin{aligned}
+		& & \mathbf{U}\mathbf{\Omega} \mathbf{U}^\prime \mathbf{U} \mathbf{\Omega} \mathbf{U}^\prime & = \mathbf{U}\mathbf{\Omega} \mathbf{U}^\prime \\
+		& \Leftrightarrow & \mathbf{U} \mathbf{\Omega}^2 \mathbf{U}^\prime &= \mathbf{U} \mathbf{\Omega} \mathbf{U}^\prime \\
+		& \Leftrightarrow & \mathbf{U} \mathbf{\Omega}^2 &= \mathbf{U} \mathbf{\Omega} \\
+		& \Leftrightarrow & \mathbf{\Omega}^2 &= \mathbf{\Omega}.
+	\end{aligned}
+	\]
+	D.h. für $ i=1,\ldots, n  $ ist $ \lambda_i^2 = \lambda_i $, also $ \lambda_i = 0 $ oder $ \lambda_i = 1 $. \\
+	Weiters ist  
+	\[
+	\begin{aligned}	
+	\rang(\mathbf{P}) & = k \\
+	& = \rang(\mathbf{U} \mathbf{\Omega} \mathbf{U}^\prime) \\
+	& = \rang(\mathbf{\Omega}) \\
+	& = \# \{i: 1\le i \le n, \lambda_i = 1\}.
+	\end{aligned}
+	\]  
+	Also sind genau $ k $ Eigenwerte gleich $ 1 $ und $ n-k $ Eigenwerte sind $ 0 $.
+\end{proof}
+	
+
+\begin{theorem}
+	
+		Ist $ \mathbf{P}_{(n\times n)} $ die Matrix einer Orthogonalprojektion auf einen $ k $-dimensionalen Teilraum $ (1 \le k \le n) $, und ist $ \mathbf{Z} \sim N\left(0,1 \right) $. Dann gilt \[ \mathbf{Z}^\prime \mathbf{P}\mathbf{Z}\sim \chi_k^2 \]
+	
+	\end{theorem}
+
+\begin{proof}
+	$ \mathbf{Z}^\prime \mathbf{P}\mathbf{Z} = \mathbf{Z}^\prime \mathbf{U} \mathbf{\Omega} \mathbf{U}^\prime \mathbf{Z} $. \\
+	Nun ist  $ \mathbf{U}^\prime \mathbf{Z} \sim N(\underbrace{\mathbf{U}^\prime 0}_{=0}, \underbrace{\mathbf{U}^\prime \mathbf{I}_n U}_{\substack{= \mathbf{U}^\prime \mathbf{U} \\ = \mathbf{I}_n}}) \equiv N(0, \mathbf{I}_n) $. \\
+	
+	Insbesondere ist $ \mathbf{Z} \sim \mathbf{U}^\prime \mathbf{Z} $. Für $ \mathbf{\Omega} = \text{diag}(\underbrace{1, \ldots, 1}_k, \underbrace{0, \ldots, 0}_{n-k}) $ ist damit 
+	\[
+	\begin{aligned}
+		\mathbf{Z}^\prime \mathbf{P} \mathbf{Z} & = \mathbf{Z}^\prime \mathbf{U} \mathbf{\Omega} \mathbf{U}^\prime \mathbf{Z} \\
+		& = (\mathbf{U}^\prime \mathbf{Z})^\prime \mathbf{\Omega} (\mathbf{U}^\prime \mathbf{Z}) \\
+		& \sim \mathbf{Z}^\prime \mathbf{\Omega} \mathbf{Z} \\
+		& = \sum_{i=1}^{k} Z_i^2 \\
+		& \sim \chi_k^2.
+	\end{aligned}
+	\]
+\end{proof}
+
+\begin{example}
+	
+	Seien $ X_1, \ldots, X_n $ i.i.d. $ N(\mu, \sigma^2) $, sodass $ \mathbf{X} = \begin{pmatrix}
+		X_1 \\ \vdots \\ X_n
+	\end{pmatrix} \sim N(\mu^2. \sigma^2 \mathbf{I}_n) $. \\
+	
+	$ \mathbf{X} - \boldsymbol{\iota}\bar{X}  = \underbrace{\left(\mathbf{I}_n - \boldsymbol{\iota} \frac{1}{n} \boldsymbol{\iota}^\prime\right)}_{\coloneqq \mathbf{P}} \mathbf{X} \ldots $ Orthogonalprojektion von $ \mathbf{X} $ auf $ [\boldsymbol{\iota}]^\perp $, ein $ (n-1) $.dimensionaler Teilraum.
+	
+	Prüfe Eigenschaften: 
+	\[
+	\begin{aligned}
+		\mathbf{P}^2 & = \left(\mathbf{I}_n - \boldsymbol{\iota} \frac{1}{n} \boldsymbol{\iota}^\prime\right)\left(\mathbf{I}_n - \boldsymbol{\iota} \frac{1}{n} \boldsymbol{\iota}^\prime\right) \\
+		& = \mathbf{I}_n - \boldsymbol{\iota} \frac{1}{n} \boldsymbol{\iota}^\prime - \boldsymbol{\iota} \frac{1}{n} \boldsymbol{\iota}^\prime + \boldsymbol{\iota} \frac{1}{n} \boldsymbol{\iota}^\prime \boldsymbol{\iota} \frac{1}{n} \boldsymbol{\iota}^\prime \\
+		& = \mathbf{I}_n - \boldsymbol{\iota} \frac{1}{n} \boldsymbol{\iota}^\prime - \boldsymbol{\iota} \frac{1}{n}\boldsymbol{\iota}^\prime + \boldsymbol{\iota} \frac{1}{n} \boldsymbol{\iota}^\prime \\
+		& = \mathbf{I}_n - \boldsymbol{\iota} \frac{1}{n} \boldsymbol{\iota}^\prime \\
+		& = \mathbf{P}. \, \checked
+	\end{aligned}
+	\]
+	$ \mathbf{P}^\prime = \left(\mathbf{I}_n - \boldsymbol{\iota} \frac{1}{n} \boldsymbol{\iota}^\prime\right)^\prime = \mathbf{I}_n - \boldsymbol{\iota} \frac{1}{n} \boldsymbol{\iota}^\prime = \mathbf{P}. \, \checked $ \\
+	Beachte: $  \dim\left([\boldsymbol{\iota}]^\perp\right) = n-1 $. \\
+	
+	? Verteilung von $ ||\mathbf{X}-\boldsymbol{\iota} \bar{X}||^2 $ ? \\
+	
+	(Beachte: $ \hat{\sigma}_n^2 = \frac{1}{n-1} ||\mathbf{X}-\boldsymbol{\iota}\bar{X}||^2 $).\\
+	Wissen: $ \mathbf{X}-\boldsymbol{\iota} \bar{X} \sim N\left(0, \sigma^2\left(\mathbf{I}_n -\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^\prime \right)\right) $. \\
+	Für $ \mathbf{Z} \sim N(0,\mathbf{I}_n) $ ist 
+	\[
+	\begin{aligned}
+		\sigma \underbrace{\left(\mathbf{I}_n -\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^\prime \right)}_{P} \mathbf{Z} & \sim N(0, \underbrace{\sigma \mathbf{P}\mathbf{I}_n \mathbf{P}^\prime \sigma}_{\substack{= \sigma^2\mathbf{P}\mathbf{P}^\prime \\ = \sigma^2 \mathbf{P}\mathbf{P} \\ = \sigma^2 \mathbf{P}}}) \\
+		& = N(0, \sigma^2 \mathbf{P}) \\
+		& \sim \mathbf{X}- \boldsymbol{\iota} \bar{X}.
+	\end{aligned}
+	\]
+	
+	\[
+	\begin{aligned}
+		||\mathbf{X}-\boldsymbol{\iota}\bar{X}||^2 & \sim ||\sigma \underbrace{\left(\mathbf{I}_n -\boldsymbol{\iota}\frac{1}{n}\boldsymbol{\iota}^\prime \right)}_{P} \mathbf{Z} ||^2 \\
+		& = (\sigma \mathbf{P} \mathbf{Z})^\prime(\sigma \mathbf{P} \mathbf{Z}) \\
+		& = \sigma^2 \mathbf{Z}^\prime \mathbf{P}^\prime \mathbf{P}\mathbf{Z} \\
+		& = \sigma^2 \mathbf{Z}^\prime \mathbf{P}\mathbf{Z}\\
+		& \tikzmarknode{S}{\sim} \sigma^2 \chi_{n-1}^2.
+	\end{aligned}
+	\]
+	\begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
+		nodes={inner sep=1pt, align=center, font=\footnotesize}]
+		\draw[<-] (S.south) -- ++ (0,-.5) node[below] {Proposition};
+	\end{tikzpicture}
+	\vspace{4ex}
+	
+\end{example}
+
+\begin{theorem}
+	\index{Chi-Quadrat-Verteilung}
+	
+	Für $ X_1, \ldots, X_n $  i.i.d. $ N(\mu, \sigma^2) $ ist 
+	\[ \hat{\sigma}_n^2 = \frac{1}{n-1} \sum_{i=1}^{n} (X_i - \bar{X})^2 \sim \frac{\sigma^2}{n-1} \chi_{n-1}^2 \]
+	
+	und \[
+	\frac{\sqrt{n}}{\hat{\sigma}_n}(\bar{X}-\mu) \sim t_{n-1}.
+	\]
+	\end{theorem}
+
+\begin{proof}
+	\begin{remark}
+		Erinnerung: Für Zufallsvariablen $ A,B $, die unabhängig voneinander sind und so, dass $ A \sim N(0,1) $ und $ B \sim \chi_k^2 $ ist.
+	\end{remark}
+	
+	\[
+	\frac{A}{\sqrt{\frac{B}{n}}}\sim t_k
+	\]
+	 \[
+	 \frac{\sqrt{n}}{\hat{\sigma}_n}(\bar{X}-\mu) = \frac{\frac{\sqrt{n}}{\sigma}(\bar{X}-\mu)}{\frac{\hat{\sigma}_n}{\sigma}}
+	 \]
+	 \[
+	 \frac{\sqrt{n}}{\sigma}(\bar{X}-\mu) \sim N(0,1).
+	 \]
+	
+	\[
+	\begin{aligned}	
+	\frac{\hat{\sigma}_n}{\sigma} & = \sqrt{\frac{\hat{\sigma}_n^2}{\sigma^2}} \\
+	& = \sqrt{\frac{1}{\sigma^2}\frac{1}{n-1}\underbrace{\sum_{i=1}^{n}(X_i-\bar{X})^2}_{\sim \sigma^2 \chi_{n-1}^2}} \\
+	& \sim \sqrt{\frac{1}{\sigma^2}\frac{1}{n-1} \sigma^2 \chi_{n-1}^2} \\
+	& \sim \sqrt{\frac{\chi_{n-1}^2}{n-1}}.
+	\end{aligned}
+	\]
+	Zähler ist eine Funktion von $ \bar{X} $ und Nenner ist eine Funktion von $ \mathbf{X}-\boldsymbol{\iota} \bar{X} $ \\
+	$ \Rightarrow $ Zähler und Nenner sind unabhängig. Also ist 
+	\[
+	\frac{\frac{\sqrt{n}}{\sigma}(\bar{X}-\mu)}{\frac{\hat{\sigma}_n}{\sigma}} \sim t_{n-1}.
+	\]
+	
+\end{proof}
+
+
+
+\section{Der Multivariate Zentrale Grenzwertsatz}
+
+
+
+\begin{satz}
+	\index{Zentraler Grenzwertsatz}
+	
+	Sind $ \mathbf{X}_i,$  $ i\ge 1, $  $ k $-dimensionale Zufallsvektoren, die i.i.d. sind mit $ \mathbb{E}(\mathbf{X}_i)=\boldsymbol{\mu}_{(n \times 1)} $  , $ \VC(\mathbf{X}_i) = \boldsymbol{\Sigma}_{(n \times n)}. $
+	Damit gilt für $ \mathbf{\bar{X}}_n = \frac{1}{n} \sum_{i=1}^{n} \mathbf{X}_i,$  dass 
+	\[  \sqrt{n}(\mathbf{\bar{X}}_n-\boldsymbol{\mu}) \overset{w}{\longrightarrow} N(0, \boldsymbol{\Sigma}) \]
+\end{satz}
+
+
+\section{Normalverteilungen - stetig und singulär (degeneriert)}
+
+
+Betrachte $ \mathbf{X} \sim N(\boldsymbol{\mu}, \boldsymbol{\Sigma}),\boldsymbol{\mu} \in \mathbb{R}^n $, $ \boldsymbol{\Sigma}_{(n\times n)} $. Es gilt $ \text{rang}(\boldsymbol{\Sigma})\in \left\lbrace 0, 1, 2,\ldots, n\right\rbrace  $.
+
+\begin{theorem}
+	\index{Normalverteilung!Dichte}
+	
+	Ist $ \text{rang}(\boldsymbol{\Sigma})=n $, dann besitzt $ \mathbf{X} $  eine Dichte, die gegeben ist durch
+	\[ \Phi_{\mu, \Sigma} (\mathbf{x}) = (2\pi)^{-\frac{n}{2}} (\text{det} \boldsymbol{\Sigma})^{-\frac{1}{2}} e^{-\frac{1}{2}(\mathbf{x}-\boldsymbol{\mu})^\prime\boldsymbol{\Sigma}^{-1}(\mathbf{x}-\boldsymbol{\mu})} \] für $ \mathbf{x} = \left( x_1,\ldots, x_n \right)^{\prime} \in \R^n. $
+\end{theorem}
+
+
+\begin{proof}
+	Betrachte Spektralzerlegung (Eigenwertzerlegung) von $ \boldsymbol{\Sigma} = \mathbf{U}\mathbf{\Omega} \mathbf{U}^\prime $, wobei $ \mathbf{\Omega} = \text{diag} \left(\lambda_1,\ldots,\lambda_n \right) $, wobei alle $ \lambda_i > 0 $ sind.
+	
+	$ \boldsymbol{\Sigma}^{\frac{1}{2}} = \mathbf{U}\mathbf{\Omega}^{\frac{1}{2}} \mathbf{U}^\prime $ mit $ \mathbf{\Omega}^{\frac{1}{2}} = \text{diag} \left(\sqrt{\lambda_1},\ldots,\sqrt{\lambda_n} \right) $,
+	
+	$ \boldsymbol{\Sigma}^{- \frac{1}{2}} = \mathbf{U}\mathbf{\Omega}^{\frac{1}{2}} \mathbf{U}^\prime $ mit $ \mathbf{\Omega}^{- \frac{1}{2}} = \text{diag} \left(\frac{1}{\sqrt{\lambda_1}},\ldots,\frac{1}{\sqrt{\lambda_n}} \right) $,
+	
+	$ \boldsymbol{\Sigma}^{-1} = \mathbf{U}\mathbf{\Omega}^{\frac{1}{2}} \mathbf{U}^\prime $ mit $ \mathbf{\Omega}^{-1} = \text{diag} \left(\frac{1}{\lambda_1},\ldots,\frac{1}{\lambda_n} \right) $.
+	
+	Seien $ Z_1,\ldots,Z_n $ i.i.d. $ N(0,1) $ und $ \mathbf{Z}=\left(Z_1,\ldots,Z_n\right)^\prime $.
+	
+	Dann ist \[ \begin{aligned}
+		\boldsymbol{\Sigma}^\frac{1}{2} \mathbf{Z} + \boldsymbol{\mu} &\sim N(\boldsymbol{\mu}, \boldsymbol{\Sigma}) \\
+		&\sim \mathbf{X}. 
+	\end{aligned}
+	\] 
+	
+	Für $ \mathbf{B} \in \R^n $ ist 
+	\[ \begin{aligned}
+		\Prob(x \in \mathbf{B}) & = \Prob \left( \boldsymbol{\Sigma}^{\frac{1}{2}} \mathbf{Z} + \boldsymbol{\mu} \in \mathbf{B} \right) \\
+		& = \int\limits_{\substack{\mathbf{Z}=(Z_1,\ldots,Z_n)^\prime : \\ \boldsymbol{\Sigma}^{\frac{1}{2}} \mathbf{Z} + \boldsymbol{\mu} \in \mathbf{B}}} \ldots \int \underbrace{\Phi \left( Z_1\right) \cdot \ldots \cdot \Phi \left(Z_n\right)}_{\mathclap{\substack{= \frac{1}{\sqrt{2\pi}} \exp\left( {-\frac{Z_1^2}{2}}\right)  \cdots \frac{1}{\sqrt{2\pi}} \exp\left( {-\frac{Z_n^2}{2}}\right)  \\
+		= (2\pi)^{-\frac{n}{2}} \exp\left( {-\frac{Z_1^2}{2}-\frac{Z_2^2}{2}-\ldots - \frac{Z_n^2}{2}}\right) \\
+		= (2\pi)^{-\frac{n}{2}} \exp\left(-\frac{1}{2} \sum_{i=1}^{n} Z_i^2 \right) \\
+		= (2\pi)^{-\frac{n}{2}} \exp\left(-\frac{1}{2}\mathbf{Z}^\prime \mathbf{Z} \right)  }}} \cdot dz_1 \cdots  dz_n \\
+		& = \int\limits_{\substack{\mathbf{Z}=(Z_1,\ldots,Z_n)^\prime : \\ \boldsymbol{\Sigma}^{\frac{1}{2}} Z + \boldsymbol{\mu} \in \mathbf{B}}} \ldots \int (2\pi)^{-\frac{n}{2}} \exp\left(-\frac{1}{2}Z^\prime Z \right) \cdot dz_1 \cdots  dz_n = \circledast.
+	\end{aligned}
+	\]
+	$ \mathbf{X} \coloneqq \boldsymbol{\Sigma}^{\frac{1}{2}} \mathbf{Z} + \boldsymbol{\mu}. $ \\
+	$ \mathbf{Z} = \boldsymbol{\Sigma}^{-\frac{1}{2}} (\mathbf{X}-\boldsymbol{\mu}). $ \\
+	$ dz_1,\cdots, dz_n = |\det\boldsymbol{\Sigma}|^{-\frac{1}{2}}. $
+	\[
+	\begin{aligned}
+		\circledast & = \int\limits_{\substack{\mathbf{X}=(X_1,\ldots,X_n)^\prime : \\ x \in \mathbf{B}}} \ldots \int (2\pi)^{-\frac{n}{2}} \exp\left(-\frac{1}{2}(\mathbf{X}-\boldsymbol{\mu})^\prime \boldsymbol{\Sigma}^{-\frac{1}{2}} \boldsymbol{\Sigma}^{-\frac{1}{2}} (\mathbf{X}-\boldsymbol{\mu}) \right) |\det \boldsymbol{\Sigma} |^{-\frac{1}{2}}  \cdot dx_1 \cdots  dx_n \\
+		& = \int\limits_{\substack{\mathbf{X}=(X_1,\ldots,X_n)^\prime : \\ x \in \mathbf{B}}} \ldots \int \underbrace{(2\pi)^{-\frac{n}{2}} |\det \boldsymbol{\Sigma} |^{-\frac{1}{2}} \exp\left(-\frac{1}{2}(\mathbf{X}-\boldsymbol{\mu})^\prime \boldsymbol{\Sigma}^{-1} (\mathbf{X}-\boldsymbol{\mu}) \right)}_{\substack{\ldots\text{ dies ist also die Dichte von} \mathbf{X} \\ = \Phi_{\boldsymbol{\mu},\boldsymbol{\Sigma}}(x)}}   \cdot dx_1 \cdots  dx_n
+	\end{aligned}
+	\]
+
+\end{proof}
+
+\begin{theorem}
+	
+	Ist $ k = \rang(\boldsymbol{\Sigma}) $ so, dass $ 0<k<n $, dann lässt sich $ \mathbf{X} $ schreiben als 
+	\[
+	\mathbf{X} = \mathbf{B}\mathbf{W}+\boldsymbol{\mu},
+	\]
+	wobei $ \mathbf{B} $ eine $ m\times k $ Matrix mit orthogonalen $ \left(\mathbf{B}^\prime \mathbf{B} = \mathbf{I}_k \right)  $ Spalten ist und wobei $ \mathbf{W} $ ein $ k $-dimensionaler Zufallsvektor ist mit 
+	\[
+	\mathbf{W} \sim N(0,\mathbf{D}),
+	\]
+	mit $ \mathbf{D} = \text{diag}\left(d_1,\ldots,d_k\right) > 0. $
+\end{theorem}
+
+\begin{proof}
+	Wieder $ \boldsymbol{\Sigma} = \mathbf{U} \mathbf{\Omega} \mathbf{U}^\prime. $ Laut Voraussetzung $ (k=\text{rang}(\boldsymbol{\Sigma})<n) $ kann man $ \mathbf{\Omega} $ schreiben als $ \mathbf{\Omega} = \text{diag}(\underbrace{\lambda_1,\ldots,\lambda_k}_{k \text{ Komponente}}, \underbrace{0, \ldots, 0}_{n \text{ Komponente}}). $ \\
+	Mit anderen Worten:
+	\[
+	\mathbf{\Omega} = \begin{pmatrix}
+		\lambda_1 	& 		& 				& 		& 		& \boldsymbol{0}\\
+					& \ddots&				&		&& \\
+					& 		&  \lambda_k \\
+					& 		& 		& 0 \\
+				\boldsymbol{0}	&		& 		& 		& \ddots \\
+				 	& 		& 		& 		& 		& 0
+	\end{pmatrix} = \begin{pmatrix}
+	\mathbf{\Omega}_1 		& \boldsymbol{0}_{k,n-k} \\
+	\boldsymbol{0}_{n-k,k}		& \boldsymbol{0}_{n-k,n-k}
+\end{pmatrix},
+	\] 
+	wobei $ \mathbf{\Omega}_1 = \text{diag}(\lambda_1,\ldots, \lambda_k). $ \\
+	
+	Partitioniere $ \mathbf{U} = \left(\mathbf{U}_1, \mathbf{U}_2\right). $ 
+	
+	\[ 
+	\begin{aligned}
+	\mathbf{X}-\boldsymbol{\mu} & = \mathbf{U} \mathbf{U}^\prime (\mathbf{X}-\boldsymbol{\mu}) \\
+	& = \left(\mathbf{U}_1 \mathbf{U}_1^\prime + \mathbf{U}_2 \mathbf{U}_2^\prime\right)(\mathbf{X}-\boldsymbol{\mu}) \\
+	& = \mathbf{U}_1 \mathbf{U}_1^\prime (\mathbf{X}-\boldsymbol{\mu}) + \mathbf{U}_2 \mathbf{U}_2^\prime (\mathbf{X}-\boldsymbol{\mu}).
+	\end{aligned}
+	\]
+	
+	\[
+		\mathbf{U}_1^\prime(\underbrace{\mathbf{X}-\boldsymbol{\mu}}_{\sim N(0,\boldsymbol{\Sigma})}) \sim N(0,\mathbf{U}_1^\prime \boldsymbol{\Sigma} \mathbf{U}_1).
+	\]
+	\[
+	\begin{aligned}
+	\mathbf{U}_1^\prime \boldsymbol{\Sigma} \mathbf{U}_1 & = \mathbf{U}_1^\prime \mathbf{U} \mathbf{\Omega} \mathbf{U}^\prime \mathbf{U}_1 \\
+	& = \mathbf{U}_1^\prime \begin{pmatrix}
+		\mathbf{U}_1 & \mathbf{U}_2
+		\end{pmatrix} \mathbf{\Omega} \begin{pmatrix}
+		\mathbf{U}_1^\prime\\
+		\mathbf{U}_2^\prime
+		\end{pmatrix} \mathbf{U}_1 \\
+	& = \begin{pmatrix}
+		\mathbf{U}_1^\prime \mathbf{U}_1 & \mathbf{U}_1^\prime \mathbf{U}_2
+	\end{pmatrix} \mathbf{\Omega} \begin{pmatrix}
+		\mathbf{U}_1^\prime \mathbf{U}_1\\
+		\mathbf{U}_2^\prime \mathbf{U}_1
+	\end{pmatrix} \\
+	& = \begin{pmatrix}
+		\mathbf{I}_k & \boldsymbol{0}_{k,n-k}
+		\end{pmatrix}  
+		\begin{pmatrix}
+			\mathbf{\Omega}_1 		& \boldsymbol{0}_{k,n-k} \\
+			\boldsymbol{0}_{n-k,k}		& \boldsymbol{0}_{n-k,n-k}
+		\end{pmatrix} 
+		\begin{pmatrix}
+			\mathbf{I}_k\\
+			\boldsymbol{0}_{k,n-k}
+		\end{pmatrix} \\
+	& = \begin{pmatrix}
+		\mathbf{I}_k & \boldsymbol{0}_{k,n-k}
+	\end{pmatrix}  
+	\begin{pmatrix}
+		\mathbf{\Omega}_1  \\
+		\boldsymbol{0}
+	\end{pmatrix} \\
+	& = \mathbf{\Omega}_1.
+	\end{aligned}
+	\]
+	Also: $ \mathbf{U}_1^\prime (\mathbf{X}-\boldsymbol{\mu}) \sim N(0,\mathbf{\Omega}_1). $ Beachte $ \mathbf{\Omega}_1 > 0. $
+	
+	
+	
+	\[
+	\begin{aligned}
+		\mathbf{U}_2^\prime \boldsymbol{\Sigma} \mathbf{U}_2 & = \mathbf{U}_2^\prime \mathbf{U} \mathbf{\Omega} \mathbf{U}^\prime \mathbf{U}_2 \\
+		& = \mathbf{U}_2^\prime \begin{pmatrix}
+			\mathbf{U}_1 & \mathbf{U}_2
+		\end{pmatrix} \mathbf{\Omega} \begin{pmatrix}
+			\mathbf{U}_1^\prime\\
+			\mathbf{U}_2^\prime
+		\end{pmatrix} \mathbf{U}_2 \\
+		& = \begin{pmatrix}
+			\mathbf{U}_2^\prime \mathbf{U}_2 & \mathbf{U}_2^\prime \mathbf{U}_2
+		\end{pmatrix} \mathbf{\Omega} \begin{pmatrix}
+			\mathbf{U}_1^\prime \mathbf{U}_2\\
+			\mathbf{U}_2^\prime \mathbf{U}_2
+		\end{pmatrix} \\
+		& = \begin{pmatrix}
+			0 & \mathbf{I}_{n-k}
+		\end{pmatrix}  
+		\begin{pmatrix}
+			\mathbf{\Omega}_1 		& \boldsymbol{0}_{k,n-k} \\
+			\boldsymbol{0}_{n-k,k}		& \boldsymbol{0}_{n-k,n-k}
+		\end{pmatrix} 
+		\begin{pmatrix}
+			0\\
+			\mathbf{I}_{n-k}
+		\end{pmatrix} \\
+		& = \begin{pmatrix}
+			0 & \mathbf{I}_{n-k}
+		\end{pmatrix}  
+		\begin{pmatrix}
+			0  \\
+			0
+		\end{pmatrix} \\
+		& = 0 .
+	\end{aligned}
+	\]
+	
+	Also: \[ \begin{aligned} \mathbf{U}_2^\prime (\mathbf{X}-\boldsymbol{\mu}) & \sim N(0,0) \\
+		& \sim \boldsymbol{0} \in \R^{n-k}. \end{aligned} \]
+	
+	\[
+	\begin{aligned}
+		\mathbf{X}-\boldsymbol{\mu} & = \mathbf{U}_1\left(\mathbf{U}_1^\prime (\mathbf{X}-\boldsymbol{\mu})\right) + \mathbf{U}_2 \left(\mathbf{U}_2^\prime (\mathbf{X}-\boldsymbol{\mu})\right) \\
+		\Leftrightarrow \mathbf{X} & = \mathbf{U}_1(\underbrace{\mathbf{U}_1^\prime (\mathbf{X}-\boldsymbol{\mu})}_{\sim N(0,\mathbf{\Omega}_1)}) + \underbrace{\mathbf{U}_2 \left(\mathbf{U}_2^\prime (\mathbf{X}-\boldsymbol{\mu})\right)}_{0} + \boldsymbol{\mu}.
+	\end{aligned}
+	\]
+	Setze $ \mathbf{B} \coloneqq \mathbf{U}_1 $, $ \mathbf{W} = \mathbf{U}_1^\prime (\mathbf{X}-\boldsymbol{\mu}) $, und bin fertig.
+\end{proof}
+
+\begin{remark}
+	Bemerkung: Ist $ \rang(\boldsymbol{\Sigma}) = 0 $, dann ist $ \mathbf{X}\sim 0\mathbf{Z}+\boldsymbol{\mu} $ für $ Z_1,\ldots, Z_n $ i.i.d. $ N(0,1) $, denn hier ist $ \boldsymbol{\Sigma} = \boldsymbol{0}_{(n\times n)} $. Also $ \mathbf{X} \sim 0\mathbf{Z} +\boldsymbol{\mu} \equiv \boldsymbol{\mu}. $
+\end{remark}	
+
+\begin{remark}
+	Bemerkung: Mit den beiden letzten Propositionen ist auch sichergestellt, dass die $ N(\boldsymbol{\mu}, \boldsymbol{\Sigma}) $-Verteilung, wie in Abschnitt I.2 angegeben, auch wohldefiniert ist.
+\end{remark}
+
+
+
+%---------------------------------------------------------------------------
+% Bibliography
+%---------------------------------------------------------------------------
+
+% \addcontentsline{toc}{chapter}{\textcolor{tssteelblue}{Literature}}
+% \printbibliography{}
+
+%---------------------------------------------------------------------------
+% Index
+%---------------------------------------------------------------------------
+\addcontentsline{toc}{chapter}{\textcolor{tssteelblue}{Index}}
+\printindex
+
+\end{document}
