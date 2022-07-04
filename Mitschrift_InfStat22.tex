@@ -1593,7 +1593,6 @@ Zwei Fälle:
 	wobei $ \hat{N}_{ML} $ nicht eindeutig ist wenn $ \frac{mn}{x} \in \N $.
 \end{example}
 
-
 \section{Zulässigkeit, Effizienz und die Cramér-Rao-Schranke}
 
 \begin{book}
@@ -1762,26 +1761,22 @@ Betrachte bis auf weiteres die Klasse $\kappa$ derr unverzerrten Schätzer.
 	\]
 	
 	Also gilt auch (i). $ \checkmark $
+	\end{proof}
 	
-\end{proof}
-
-
 Eine alternative Formel für $ I(\theta_0) $: 
-
 \begin{lemma}
 	Die \textbf{Fisher-Information} \index{Fisher-Information} lässt sich auch berechnen als 
-	\[I(\theta_0)=-\E_{\theta_0}\left(\frac{d^2}{d\theta^2}\log f(x|\theta_0)\right)\] 
+	\[I(\theta)=-\E(\theta)\left(\frac{d^2}{d\theta^2}\log f(x|\theta)\right)\] 
 	unter geeigneten Glattheitsbedingungen, sodass Schritte (a) und (b) im Beweis zulässig sind.
 \end{lemma}
 
 \begin{proof}
 	Für jedes $ \theta\in\Theta $ ist $ \int f(x|\theta)dx = 1 $. 
-	
 	\[
 	\begin{aligned}
-		0 & = \frac{d}{d\theta}\int f(x|\theta) dx \\
+		0 & = \frac{d}{d\theta}\int f(x|\theta) dx \\ 
 		& \overset{(a)}{=} \int \frac{d}{d\theta} f(x|\theta) dx \\
-		& = \int \frac{\frac{d}{\theta}f(x|\theta)}{f(x|\theta)}f(x|\theta) dx \\
+		& = \int \underbrace{\frac{\frac{d}{d\theta}f(x|\theta)}{f(x|\theta)}}_{  \left(\frac{d}{d\theta} \log f(x|\theta)\right) } f(x|\theta) dx \\
 		& = \int \left(\frac{d}{d\theta} \log f(x|\theta)\right) f(x|\theta) dx = (c).
 	\end{aligned}
 	\]
@@ -1790,8 +1785,8 @@ Eine alternative Formel für $ I(\theta_0) $:
 	& = \frac{d}{d\theta}\int \left(\frac{d}{d\theta} \log f(x|\theta)\right) f(x|\theta) dx \\
 	& \overset{(b)}{=} \int \left(\frac{d^2}{d\theta^2} \log f(x|\theta)\right) f(x|\theta) + \left(\frac{d}{d\theta}\log f(x|\theta)\right) \underbrace{\frac{d}{d\theta} f(x|\theta)}_{\overset{s.o}{=}\left(\frac{d}{d\theta}\log f(x|\theta)\right)f(x|\theta)} dx \\
 	& = \int \left(\frac{d^2}{d\theta^2} \log f(x|\theta)\right) f(x|\theta) dx + \int \left(\frac{d}{d\theta}\log f(x|\theta)\right)^2 f(x|\theta) dx \\
-	& = \E_{\theta_0} \left(\frac{d^2}{d\theta^2}\log f(x|\theta)\right)+\underbrace{\E_{\theta_0}\left(\left(\frac{d}{d\theta}\log f(x|\theta)\right)^2\right)}_{=I(\theta)} \\
-	\Rightarrow I(\theta) & = - \E_{\theta_0}\left(\frac{d^2}{d\theta^2}\log f(x|\theta)\right). 
+	& = \E_{\theta} \left(\frac{d^2}{d\theta^2}\log f(X|\theta)\right)+\underbrace{\E_{\theta}\left(\left(\frac{d}{d\theta}\log f(X|\theta)\right)^2\right)}_{=I(\theta)} \\
+	\Rightarrow I(\theta) & = - \E_{\theta_0}\left(\frac{d^2}{d\theta^2}\log f(X|\theta)\right). 
 	\end{aligned}
 	\]
 	
@@ -1800,216 +1795,200 @@ Eine alternative Formel für $ I(\theta_0) $:
 
 
 \begin{remark}
-	Bemerkung: Die Cramér-Rao-Schranke gilt auch in diskreten Modellen: 
+	Bemerkung: Die Cramér-Rao-Schranke gilt auch für diskrete Zufallsvariablen: 
 	
-	Sind $ X_1,\ldots,X_n $ i.i.d. diskrete Zufallsvariablen mit Wahrscheinlichkeitsfunktion $ w(x|\theta_0), \; \theta_0\in\Theta\subseteq\R $, und ist $ \hat{\theta} $ ein unverzerrter Schätzer für $ \theta_0 $, dann gilt 
+	Sind $ X_1,\ldots,X_n $ i.i.d. diskrete Zufallsvariablen, verteilt wie X,  mit Wahrscheinlichkeitsfunktion $ p(x|\theta), \; \theta \in\Theta\subseteq\R $, und ist $ \hat{\theta_n} =  \hat{\theta_n} (X_1, ... , X_n)  $ ein unverzerrter Schätzer für $ \theta $, dann gilt 
 	\[
-	\Var_{\theta_0}(\hat{\theta}) \ge \frac{1}{nI(\theta_0)},
+	\Var{ \hat{\theta_n}} \ge \frac{1}{nI(\theta)},
 	\] 
-	wobei $ I(\theta_0) = \E_{\theta_0} \left(\left(\frac{d}{d\theta} \log w(x_1|\theta)\right)^2\right) $, unter analogen Glattheitsbedingungen wie im letzten Satz. 
+        unter analogen Glattheitsbedingungen wie im letzten Satz. 
 	
 	Details: Siehe Übung.
 \end{remark}
 
+\newpage
+
 \begin{example}[Bernoulli-Verteilung]
-	Seien $ X_1,\ldots,X_n $ i.i.d $ B(p_0), \; 0<p_0<1 $. 
-	
-	Wissen: $ \hat{p}_{ML} = \bar{X}_n = \hat{p}_{MM} $ ist unverzerrt für $ p_0 $ mit Varianz $ \Var_{p_0}(\bar{X}_n) = \frac{\Var_{p_0}(X_1)}{n} = \frac{p_0(1-p_0)}{n} $. 
+	Seien $ X_1,\ldots,X_n $ i.i.d $ B(p_0), \; 0<p_0<1 $. \\
+	Wissen: $ \hat{p}_{ML} = \bar{X}_n = \hat{p}_{MM} = \frac{1}{n} \sum_{i=1}^{n} x_i $  \\
+	ist unverzerrt für $ p_0 $ mit Varianz $ \Var_{p_0}(\bar{X}_n) = \frac{\Var_{p_0}(X_1)}{n} = \frac{p_0(1-p_0)}{n} $. 
 	
 	\[
 	\begin{aligned}
-		w(x|p) & =\left\{\begin{array}{ll}
-			p & \colon x=1, \\
-			1-p & \colon x=0 \end{array}\right .\\
-		& = p^x(1-p)^{1-x}, \; x\in\lbrace0,1\rbrace, \; 0<p<1.
-	\end{aligned}
-	\]
-	
-	\[
-	\log w(x|p) = x\log p + (1-x)\log(1-p).
-	\]
-	
-	\[\begin{aligned}
-	\frac{d}{dp}\log w(x|p) & = \frac{x}{p} - \frac{1-x}{1-p} \\
-	\left(\frac{d}{dp}\log w(x|p)\right)^2 & = \frac{x^2}{p^2} - 2\underbrace{\frac{x}{p}\frac{1-x}{1-p}}_{=0, \text{ da } x\in\lbrace0,1\rbrace} + \frac{(1-x)^2}{(1-p)^2}.
+		p(x|p_0) & =\left\{\begin{array}{ll}
+			p_0 & \colon x=1, \\
+			1-p_0 & \colon x=0 \end{array}\right .\\
+		& = p_0^x(1-p_0)^{1-x}, \; x\in\lbrace0,1\rbrace, \; 0<p_0<1.
 	\end{aligned}
 	\]
 	
 	\[
 	\begin{aligned}
-		I(p_0) & = \E_{p_0} \left(\left(\frac{d}{dp}\log w(x_1|p_0)\right)^2\right) \\
-		& \overset{s.o.}{=} \E_{p_0} \left(\frac{x_1^2}{p_0^2} + \frac{(1-x_1)^2}{(1-p_0)^2}\right)\\
+		\frac{d}{d p_0} \log p(x|p_0) & = \frac{d}{d p_0} ( x\log p_0 + (1-x)\log(1-p_0)) \\
+		& = x \frac{1}{p_0} + (1-x)\frac{-1}{1-p_0} =  \frac{x}{p_0} + \frac{1-x}{1-p_0}
+	\end{aligned}
+	\]
+
+	\[
+	\begin{aligned}
+		I(p_0) & = \E_{p_0} \left(\left(  \frac{X}{p_0} + \frac{1-X}{1-p_0} )\right)^2\right) \\
 		& = \frac{1}{p_0^2}p_0 +\frac{1}{(1-p_0)^2}(1-p_0) \\
-		& = \frac{1}{p_0} + \frac{1}{1-p_0} \\
-		& = \frac{1-p_0+p_0}{p_0(1-p_0)} \\
+		& = \frac{1}{p_0} + \frac{1}{1-p_0}  = \frac{1-p_0+p_0}{p_0(1-p_0)} \\
 		& = \frac{1}{p_0(1-p_0)}.
 	\end{aligned}
 	\]
 	
 	Die Cramér-Rao-Schranke in diesem Modell ist also 
 	\[
-	\frac{1}{nI(p_0)} = \frac{p_0(1-p_0)}{n}.
+	\frac{1}{nI(p_0)} = \frac{p_0(1-p_0)}{n} = Var_{p_0} (\bar{X}_n )
 	\]
 	
-	Insbesondere ist $ \hat{p}_{ML} = \bar{X}_n $ effizient in der Klasse der unverzerrten Schätzer!
+	Der Schätzer  $ \bar{X}_n $ für $ p_0 $ ist also effizient (in der Klasse der unverzerrten Schätzer) !
 \end{example}
 
 \begin{example}[Exponentialverteilung]
-	$ X_1,\ldots,X_n $ i.i.d. $ Exp(\lambda_0), \; \lambda_0 > 0 $. 
+	$ X_1,\ldots,X_n $ i.i.d. verteilt wie X, wobei X eine stetige Zufallsvariable ist
+	mit $ X ~ E_{\lambda}(\lambda_0), \; \lambda_0 > 0 $. 
 	
-	$ f(x|\lambda) = \lambda e^{-\lambda x}, \; (x > 0) $. 
+	Dichte $ f(x|\lambda_0) = \lambda_0 e^{-\lambda_0 x}, \; (x > 0) $. 
 	
-	$ \log f(x|\lambda) = \log \lambda - \lambda x $. 
+	$ \log f(x|\lambda_0) = \log \lambda_0 - \lambda_0 x $. 
 	
-	$ \frac{d}{d\lambda} \log f(x|\lambda) = \frac{1}{\lambda} - x $. 
+	$ \frac{d}{d\lambda} \log f(x|\lambda_0) = \frac{1}{\lambda_0} - x $. 
+	
+	Erinnerung: $E_{\lambda_0}(X) = \frac{1}{\lambda_0}, \ Var_{\lambda_0}(X) =  \frac{1}{\lambda_0^2}  $
 	
 	\[
 	\begin{aligned}
 		I(\lambda_0) & = \E_{\lambda_0} \left(\left(\frac{d}{d\lambda}\log f(x|\lambda_0)\right)^2\right) \\
-		& = \E_{\lambda_0} \left(\left(\frac{1}{\lambda_0}-X\right)^2\right) \\
-		& = \Var_{\lambda_0}(X) \\
-		& = \frac{1}{\lambda_0^2}.
+		& = \E_{\lambda_0} \left(\left(\frac{1}{\lambda_0}-X\right)^2\right) 
+		= \Var_{\lambda_0}(X) 
+		= \frac{1}{\lambda_0^2}.
 	\end{aligned}
 	\]
 	
 	Cramér-Rao-Schranke: 
 	\[
-	\left(nI(\lambda_0)\right)^{-1} = \frac{\lambda_0^2}{n}.
+	\frac{1}{\left(nI(\lambda_0)\right)} = \frac{\lambda_0^2}{n}.
 	\]
 	
-	Der Schätzer $ \frac{1}{\bar{X}_n} = \frac{1}{\frac{1}{n}\sum_{i=1}^{n}X_i} $, ein Momentenmethoden-Schätzer und auch der ML-Schätzer, ist verzerrt: 
-	\[
-	\E_{\lambda_0}\left(\frac{1}{\bar{X}_n}\right) \ne \frac{1}{\E_{\lambda_0}(\bar{X}_n)} = \frac{1}{\frac{1}{\lambda_0}}= \lambda_0 
-	\]
-	
-	Über diesen Schätzer liefert die Cramér-Rao-Schranke damit keine Information.
+	Wissen: Der Schätzer $ \frac{1}{\bar{X}_n} = \frac{1}{\frac{1}{n}\sum_{i=1}^{n}X_i} = \hat{\lambda}_{MM} = \hat{\lambda}_{ML}  $ \\
+	Aber dieser Schätzer ist verzerrt! Cramer-Rao-Schranke nicht anwendbar! 
 \end{example}
 
 \begin{example}[Umparametrisierung der Exponentialverteilung]
 	$ X_1,\ldots,X_n $ i.i.d. $ Exp\left(\frac{1}{\theta_0}\right), \; \theta_0 > 0 $. 
 	
-	Hier ist
 	
-	$ \E_{\theta_0}(X_1) = \frac{1}{\frac{1}{\theta_0}} = \theta_0 $.
+	Wissen: $ \E_{\theta_0}(X) = \frac{1}{\frac{1}{\theta_0}} = \theta_0 , \ \Var_{\theta_0} (X)  = \left(\frac{1}{\frac{1}{\theta_0}}\right)^2 = \theta_0^2 $.
 	
-	$ \Var_{\theta_0} (X_1)  = \left(\frac{1}{\frac{1}{\theta_0}}\right)^2 = \theta_0^2 $.
+	Dichte: $ f(x|\theta_0) = \frac{1}{\theta_0} e^{-\frac{x}{\theta_0}}, \; (x > 0) $. 
 	
-	$ f(x|\theta) = \frac{1}{\theta} e^{-\frac{x}{\theta}}, \; (x > 0) $. 
+	$ \log f(x|\theta_0) = -\log \theta_0 -  \frac{x}{\theta} $. 
 	
-	$ \log f(x|\theta) = -\log \theta -  \frac{x}{\theta} $. 
-	
-	$ \frac{d}{d\theta} \log f(x|\theta) = -\frac{1}{\theta} + \frac{x}{\theta^2} $. 
+	$ \frac{d}{d\theta_0} \log f(x|\theta_0) = -\frac{1}{\theta_0} + \frac{x}{\theta_0^2} $. 
 	
 	\[
 	\begin{aligned}
-		I(\theta_0) & = \E_{\theta_0} \left(\left(\frac{d}{d\theta}\log f(x_1|\theta_0)\right)^2\right) \\
-		& = \E_{\theta_0} \left(\left(-\frac{1}{\theta} + \frac{X_1}{\theta^2}\right)^2\right) \\
-		& = \E_{\theta_0} \left(\left(\frac{\theta_0-X_1}{\theta_0^2}\right)^2\right) \\
-		& = \frac{1}{\theta_0^4}\E_{\theta_0} \left(\left(\theta_0-X_1\right)^2\right) \\
-		& =\frac{1}{\theta_0^4} \Var_{\theta_0}(X_1) \\
+		I(\theta_0) & = \E_{\theta_0} \left(\left(\frac{d}{d\theta_0}\log f(x|\theta_0)\right)^2\right) \\
+		& = \E_{\theta_0} \left(\left(\frac{X- \theta_0}{\theta_0^2}\right)^2\right) \\
+		& = \frac{1}{\theta_0^4}\E_{\theta_0} \left(\left(X- \theta_0\right)^2\right) \\
+		& =\frac{1}{\theta_0^4} \Var_{\theta_0}(X) \\
 		& = \frac{1}{\theta_0^4}\theta_0^2  = \frac{1}{\theta_0^2}.
 	\end{aligned}
 	\]
 	
 	Cramér-Rao-Schranke: 
 	\[
-	(nI(\theta_0))^{-1} = \frac{\theta_0^2}{n}.
+	\frac{1}{(nI(\theta_0))} = \frac{\theta_0^2}{n}.
 	\]
 	
-	$ \bar{X}_n = \frac{1}{n}\sum_{i=1}^{n}X_i $ ist ein unverzerrter Schätzer für $ \theta_0 $!
+	Beachte $ \bar{X}_n: \ \E_{\theta_0} (\bar{X}_n) =   \E_{\theta_0} (X) = \theta_0 $,
 	
-	\[
-	\Var_{\theta_0}(\bar{X}_n) = \frac{\Var_{\theta_0}(X_1)}{n} = \frac{\theta_0^2}{n}.
-	\]
+	$ \Var_{\theta_0}(\bar{X}_n) = \frac{\Var_{\theta_0}(X_1)}{n} = \frac{\theta_0^2}{n}. $
 	
-	Beide stimmen also überein. 
-	
-	Hier ist also $ \bar{X}_n $ effizient (in der Klasse der unverzerrten Schätzer). 
+	Der Schätzer  $ \bar{X}_n$ für $\theta_0$ ist also unverzerrt und erreicht die Cramer-Rao-Schranke.
+	 $ \bar{X}_n$ ist effizient (in der Klasse der unverzerrten Schätzer). 
 \end{example}
 
 \begin{remark}
-	Bemerkung: Die Existenz effizienter Schätzer kann von der Parametrisierung abhängen.
+	Bemerkung: Die Effizienz von Schätzern kann von der Parametrisierung abhängen.
 \end{remark}
 
 \begin{example}[Normalverteilung - Varianz bekannt]
-	$ X_1,\ldots,X_n $ i.i.d. $ N(\mu_0,\sigma^2), \; \mu_0 \in \R,\; \sigma^2 $ bekannt.
+	$ X_1,\ldots,X_n $ i.i.d. $ N(\mu_0,\sigma^2), \; \mu_0 \in \R,\; \sigma^2 > 0 $ bekannt.
 	
-	Wissen: $ \bar{X}_n = \hat{\mu}_{ML} $ ist unverzerrt für $ \mu_0 $. 
+	Wissen: $ \bar{X}_n = \hat{\mu}_{ML} = \hat{\mu}_{MM} $ ist unverzerrt mit $\Var_{\mu} (\bar{X}_n) = \frac{\sigma^2}{n}$.  
 	
-	$ f(x|\mu) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{1}{2\sigma^2}(x-\mu)^2} $. 
+	Dichte: $ f(x|\mu_0) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{1}{2\sigma^2}(x-\mu_0)^2} $. 
 	
-	$ \log f(x|\mu) = -\frac{1}{2}\log(2\pi\sigma^2)-\frac{1}{2\sigma^2}(x-\mu)^2 $. 
+	$ \log f(x|\mu_0) = -\frac{1}{2}\log(2\pi\sigma^2)-\frac{1}{2\sigma^2}(x-\mu_0)^2 $. 
 	
-	$ \frac{d}{d\mu}\log f(x|\mu) = \frac{1}{2\sigma^2}2(x-\mu) = \frac{x-\mu}{\sigma^2} $.
+	$ \frac{d}{d\mu_0}\log f(x|\mu_0) = \frac{1}{2\sigma^2}2(x-\mu_0) = \frac{x-\mu_0}{\sigma^2} $.
 	
 	\[
 	\begin{aligned}
-		I(\mu_0) & = \E_{\mu_0} \left(\left(\frac{d}{d\mu}\log f(X_1|\mu_0)\right)^2\right) \\
-		& = \E_{\mu_0}\left(\left(\frac{X_1-\mu_0}{\sigma^2}\right)^2\right) \\
-		& = \frac{1}{\sigma^4}\Var_{\mu_0}(X_1) \\
-		& = \frac{\sigma^2}{\sigma^4} \\
-		& = \frac{1}{\sigma^2}. 
+		I(\mu_0) & = \E_{\mu_0} \left(\left(\frac{d}{d\mu_0}\log f(X|\mu_0)\right)^2\right) \\
+		& = \E_{\mu_0}\left(\left(\frac{X-\mu_0}{\sigma^2}\right)^2\right) \\
+		& = \frac{1}{\sigma^4}\Var_{\mu_0}(X) \\
+		& = \frac{\sigma^2}{\sigma^4} = \frac{1}{\sigma^2}. 
 	\end{aligned}
 	\]
 	
 	Cramér-Rao-Schranke:
 	\[
-	(nI(\mu_0))^{-1} = \frac{\sigma^2}{n}.
+	\frac{1}{n I(\mu_0)} = \frac{\sigma^2}{n} = \Var_{\mu_0}(\bar{X}_n) .
 	\]
 	
-	\[ \Var_{\mu_0}(\bar{X}_n) = \frac{\sigma^2}{n} . 
-	\]
-	
-	Beide stimmen also überein. 
-	
-	Also ist $ \bar{X}_n $ effizient (in der Klasse der unverzerrten Schätzer).
+	$ \bar{X}_n $ ist damit effizient (in der Klasse der unverzerrten Schätzer).
 \end{example}
 
 \begin{remark}
 	Bemerkung:
-	Die hier betrachtete Klasse von Schätzern ist 
+	$ \bar{X}_n $  ist effizient in der Klasse
 	\[
-	\kappa_+ = \left\lbrace \hat{\mu} = \hat{\mu}(X_1,\ldots,X_n, \sigma^2) \colon \hat{\mu} \text{ unverzerrt}\right\rbrace
+	\kappa_+ = \left\lbrace_n \hat{\mu} = \hat{\mu_n}(X_1,\ldots,X_n, \sigma^2) \colon \hat{\mu_n} \text{ unverzerrt}\right\rbrace
 	\]
-	Der effiziente Schätzer $ \bar{X}_n $ hängt nicht von $ \sigma^2 $ ab.
+	$ \bar{X}_n $ hängt nicht von $ \sigma^2 $ ab.
 \end{remark}
 
-\begin{example}[Normalverteilung - Varianz unbekannt]
+\begin{example}[Normalverteilung - Beide unbekannt]
 	$ X_1,\ldots,X_n $ i.i.d. $ N(\mu_0,\sigma_0^2), \; \mu_0 \in \R, \; \sigma_0^2 > 0 $.
 	
 	Sei $ \kappa $ die Klasse aller unverzerrten Schätzer für $ \mu_0 $:
 	\[
-	\kappa = \left\lbrace \hat{\mu} = \hat{\mu}(X_1,\ldots,X_n) \colon \hat{\mu} \text{ unverzerrt}\right\rbrace
+	\kappa = \left\lbrace \hat{\mu} = \hat{\mu_n}(X_1,\ldots,X_n) \colon \hat{\mu_n} \text{ unverzerrt}\right\rbrace
 	\]
 	
 	Wissen: 
 	
 	(1) $ \bar{X}_n \in \kappa $ (unverzerrt),
 	
-	(2) $ \Var_{\mu_0}(\bar{X}_n) = \underset{\hat{\mu}\in\kappa_+}{\min}\Var_{\mu_0}(\hat{\mu}) $,
+	(2) $ \Var_{\mu_0}(\bar{X}_n) = \underset{\hat{\mu}\in\kappa_+}{\min}\Var_{\mu_0}(\hat{\mu_n}) $,
 	
 	(3) $ \kappa \subseteq \kappa_+ $. 
 	
 	Also: 
 	\[
 	\begin{aligned}
-		\Var_{\mu_0,\sigma_0^2}(\bar{X}_n) & \underset{(2)}{=} \underset{\hat{\mu}\in\kappa_+}{\min}\Var_{\mu_0, \sigma_0^2}(\hat{\mu}) \\
-		& \underset{(3)}{\le} \underset{\hat{\mu}\in\kappa}{\min}\Var_{\mu_0,\sigma_0^2}(\hat{\mu}) \\
+		\Var_{\mu_0,\sigma_0^2}(\bar{X}_n) & \underset{(2)}{=} \underset{\hat{\mu_n}\in\kappa_+}{\min}\Var_{\mu_0, \sigma_0^2}(\hat{\mu_n}) \\
+		& \underset{(3)}{\le} \underset{\hat{\mu_n}\in\kappa}{\min}\Var_{\mu_0,\sigma_0^2}(\hat{\mu}) \\
 		& \underset{(1)}{\le} \Var_{\mu_0,\sigma_0^2}(\bar{X}_n).
 	\end{aligned}
 	\]
 	
-	$ \Rightarrow \Var_{\mu_0,\sigma_0^2}(\bar{X}_n) = \underset{\hat{\mu}\in\kappa}{\min}\Var_{\mu_0,\sigma_0^2}(\hat{\mu}) $
+	$ \Rightarrow \Var_{\mu_0,\sigma_0^2}(\bar{X}_n) = \underset{\hat{\mu_n}\in\kappa}{\min}\Var_{\mu_0,\sigma_0^2}(\hat{\mu_n}) $
 	
-	Insbesondere ist $ \bar{X}_n $ effizient (in der Klasse der unverzerrten Schätzer) für $ \mu_0 $, auch im Fall unbekannter Varianz.
+	Also ist $ \bar{X}_n $ effizient  für $ \mu_0 $ auch im Fall unbekannter Varianz.  (in der Klasse $\kappa$ ).
 \end{example}
 
 \begin{remark}
-	Bemerkung: Es gibt eines Version der Cramér-Rao-Schranke für mehr-dimensionale Parameter und auch für multivariate Beobachtungen $ X_1,\ldots,X_n $. 
+	Bemerkung:
+	Es gibt eines Version der Cramér-Rao-Schranke für mehr-dimensionale Parameter $\theta_0 $ und für den Fall wo die $X_1, ... ,X_n$ Zufallsvektoren sind. 
 	
 	Insbesondere gilt: 
 	
-	Für $ X_1,\ldots,X_n $ i.i.d. $ N(\mu,\sigma^2I_k) $ mit $ \mu_0 \in \R^k $ und $ \sigma^2 > 0 $ ist $ \bar{X}_n = \frac{1}{n}\sum_{i=1}^{n}X_i $ ein effizienter Schätzer für $ \mu_0 $ (in der Klasse der unverzerrten Schätzer).
+	Sei $ X_1,\ldots,X_n $ i.i.d. Zufallsvektoren mit $ X_1 ~ N(\mu,\sigma^2 I_p) $ mit $ \mu_0 \in \R^p, \ \sigma_0 ^2 > 0 $ (p-dimensional), dann ist $ \bar{X}_n $  effizient.(in der Klasse der unverzerrten Schätzer für $\mu_0$).
 \end{remark}
 
 Betrachte nun auch möglicherweise verzerrte Schätzer.
@@ -2026,7 +2005,7 @@ Betrachte nun auch möglicherweise verzerrte Schätzer.
 	
 	Für $ X\sim N(\mu_0,I_p), \;\mu_0\in\R^p,\;p\ge3 $, gibt es einen Schätzer $ \hat{\mu}_{JS} $ für $ \mu_0 $, sodass gilt:
 	\[
-	\forall \mu \in \R^p \colon MSE(\tikzmarknode{JS}{\hat{\mu}_{JS}},\mu) < MSE(\tikzmarknode{X}{X},\mu)
+	\forall \mu_0 \in \R^p \colon MSE(\tikzmarknode{JS}{\hat{\mu}_{JS}},\mu_0) < MSE(\tikzmarknode{X}{X},\mu_0)
 	\]
 	\begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
 		nodes={inner sep=1pt, align=center, font=\footnotesize}]
@@ -2035,9 +2014,14 @@ Betrachte nun auch möglicherweise verzerrte Schätzer.
 	\end{tikzpicture}
 	\vspace{6ex}
 	
+	\[
+	MSE({\hat{\mu}_{JS}}, 0 ) =2, \  MSE(X,0)=p.
+	\]
+	 
+	
 	Dieser Schätzer ist gegeben durch 
 	\[
-	\hat{\mu}_{JS} = \underbrace{\left(1-\frac{p-2}{X^{\prime} X}\right)}_{\text{Kontraktionsfaktor}} \tikzmarknode{ML}{X}.
+	\hat{\mu}_{JS} = \underbrace{\left(1-\frac{p-2}{X^{\prime} X}\right)}_{\text{Kontraktionsfaktor <1 }} \tikzmarknode{ML}{X}.
 	\]
 	\begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
 		nodes={inner sep=1pt, align=center, font=\footnotesize}]
@@ -2046,101 +2030,20 @@ Betrachte nun auch möglicherweise verzerrte Schätzer.
 	\vspace{6ex}
 	Insbesondere ist der Maximum-Likelihood-Schätzer in diesem Modell unzulässig wenn $ p\ge3 $.
 \end{remark}
-
-R-Beispiel:
-	\[
-	\begin{aligned}
-		MSE(\hat{\mu}_{JS},\mu) & = \E_\mu \left(||\hat{\mu}_{JS}-\mu||^2\right) \\
-		& \tikzmarknode{GZ}{\approx} \frac{1}{m}\sum_{i=1}^{m} ||\tikzmarknode{K}{\hat{\mu}_{JS}^{(i)}}-\mu||^2
-	\end{aligned}
-	\]
-	\begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
-		nodes={inner sep=1pt, align=center, font=\footnotesize}]
-		\draw[<-] (GZ.south) -- ++ (-0.5,-.5) node[below] {Gesetz der \\ großen Zahlen};
-		\draw[<-] (K.south) -- ++ (0.5,-.5) node[below] {i.i.d. Kopien \\ von $ \hat{\mu}_{JS} $};
-	\end{tikzpicture}
-	\vspace{6ex}
-	
-	
-	Man weiß: $ MSE(\hat{\mu}_{JS},\mu) $ hängt nur von $ ||\mu|| $ ab. 
 	
 	\begin{remark}
 		Bemerkung: 
 		
-		In der Praxis wird der James-Stein-Schätzer selten verwendet. Aber als so genannter Shrinkage-Schätzer lieferte $ \hat{\mu}_{JS} $ die Inspiration für zahlreiche moderne Methoden wie LASSO, SVM, LARS, Dantzig-Selektor, $ \ldots $
+		In der Praxis wird der James-Stein-Schätzer fast nie verwendet. Aber als so genannter Shrinkage-Schätzer lieferte $ \hat{\mu}_{JS} $ die Inspiration für zahlreiche moderne Methoden wie LASSO, SVM, LARS, Dantzig-Selektor, $ \ldots $
 	\end{remark}
-
-\begin{example}
-	Nochmal zu $ X_1,\ldots, X_n $ i.i.d. $ Exp(\lambda_0), \; n \ge 2 $; ein Spezialfall der s.g. $ \Gamma(1,\lambda_0) $-Verteilung. 
-	
-	Es gilt : $ S_n = \sum_{i=1}^{n}X_i \sim \Gamma(n,\lambda_0) $. 
-	
-	?$ \E\left(\frac{1}{S_n}\right)= ? $
-	
-	Dichte der $ \Gamma(n,\lambda_0) $-Verteilung: $ \frac{\lambda^n}{\Gamma(n)}t^{n-1}e^{-\lambda_0t} \; (t\ge0) $.
-	
-	\[
-	\begin{aligned}
-		\E\left(\frac{1}{S_n}\right) & = \int_{0}^{\infty}\frac{1}{t}\frac{\lambda_0^n}{\Gamma(n)}t^{n-1}e^{-\lambda_0t}dt \\
-		& = \int_{0}^{\infty}\frac{\lambda_0^n}{\Gamma(n)}t^{n-2}e^{-\lambda_0t}dt \\
-		& = \lambda_0 \frac{\Gamma(n-1)}{\Gamma(n)}\int_{0}^{\infty}\underbrace{\frac{\lambda_0^{n-1}}{\Gamma(n-1)}t^{n-2}e^{-\lambda_0 t}}_{\substack{\text{Dichte der} \\ \Gamma(n-1,\lambda_0)\text{-Verteilung}=1}}dt \\
-		& = \lambda_0 \frac{\Gamma(n-1)}{\Gamma(n)} \\
-		& =  \lambda_0 \frac{(n-2)!}{(n-1)!} = \frac{\lambda_0}{n-1}.
-	\end{aligned}
-	\]
-	
-	Für $ \hat{\lambda} = \frac{1}{\bar{X}_n} = \frac{n}{S_n} $ ist damit $ \E_{\lambda_0}(\hat{\lambda}) = n\E_{\lambda_0}\left(\frac{1}{S_n}\right) = \lambda_0 \frac{n}{n-1} > \lambda_0 \ldots $ verzerrt.
-	
-	Der Schätzer $ \tilde{\lambda} = \frac{n-1}{n}\hat{\lambda} $ dagegen ist unverzerrt. 
-	
-	\[ \tilde{\lambda} = \frac{n-1}{n}\frac{n}{S_n} = \frac{n-1}{S_n} = \frac{n-1}{\sum_{i=1}^{n}X_i} . \] 
-	
-	Frage: Erreicht $ \tilde{\lambda} $ die Cramér-Rao-Schranke $ (nI(\lambda_0))^{-1} = \frac{\lambda_0^2}{n} $?
-	
-	?$ \Var(\tilde{\lambda}) = \Var\left(\frac{n-1}{S_n}\right) = (n-1)^2 \Var\left(\frac{1}{S_n}\right) $. 
-	
-	\[
-	\begin{aligned}
-		\E\left(\left(\frac{1}{S_n}\right)^2\right) & =  \int_{0}^{\infty} \frac{1}{t^2}\frac{\lambda_0^n}{\Gamma(n)}t^{n-1}e^{-\lambda_0t}dt \\
-		& = \int_{0}^{\infty} \frac{\lambda_0^n}{\Gamma(n)}t^{n-3}e^{-\lambda_0t}dt \\
-		& = \lambda_0^2 \frac{\Gamma(n-2)}{\Gamma(n)} \int_{0}^{\infty} \underbrace{\frac{\lambda_0^{n-2}}{\Gamma(n-2)}t^{(n-2)-1}e^{-\lambda_0t}}_{\substack{\text{Dichte der } \\ \Gamma(n-2,\lambda_0) \text{ falls }n\ge3}} dt \\
-		& = \lambda_0^2 \frac{\Gamma(n-2)}{\Gamma(n)} \\
-		& = \lambda_0^2 \frac{(n-3)!}{(n-1)!} \\
-		& = \frac{\lambda_0^2}{(n-1)(n-2)}.
-	\end{aligned}
-	\]
-	
-	\[
-	\begin{aligned}
-		\Var\left(\frac{1}{S_n}\right) & = \E\left(\left(\frac{1}{S_n}\right)^2\right) - \left(\E\left(\frac{1}{S_n}\right)\right)^2 \\
-		& = \frac{\lambda_0^2}{(n-1)(n-2)} - \frac{\lambda_0^2}{(n-1)^2} \\
-		& = \frac{\lambda_0^2}{(n-1)}\left(\frac{1}{n-2}-\frac{1}{n-1}\right) \\
-		& = \frac{\lambda_0^2}{(n-1)}\left(\frac{n-1-n+2}{(n-1)(n-2)}\right) \\
-		& = \frac{\lambda_0^2}{(n-1)^2(n-2)} \; (\text{für }n\ge3).
-	\end{aligned}
-	\]
-	
-	$ \Rightarrow \Var(\tilde{\lambda}) = (n-1)^2\Var\left(\frac{1}{S_n}\right) = \frac{\lambda_0^2}{(n-2)} $. 
-	
-	Hier ist $ \Var(\tilde{\lambda}) > \frac{\lambda_0^2}{n} $; die Cramér-Rao-Schranke wird nicht erreicht.
-	
-	Allerdings ist 
-	\[
-	\begin{aligned}
-		MSE(\tilde{\lambda},\lambda_0) & < MSE(\hat{\lambda},\lambda_0) \\
-		\Var(\tilde{\lambda}) & < \Var(\hat{\lambda}) + (Bias(\hat{\lambda}))^2.
-	\end{aligned}
-	\]
-	Details: Übung.
-\end{example}
 
 \textbf{Zur Motivation des James-Stein-Schätzers:}
 
-	$ X\sim N(\mu,I_p), \; \hat{\mu}_{JS} = \left(1-\frac{p-2}{X^\prime X}\right)X $. 
+	$ X\sim N(\mu,I_p), \; \hat{\mu}_{JS} = \left(1-\frac{p-2}{X^\prime X}\right)X , \ (p \ge 3)$. 
 	
-	Betrachte eine Approximation, wo $ p\to\infty $ geht, und wo 
+	Betrachte eine Approximation, wo $ p\to\infty $ geht, wobei
 	\[
-	\frac{\tikzmarknode{S}{||\mu||^2}}{\tikzmarknode{N}{p}} \xrightarrow{p\to\infty} \rho^2 > 0.
+	\underbrace {\frac{\tikzmarknode{S}{||\mu||^2}}{\tikzmarknode{N}{p}}}_{singal-to-noice \ ratio} \xrightarrow{p\to\infty} \rho^2 > 0 \in [0,1].
 	\]
 	
 	\begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
@@ -2151,12 +2054,14 @@ R-Beispiel:
 	\vspace{0.3cm}
 	
 	Zerlege $ X $ als $ X = \mu + \epsilon $ (für $ \epsilon = X-\mu $), sodass $ \epsilon\sim N(0,I_p) $. 
+
 	
 	\begin{remark}
-		Beachte: Als Schätzer für $ \mu $ ist $ X $ ''zu lang'': 
+		Beachte: Als Schätzer für $ \mu $ ist $ X $ (im Mittel) ''zu lang'': 
 		\[
 		\begin{aligned}
-			\E(||X||^2) & = \E(X^\prime X) \\
+			 \text{Länge von } \mu: ||\mu||^2 \\
+			 \text{Länge von } X: \E(||X||^2) & = \E(X^\prime X) \\
 			& = \E\left((\mu+\epsilon)^\prime(\mu+\epsilon)\right) \\
 			& = \E\left(\mu^\prime\mu+2\mu^\prime\epsilon +\epsilon^\prime\epsilon\right) \\
 			& = \mu^\prime\mu + 0 + \underbrace{\E(\epsilon^\prime\epsilon)}_{\E\left(\sum_{i=1}^{p}\epsilon_i^2\right)=p} \\
@@ -2269,9 +2174,9 @@ R-Beispiel:
 	
 	Betrachte durchwegs $ X_i, \; i \ge 1 $, i.i.d. mit Dichte (bzw. Wahrscheinlichkeitsfunktion)
 	\[
-	f(x|\theta_0), \; \theta_0\in\Theta\subseteq\R,
+	f(x|\theta_0), \; \theta_0\in\Theta\subseteq\R, 1-dim
 	\] 
-	sowie für die Stichprobengröße $ n $ den Maximimum-Likelihood-Schätzer 
+	und für die Stichprobe der Größe $ n $ den Maximimum-Likelihood-Schätzer 
 	\[
 	\hat{\theta}_n = \hat{\theta}_n\left(X_1,\ldots,X_n\right).
 	\]
@@ -2285,33 +2190,33 @@ R-Beispiel:
 	\end{satz}
 	
 	\begin{proof}[Beweisidee]
-		$ \hat{\theta}_n $ maximiert $ l_n(\theta)=\sum_{i=1}^{n} \log f(X_i|\theta) $ bzw. $ \frac{1}{n}l_n(\theta) $ über $ \theta\in\Theta $. 
+		$ \hat{\theta}_n $ maximiert $ l_n(\theta)=\prod_{i=1}^{n} f(X_i|\theta) $ bzw. $ l_n(\theta)= \frac{1}{n} \sum_{i=1}^{n} \underbrace{ \log f(X_i|\theta) }_{iid \ mit \ \E_{\theta_0} (\log f(X_i | \theta ))} $ bzw. $\frac{1}{n}l_n(\theta) $ für jedes $ \theta\in\Theta $. 
 		
 		Mit dem Gesetz der großen Zahlen gilt
 		\[
-		\frac{1}{n}l_n(\theta) = \frac{1}{n}\sum_{i=1}^{n} \underbrace{\log f(X_i|\theta)}_{\substack{\text{i.i.d. mit } \\ \E_{\theta_0}(\log f(X_1|\theta))}} \xrightarrow{p} \E_{\theta_0}(\log f(X_1|\theta)) \coloneqq l_\infty(\theta).
+		l_n(\theta)  \xrightarrow{p} \E_{\theta_0}(\log f(X_1|\theta)) \coloneqq l_\infty(\theta).
 		\]
 		
-		Also:
-		\[
-		\frac{1}{n}l_n(\theta) \approx l_\infty(\theta), \quad (\theta\in\Theta).
-		\]
+		für jedes $ \theta\in\Theta.$
+		
 		
 		Idee: 
 		\[
 		\underbrace{\text{Maximierer von }\frac{1}{n}l_n(\theta)}_{\hat{\theta}_n} \approx \underbrace{\text{Maximierer von }l_\infty(\theta)}_{?=\theta_0 \, \text{(siehe unten)}}.
 		\]
 		
+		? Maximierer von $ l_\infty ( \theta ) = $ ?
+		
 		\[
 		\begin{aligned}
-			\frac{d}{d\theta}l_\infty(\theta) & = \frac{d}{d\theta}\int\log f(x|\theta) f(x|\theta_0) dx \\
+			\frac{d}{d\theta}l_\infty(\theta) & = \frac{d}{d\theta}\int\log f(x|\theta) \underbrace{ f(x|\theta_0)}_{\text{dichte an der Stelle} \theta_0 } dx \\
 			& = \int \frac{d}{d\theta}\log f(x|\theta)\cdot f(x|\theta_0) dx \\
 			& = \int \frac{\frac{d}{d\theta}f(x|\theta)}{f(x|\theta)}\cdot f(x|\theta_0) dx = (\hexstar).
 		\end{aligned}
 		\]
 		
 		Für $ \theta = \theta_0 $ ist also 
-		\[
+		\[ 
 		\frac{d}{d\theta}l_\infty(\theta_0) = \frac{d}{d\theta}l_\infty(\theta)\Big|_{\theta=\theta_0} .
 		\]
 		
@@ -2319,22 +2224,27 @@ R-Beispiel:
 		\begin{aligned}
 			(\hexstar) & = \int \frac{\frac{d}{d\theta}f(x|\theta_0)}{\cancel{f(x|\theta_0)}} \cancel{f(x|\theta_0)} dx \\
 			& = \int \frac{d}{d\theta} f(x|\theta_0) dx \\
-			& = \frac{d}{d\theta} \underbrace{\int f(x|\theta_0) dx}_{=1} \\
+			& = \frac{d}{d\theta} \underbrace{\int f(x|\theta_0) dx}_{=1} \Big|_{\theta=\theta_0} \\
 			& = 0.
 		\end{aligned}
 		\]
 		
+		? Ist $\theta_0$ ein Maximierer für  $ l_\infty (\theta)$ ?
 		\[
 		\begin{aligned}
-			\frac{d^2}{d\theta^2} l_\infty(\theta_0) & = \frac{d^2}{d\theta^2} \E_{\theta_0} \left(\log f(X_1|\theta_0)\right) \\
+			& \frac{d^2}{d\theta^2} \frac{d}{d\theta}\int\log f(x|\theta) f(x|\theta_0) dx = \\
+			& = \int \frac{d^2}{d\theta^2}  \log f(x|\theta)\cdot f(x|\theta_0) dx  \Big|_{\theta=\theta_0} \\
+			& = \int\frac{d^2}{d\theta^2}  \log f(x|\theta_0)\cdot f(x|\theta_0) dx \\
 			& = \E_{\theta_0}\left(\frac{d^2}{d\theta^2}\log f(X_1|\theta_0)\right) \\
 			& = - I(\theta_0) \le 0.
 		\end{aligned}
 		\]
 		
-		Im nicht-trivialen Fall, wo $ I(\theta_0)>0 $ ist also $ \theta_0 $ ein Maximierer von $ l_\infty(\theta) $. 
+		Im nicht-trivialen Fall (stetige Zufallsvariablen), wo $ I(\theta_0)>0 $ ist also $ \theta_0 $ ein Maximierer von $ l_\infty(\theta) $. 
 		
 		Weitere Details zum Beweis folgen im Masterstudium.
+		
+		Für diskrete Zufallsvariablen funktioniert analog.
 	\end{proof}
 	
 	\begin{satz}[Asymptotische Normalität]\index{Asymptotische Normalität}
@@ -2342,19 +2252,17 @@ R-Beispiel:
 		\[
 		\sqrt{n}\left(\hat{\theta}_n-\theta_0\right) \xrightarrow{w} N\left(0,\frac{1}{I(\theta_0)}\right);
 		\]
-		d.h. für jedes $ t\in\R $ ist 
-		\[
-		\lim_{n\to\infty}\Prob_{\theta_0}\left(\sqrt{n}(\hat{\theta}_n-\theta_0)\le t\right) = \Phi_{0,\frac{1}{I(\theta_0)}}(t).
-		\]
+		
 	\end{satz}
 
-	\begin{proof}[Beweisidee]
+	\begin{proof}[Beweisidee] (Für Stetige Zufallsvariablen, diskrete analog )
 		$ \hat{\theta}_n $ maximiert $ l_n(\theta)=\sum_{i=1}^{n}\log f(X_i|\theta) $. 
 		
 		\[
 		\begin{aligned}
-			\Rightarrow 0 & = l_n^\prime(\hat{\theta}_n) \\
-			& \tikzmarknode{T}{\approx} l_n^\prime(\theta_0) + l_n^{\prime\prime}(\theta_0)(\hat{\theta}_n-\theta_0)+ \, \cancel{Rest}.
+		    \Rightarrow 0 & = \frac{d}{d\theta} l_n (\theta) \Big|_{\theta = \hat{\theta}_n} \\
+		    & = \frac{d}{d\theta} l_n (\hat{\theta}_n) = l_n^{\prime} (\hat{\theta}_n) \\
+		    & \tikzmarknode{T}{\approx} l_n^{\prime} (\theta_0) + (\hat{\theta}_n - \theta_0) l_n^{\prime \prime} (\theta_0) + \xcancel{Rest}.
 		\end{aligned}
 		\begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
 		nodes={inner sep=1pt, align=center, font=\footnotesize}]
@@ -2364,21 +2272,36 @@ R-Beispiel:
 		\vspace{0.3cm}
 		
 		\[
-		\Rightarrow \sqrt{n}(\hat{\theta}_n-\theta_0) \approx \frac{\sqrt{n}l_n^\prime(\theta_0)\frac{1}{n}}{-l_n^{\prime\prime}(\theta_0)\frac{1}{n}} = \frac{\textcolor{blue}{\frac{1}{\sqrt{n}}l_n^\prime(\theta_0)}}{\textcolor{red}{-\frac{1}{n}l_n^{\prime\prime}(\theta_0)}} \quad (\hexstar)
+		\begin{aligned}
+		\Rightarrow \hat{\theta}_n - \theta_0 & \approx \frac{l_n^{\prime}(\theta_0)}{-l_n^{\prime \prime}(\theta_0)} = \frac{\frac{1}{n}l_n^{\prime}(\theta_0)}{-\frac{1}{n}l_n^{\prime \prime}(\theta_0)} \\
+		\Rightarrow \sqrt{n}(\hat{\theta}_n-\theta_0) & \approx \frac{\sqrt{n}l_n^\prime(\theta_0)\frac{1}{n}}{-l_n^{\prime\prime}(\theta_0)\frac{1}{n}} = \frac{\textcolor{blue}{\frac{1}{\sqrt{n}}l_n^\prime(\theta_0)}}{\textcolor{red}{-\frac{1}{n}l_n^{\prime\prime}(\theta_0)}} \quad (\hexstar)
+		\end{aligned}
 		\]
 		
 		\[
 		\begin{aligned}
-			\textcolor{blue}{\frac{1}{\sqrt{n}}l_n^\prime(\theta_0)} & = \frac{1}{\sqrt{n}}\sum_{i=1}^{n}\underbrace{\frac{d}{d\theta}\log f(X_i|\theta_0)}_{\substack{\text{i.i.d. mit E-Wert} = 0 \, \text{und Varianz } \\ \E_{\theta_0}\left(\left(\frac{d}{d\theta}\log f(X_1|\theta_0)\right)^2\right)= I(\theta_0)}} \\
+			\textcolor{blue}{\frac{1}{\sqrt{n}}l_n^\prime(\theta_0)} & = \frac{1}{\sqrt{n}}\sum_{i=1}^{n}\underbrace{\frac{d}{d\theta}\log f(X_i|\theta)\Big|_{\theta=\theta_0}}_{\substack{\frac{d}{d\theta}\log f(X_i|\theta_0) \\ \text{i.i.d. mit E-Wert} = 0 \, \text{und Varianz } \\ \E_{\theta_0}\left(\left(\frac{d}{d\theta}\log f(X_1|\theta_0)\right)^2\right)= I(\theta_0)}} \\
 			& \xrightarrow{w} N(0,I(\theta_0)) \; \text{wegen dem zentralen Grenzwertsatz.}
 		\end{aligned}
 		\]
 		
 		\[
 		\begin{aligned}
-			\textcolor{red}{-\frac{1}{n}l_n^{\prime\prime}(\theta_0)} & = \frac{1}{n}\sum_{i=1}^{n}\underbrace{\left(-\frac{d^2}{d\theta^2}\log f(X_i|\theta_0)\right)}_{\substack{\text{i.i.d. mit E-Wert} \\ -\E_{\theta_0}\left(\frac{d^2}{d\theta^2}\log f(X_1|\theta_0)\right)= I(\theta_0)}} \\
+			\textcolor{red}{-\frac{1}{n}l_n^{\prime\prime}(\theta_0)} & = \frac{1}{n} l_n^{\prime \prime} (\theta_0) \\
+			& = \frac{1}{n}\sum_{i=1}^{n}\underbrace{\left(-\frac{d^2}{d\theta^2}\log f(X_i|\theta_0)\right)}_{\substack{\text{i.i.d. mit E-Wert} \\ -\E_{\theta_0}\left(\frac{d^2}{d\theta^2}\log f(X_1|\theta_0)\right)= I(\theta_0)}} \\
 			& \xrightarrow{p} I(\theta_0) \; \text{wegen dem Gesetz der großen Zahlen.}
 		\end{aligned}
+		\]
+		
+		Falls \(I(\theta_0)\) folgt auch dass
+		
+		\[
+		    \frac{1}{\textcolor{red}{-\frac{1}{n}l_n^{\prime\prime}(\theta_0)}} \xrightarrow{p} \frac{1}{I(\theta_0)}.
+		\]
+		Also:
+		
+		\[
+		    \frac{\textcolor{blue}{\frac{1}{\sqrt{n}}l_n^\prime(\theta_0)}}{\textcolor{red}{-\frac{1}{n}l_n^{\prime\prime}(\theta_0)}} = \underbrace{\textcolor{blue}{\frac{1}{\sqrt{n}}l_n^\prime(\theta_0)}}_{\xrightarrow{w} N(0,I(\theta_0))} \cdot \underbrace{\frac{1}{\textcolor{red}{-\frac{1}{n}l_n^{\prime\prime}(\theta_0)}}}_{\xrightarrow{p} \frac{1}{I(\theta_0)}}
 		\]
 		
 		Mit den Rechenregeln für $ \xrightarrow{p} $ und $ \xrightarrow{w} $ ergibt sich, dass
@@ -2390,10 +2313,13 @@ R-Beispiel:
 		\[
 		\sqrt{n}(\hat{\theta}_n-\theta_0) \xrightarrow{w} N\left(0,\frac{1}{I(\theta_0)}\right).
 		\]
+		
+		Weitere Details folgen im Masterstudium.
+		
 	\end{proof}
 	
 	\begin{remark}
-		Bemerkung: Ein konsistenter Schätzer für $ I(\theta_0) $ ist (unter geeigneten Voraussetzungen) gegeben durch 
+		Bemerkung: Für Inferenz über $\theta_0$ benötigt man noch einen konsistenten Schätzer für $\frac{1}{I(\theta_0)}$ bzw. $I(\theta_0)$, der für $ I(\theta_0) $ (unter geeigneten Voraussetzungen) gegeben ist durch 
 		\[
 		\hat{I} = -\frac{1}{n}\sum_{i=1}^{n}\frac{d^2}{d\theta^2}\log f(X_i|\hat{\theta}_n)
 		\] oder durch
@@ -2403,16 +2329,25 @@ R-Beispiel:
 	\end{remark}
 
 	\begin{remark}
-		Bemerkung: Falls $ \hat{\theta}_n $ ein unverzerrter Schätzer für $ \theta_0 $ ist, dann folgt aus der Cramér-Rao-Schranke, dass $ \Var(\hat{\theta}_n) \ge \frac{1}{nI(\theta_0)}$ (unter Glattheitsbedingungen).
-		
-		\[ \Rightarrow \Var(\sqrt{n}(\hat{\theta}_n-\theta_0)) = n\Var(\hat{\theta}_n) \ge \frac{1}{I(\theta_0)} .
+		Bemerkung: Falls $ \hat{\theta}_n $ ein unverzerrter Maximum-Likelihood-Schätzer für $ \theta_0 $ ist, dann gilt die Cramér-Rao-Schranke: 
+	    
+	    \[
+	    	\Var_{\theta_0}(\hat{\theta}_n) \ge \frac{1}{n I(\theta_0)}
+	    \]
+	    
+		\[
+		\begin{aligned}
+			\Rightarrow \Var_{\theta}(\sqrt{n}(\hat{\theta}_n-\theta_0)) & = \Var_{\theta_0}(\sqrt{n}\hat{\theta}_n) \\
+	        & = n\Var_{\theta_0}(\hat{\theta}_n) \\
+	        & \ge n \frac{1}{n I(\theta_0)} = \frac{1}{I(\theta_0)} .
+		\end{aligned}
 		\] 
 		
 		Für allgemeine Maximum-Likelihood-Schätzer besagt der letzte Satz, dass 
 		\[
-		\Var(\text{Asymptotische Verteilung von }\sqrt{n}(\hat{\theta}_n-\theta_0))=\frac{1}{I(\theta_0)}.
+		\Var(\text{Grenzverteilung von }\sqrt{n}(\hat{\theta}_n-\theta_0))=\frac{1}{I(\theta_0)}.
 		\]
-		Diese Eigenschaft nennt man asymptotische Effizienz.
+		In diesem Sinne ist der Maximum-Likelihood-Schätzer asymptotisch effizient.
 		
 	\end{remark}
 
@@ -2655,14 +2590,19 @@ Die Wahrscheinlichkeit eines Fehlers 2. Art wird von der Wahl von $ T $ und $ R 
 	Es gilt: 
 	\[
 	\begin{aligned}
-		\Prob(S\ge c\; |H_0) = \alpha & \ge a = \Prob(S\ge s\; |H_0) \\
-		\Leftrightarrow c & \le s \\
-		\equiv s & \ge c \\
+		\Prob(S\ge \tilde{c}\; |H_0) = \tilde{\alpha} & \ge a = \Prob(S\ge s\; |H_0) \\
+		\Leftrightarrow \tilde{c} & \le s \\
+		\equiv \tikzmarknode{S}{s} & \ge \tikzmarknode{C}{\tilde{c}} \\
+		\\
 		\Leftrightarrow \; & \xcancel{H_0}.
 	\end{aligned}
 	\]
 \end{proof}
-
+	\begin{tikzpicture}[overlay, remember picture,shorten <=1mm,
+		nodes={inner sep=1pt, align=center, font=\footnotesize}]
+		\draw[<-] (S.south) -- ++ (-3.5,-.5) node[below] {Beobachtbarer Wert der Test-Statistik};
+		\draw[<-] (C.south) -- ++ (2.5,-.5) node[below] {Kritische Wert des Tests};
+	\end{tikzpicture}
 \begin{remark}
 	Bemerkung: Falls die Verteilungsfunktion $ F $ der Test-Statistik $ S $ (bzw. $ |S| $) invertierbar ist, dann ist der p-Wert vor der Durchführung des Experiments/Tests eine Zufallsvariable, die $ U([0,1]) $-verteilt ist.
 \end{remark}
@@ -2694,28 +2634,31 @@ Die Wahrscheinlichkeit eines Fehlers 2. Art wird von der Wahl von $ T $ und $ R 
 \begin{example}(Der z-Test)
 	(Testen des Mittelwerts im Gauß'schem Modell mit bekannter Varianz). 
 	
-	Betrachte $ X_1,\ldots,X_n $ i.i.d. $ N(\mu,\sigma^2), \; \mu\in\R, \;\sigma^2>0 $ bekannt. 
+	Betrachte $ X_1,\ldots,X_n $ i.i.d. $ N(\mu_0,\sigma^2), \; \mu_0\in\R, \;\sigma^2>0 $ bekannt. 
 	
-	$ H_0\colon \mu=\mu_0 $. 
+	$ H_0\colon \mu=\mu_z $ (Für einen bestimmten Wert $\mu_0$). 
 	
 	Die sogenannte z-Statistik ist gegeben durch 
 	\[
-	Z = \frac{1}{\sqrt{n}}\sum_{i=1}^{n}\frac{X_i-\mu_0}{\sigma} = \sqrt{n}\frac{\bar{X}_n-\mu_0}{\sigma}.
+	\begin{aligned}
+	Z & = \underbrace{\frac{1}{\sqrt{n}}\underbrace{\sum_{i=1}^{n}\underbrace{\frac{X_i-\mu_0}{\sigma}}_{\sim \text{ i.i.d. } N(0,1) \text{ unter } H_0}}_{\sim N(0,n) \text{ unter } H_0}}_{\sim N(0,1) \text{ unter } H_0} \\
+	\\
+	  & = \sqrt{n}\frac{\bar{X}_n-\mu_0}{\sigma}.
+	\end{aligned}
 	\]
-	
-	Beachte: Unter $ H_0 $ ist $ Z\sim N(0,1) $. 
 	
 	Zweiseitige Alternative: 
 	
-	$ H_1\colon \mu\ne\mu_0 $.
+	$ H_1\colon \mu_0\ne\mu_z $.
 	
-	$ \xcancel{H_0} $ falls $ |Z| $ groß ist. Für Signifikanzniveau $ \alpha $ wählt man $ c=\Phi^{-1}\left(1-\frac{\alpha}{2}\right) $ und verwirft, wenn $ |Z|\ge c $: 
+	$ \xcancel{H_0} $ falls $ |Z| $ groß ist. Für Signifikanzniveau $ \alpha\in (0.1) $ wählt man $ c=\Phi^{-1}\left(1-\frac{\alpha}{2}\right) $ und verwirft, wenn $ |Z|\ge c $: 
 	\[
 	\begin{aligned}
 		\Prob(\xcancel{H_0}|H_0) & = \Prob(|Z|\ge c\;|H_0) \\
 		& = \Prob(|N(0,1)|\ge c) \\
 		& = \Prob(N(0,1)\le -c)+1-\Prob(N(0,1)\le c) \\
 		& = \Phi(-c)+1-\Phi(c) \\
+		& = 2\left( 1 - \Phi(c) \right)
 		& = 2\left(1-\Phi\left(\Phi^{-1}\left(1-\frac{\alpha}{2}\right)\right)\right) \\
 		& = 2\left(1-1+\frac{\alpha}{2}\right) = \alpha. \checkmark
 	\end{aligned}
@@ -2731,17 +2674,28 @@ Die Wahrscheinlichkeit eines Fehlers 2. Art wird von der Wahl von $ T $ und $ R 
 				\addplot [fill=none, draw=cyan, domain=-3:3] {gauss(0,1)} \closedcycle;
 				\addplot [fill=orange!20, draw=none, domain=-3:-2] {gauss(0,1)} \closedcycle;
 				\addplot [fill=orange!20, draw=none, domain=2:3] {gauss(0,1)} \closedcycle;
-				\node[coordinate, pin={$\frac{\alpha}{2}$}] at (axis cs: 2.5, 0.01){};
-				\node[coordinate, pin={$\frac{\alpha}{2}$}] at (axis cs: -2.5, 0.01){};
+				\node[coordinate, pin={$1-\Phi(c)$}] at (axis cs: 2.5, 0.01){};
+				\node[coordinate, pin={$\Phi(-c)$}] at (axis cs: -2.5, 0.01){};
 			\end{axis}
 		\end{tikzpicture}
 	\end{center}
 	
 	Linksseitige Alternative:
 	
-	$ H_1\colon \mu<\mu_0 $.
+	$ H_1\colon \mu_0<\mu_z $.
 	
-	$ \xcancel{H_0} $ falls $ Z $ klein ist. Für Signifikanzniveau $ \alpha $ wählt man $ c=\Phi^{-1}\left(\alpha\right) $ und verwirft, wenn $ Z \le c $.	
+	$ \xcancel{H_0} $ falls $ Z $ links von 0 liegt. Für Signifikanzniveau $ \alpha\in(0,1)$ wählt man $ c=\Phi^{-1}\left(\alpha\right) $ und verwirft $H_0$, wenn $ Z \le c $.
+	
+	Signifikanzniveau dieses Tests:
+	
+	\[
+	\begin{aligned}
+	    \Prob(\xcancel{H_0}|H_0) & = \Prob(Z\le c|H_0) \\
+	    & = \Prob(N(0,1)\le c) \\
+	    & = \Phi(c) = \Phi(\Phi^{-1}(\alpha)) \\
+	    & = \alpha
+	\end{aligned}
+	\]
 	
 	\begin{center}
 		\begin{tikzpicture}
@@ -2759,10 +2713,20 @@ Die Wahrscheinlichkeit eines Fehlers 2. Art wird von der Wahl von $ T $ und $ R 
 	
 	Rechtsseitige Alternative:
 	
-	$ H_1\colon \mu>\mu_0 $.
+	$ H_1\colon \mu_0>\mu_z $.
 	
-	$ \xcancel{H_0} $ falls $ Z $ klein ist. Für Signifikanzniveau $ \alpha $ wählt man $ c=\Phi^{-1}\left(1-\alpha\right) $ und verwirft, wenn $ Z \ge c $.	
+	$ \xcancel{H_0} $ falls $ Z $ rechts von 0 liegt. Für Signifikanzniveau $ \alpha\in(0,1) $ wählt man $ c=\Phi^{-1}\left(1-\alpha\right) $ und verwirft $H_0$, wenn $ Z \ge c $ ist.
 	
+	Signifikanzniveau dieses Tests:
+\[	
+	\begin{aligned}
+	    \Prob(\xcancel{H_0}|H_0) & = \Prob(z\ge c|H_0) \\
+	    & = \Prob(N(0,1)\ge c) \\
+	    & = 1 - \Prob(N(0,1)<c) \\
+	    & = 1 - \Phi(c) = 1 - \Phi(\Phi^{-1}(1-\alpha)) \\
+	    & = 1 - (1-\alpha) = \alpha
+	\end{aligned}
+\]	
 	\begin{center}
 		\begin{tikzpicture}
 			\begin{axis}[no markers, domain=0:10, samples=100,
@@ -2782,29 +2746,38 @@ Die Wahrscheinlichkeit eines Fehlers 2. Art wird von der Wahl von $ T $ und $ R 
 \begin{example}(Der t-Test)
 	(Testen des Mittelwerts im Gauß'schen Modell mit unbekannter Varianz).
 	
-		Betrachte $ X_1,\ldots,X_n $ i.i.d. $ N(\mu,\sigma^2), \; \mu\in\R, \;\sigma^2>0 $. 
+		Betrachte $ X_1,\ldots,X_n $ i.i.d. $ N(\mu_0,\sigma_0^2), \; \mu_0\in\R, \;\sigma_0^2>0 $. 
 	
-	$ H_0\colon \mu=\mu_0 $. 
+	$ H_0\colon \mu_0=\mu_z $. 
 	
-	Setze \[ T = \frac{1}{\sqrt{n}}\sum_{i=1}^{n}\frac{X_i-\mu_0}{\hat{\sigma}} = \sqrt{n}\frac{\bar{X}-\mu_0}{\hat{\sigma}} \] für $ \hat{\sigma}^2 = \frac{1}{n-1}\sum_{i=1}^{n}(X_i-\bar{X})^2 $.
+	Setze \[ T = \frac{1}{\sqrt{n}}\sum_{i=1}^{n}\frac{X_i-\mu_z}{\hat{\sigma}_n} = \sqrt{n}\frac{\bar{X}-\mu_z}{\hat{\sigma}_n} \] mit $\sqrt{n}(\bar{x}_n-\mu_z)\sim N(0,\sigma^2)$; $\hat{\sigma}_n\sim \sqrt{\frac{\sigma^2\chi_{n-1}}{n-1}}$
 	
-	Beachte: Unter $ H_0 $ ist $ T\sim t_{n-1} $ (siehe Kapitel 1).
+	Beachte: Unter $ H_0 $ ist $ T\sim t_{n-1} $ denn
+	\[
+	\begin{aligned}
+	    T & \sim \frac{N(0,\sigma^2)}{\sigma\sqrt{\chi_{n-1}^2/(n-1)}} \\
+	    & \sim \frac{N(0,1)}{\sqrt{\chi_{n-1}^2/(n-1)}} \\
+	    & \sim t_{n-1}.
+	\end{aligned}
+	\]
 	
 	Zweiseitige Alternative:
 	
-	$ H_1\colon \mu\ne\mu_0 $.
+	$ H_1\colon \mu_0\ne\mu_z $.
 	
-	Für ein Signifikanzniveau $ \alpha $ wählt man $ c=F_{n-1}^{-1}\left(1-\frac{\alpha}{2}\right) $ und verwirft, wenn $ |T|\ge c $. 
+	Für ein Signifikanzniveau $ \alpha\in(0,1) $ wählt man $ c=F_{n-1}^{-1}\left(1-\frac{\alpha}{2}\right) $ und verwirft, wenn $ |T|\ge c $. 
 	
 	Linksseitige Alternative: 
 	
-	$ H_1\colon \mu < \mu_0 $. 
+	$ H_1\colon \mu_0 < \mu_z $. 
 	
-	Für Signifikanzniveau $ \alpha $ wählt man $ c=F_{n-1}^{-1}(\alpha) $ und verwirft wenn $ T\le c $. 
+	Für Signifikanzniveau $ \alpha\in(0,1) $ wählt man $ c=F_{n-1}^{-1}(\alpha) $ und verwirft, wenn $ T\le c $. 
 	
 	Rechtsseitige Alternative:
 	
-	Für ein Signifikanzniveau $ \alpha $ wählt man $ c=F_{n-1}^{-1}\left(1-\alpha\right) $ und verwirft, wenn $ T\ge c $.
+	$H_1\colon \mu_0 > \mu_z $.
+	
+	Für ein Signifikanzniveau $ \alpha\in(0,1) $ wählt man $ c=F_{n-1}^{-1}\left(1-\alpha\right) $ und verwirft, wenn $ T\ge c $.
 	
 	
 \end{example}
@@ -2814,31 +2787,41 @@ Die Wahrscheinlichkeit eines Fehlers 2. Art wird von der Wahl von $ T $ und $ R 
 	
 	Betrachte 2 Stichproben: 
 	\begin{itemize}
-		\item $ X_1,\ldots,X_n \;$ i.i.d. $ N\left(\mu_x, \sigma_x^2\right) $ 
-		\item $ Y_1,\ldots,Y_m \;$ i.i.d. $ N\left(\mu_y, \sigma_y^2\right) $ .
+		\item $ X_1,\ldots,X_n \;$ i.i.d. $ N\left(\mu_x, \sigma_0^2\right) $ 
+		\item $ Y_1,\ldots,Y_m \;$ i.i.d. $ N\left(\mu_y, \sigma_0^2\right) $ .
 	\end{itemize}
 
-	Beide Stichproben sind voneinander unabhängig.
+	Beide Stichproben sind voneinander unabhängig und haben die gleiche Varianz.
 	
-	$ H_0 \colon \mu_x = \mu_y = \mu $ und $ \sigma_x^2=\sigma_y^2=\sigma^2 $.
+	$ H_0 \colon \mu_x = \mu_y $ und $ \bar{X}_n = \bar{Y}_n $.
 	
 	Unter $ H_0 $ gilt: 
 	\[
-	\bar{X}_n=\frac{1}{n}\sum_{i=1}^{n}X_i \sim N\left(\mu,\frac{\sigma^2}{n}\right),
+	\bar{X}_n=\sim N\left(\mu_x,\frac{\sigma_0^2}{n}\right),
 	\]
 	\[
-	\bar{Y}_m=\frac{1}{m}\sum_{i=1}^{m}Y_i \sim N\left(\mu,\frac{\sigma^2}{m}\right),
+	\bar{Y}_m=\sim N\left(\mu_x,\frac{\sigma_0^2}{m}\right),
 	\]
 		\[
-	\bar{X}_n - \bar{Y}_m \sim N\left(0, \sigma^2\left(\frac{1}{n}+\frac{1}{m}\right)\right). 
+	\begin{aligned}
+	    \bar{X}_n - \bar{Y}_m & \sim N\left(0, \sigma_0^2\left(\frac{1}{n}+\frac{1}{m}\right)\right) \\
+	    \frac{\bar{X}_n-\bar{Y}_n}{\sigma_0\sqrt{\frac{1}{n}-\frac{1}{m}}} & \sim N(0,1).
+	\end{aligned}
 	\]
 	$ \bar{X}_n $ und $ \bar{Y}_m $ sind unabhängig voneinander.
 	
-	Schätze $ \sigma^2 $ durch 
+	Setze 
+	
 	\[
-	\hat{\sigma}^2 = \frac{1}{m+n-1}\left(\sum_{i=1}^{n}(X_i-\hat{\mu})^2+\sum_{i=1}^{m}(Y_i-\hat{\mu})^2\right)
+		\hat{\mu} = \frac{1}{n+m}\left( \sum_{i=1}^n X_i + \sum_{i=1}^m Y_i \right)
 	\]
-	für $ \hat{\mu} = \frac{1}{m+n} \left(\sum_{i=1}^{n}X_i+\sum_{i=1}^{m}Y_i\right) $.
+	
+	\[
+	\begin{aligned}
+	    \hat{\sigma}^2 & = \frac{1}{m+n-1}\left(\sum_{i=1}^{n}(X_i-\hat{\mu})^2+\sum_{i=1}^{m}(Y_i-\hat{\mu})^2\right) \\
+	    & \sim \frac{\sigma_0^2 \chi_{n+m-1}^2}{n+m-1} \text{ unter } H_0.
+	\end{aligned}
+	\]
 	
 	Betrachte die Test-Statistik
 	\[
@@ -2847,11 +2830,11 @@ Die Wahrscheinlichkeit eines Fehlers 2. Art wird von der Wahl von $ T $ und $ R 
 	
 	Beachte: 
 	\[
-	T = \frac{\bar{X_n}-\bar{Y}_m}{\underbrace{\sigma\sqrt{\frac{1}{m}+\frac{1}{n}}}_{\sim N(0,1)}} \cdot \overbrace{\frac{\sigma}{\hat{\sigma}}}^{\frac{1}{\frac{\chi^2_{m+n-1}}{m+n-1}}} \sim t_{m+n-1}.
+	T = \frac{\bar{X_n}-\bar{Y}_m}{\underbrace{\sigma_0\sqrt{\frac{1}{m}+\frac{1}{n}}}_{\sim N(0,1)}} \cdot \overbrace{\frac{\sigma_0}{\hat{\sigma}}}^{\frac{1}{\sqrt{\frac{\chi^2_{m+n-1}}{m+n-1}}}} \sim t_{m+n-1}.
 	\]
-	$ \hat{\sigma}^2 \sim \frac{\sigma^2}{m+n-1} \chi^2_{m+n-1} $, 
+	$ \hat{\sigma}^2 \sim \frac{\sigma_0^2}{m+n-1} \chi^2_{m+n-1} $, 
 	
-	$ \frac{\hat{\sigma}^2}{\sigma^2} \sim \frac{1}{m+n-1} \chi^2_{m+n-1} $. \\
+	$ \frac{\hat{\sigma}^2}{\sigma_0^2} \sim \frac{1}{m+n-1} \chi^2_{m+n-1} $. \\
 	
 	Linksseitige Alternative: $ H_1\colon \mu_x < \mu_y \quad (\sigma_x^2, \sigma_y^2 \; \text{egal}) $. 
 	
@@ -2878,20 +2861,20 @@ Die Wahrscheinlichkeit eines Fehlers 2. Art wird von der Wahl von $ T $ und $ R 
 	\end{itemize}
 	Beide Stichproben sind unabhängig voneinander.
 	
-	$ H_0 \colon \sigma_x^2 = \sigma_y^2 = \sigma^2 \quad (\mu_x,\mu_y \; \text{egal}) $.
+	$ H_0 \colon \sigma_x^2 = \sigma_y^2 \quad (\mu_x,\mu_y \; \text{egal}) $.
 	
 	Unter $ H_0 $ ist 
 	\[ 
-	\hat{\sigma}_x^2 = \frac{1}{n-1}\sum_{i=1}^{n}(X_i-\bar{X}_n)^2 \sim \frac{\sigma^2}{n-1}\chi^2_{n-1} ,
+	\hat{\sigma}_x^2 = \frac{1}{n-1}\sum_{i=1}^{n}(X_i-\bar{X}_n)^2 \sim \frac{\sigma_x^2}{n-1}\chi^2_{n-1} ,
 	\]
 		\[ 
-	\hat{\sigma}_y^2 = \frac{1}{m-1}\sum_{i=1}^{m}(Y_i-\bar{Y}_m)^2 \sim \frac{\sigma^2}{m-1}\chi^2_{m-1} ,
+	\hat{\sigma}_y^2 = \frac{1}{m-1}\sum_{i=1}^{m}(Y_i-\bar{Y}_m)^2 \sim \frac{\sigma_x^2}{m-1}\chi^2_{m-1} ,
 	\] wobei $ \hat{\sigma}_x^2 $ und $ \hat{\sigma}_y^2 $ unabhängig voneinander sind.
 	
-	Betrachte die Teststatistik 
+	Damit gilt unter $H_0$: 
 	\[
 	\begin{aligned}
-		F = \frac{\hat{\sigma}_x^2}{\hat{\sigma}_y^2} & \sim \frac{\frac{\sigma^2}{n-1}\chi^2_{n-1}}{\frac{\sigma^2}{m-1}\chi^2_{m-1}} \\
+		F = \frac{\hat{\sigma}_x^2}{\hat{\sigma}_y^2} & \sim \frac{\frac{\sigma_x^2}{n-1}\chi^2_{n-1}}{\frac{\sigma_x^2}{m-1}\chi^2_{m-1}} \\
 		& \sim \frac{\frac{\chi^2_{n-1}}{n-1}}{\frac{\chi^2_{m-1}}{m-1}} \\
 		& \sim F_{n-1,m-1}, 
 	\end{aligned}
@@ -2952,14 +2935,16 @@ $ H_1 \colon \theta\in\Theta\setminus\Theta_0 $. \\
 
 Bisher hatten wir z.B.:
 \begin{itemize}
-	\item $ \Theta=\R, \quad \Theta_0 = \lbrace\mu_0\rbrace \quad $ (z-Test), 
+	\item $ \Theta=\R, \quad \Theta_0 = \lbrace\mu_\star \rbrace;  \quad H_0 = \mu=\mu_\star \ vs \ H_1: \mu \neq \mu_\star $ (z-Test 2-Seitig), 
 	
-	\item $ \Theta=\R\times(0,\infty), \quad \Theta_0 = \lbrace\mu_0\rbrace\times(0,\infty) \quad $ (t-Test), 
+	\item $ \Theta=(-\infty, \mu_\star ) \quad \Theta_0 = \lbrace\mu_\star \rbrace;  \quad H_0 = \mu=\mu_\star \ vs \ H_1: \mu \neq \mu_\star $ (z-Test 1-Seitig), 
 	
-	\item $ \Theta=(0,\infty)\times(0,\infty), \quad \Theta_0 = \lbrace(\sigma^2,\sigma^2)\colon \sigma^2>0\rbrace \quad $ (F-Test).
+	\item $ \Theta=\R\times(0,\infty), \quad \Theta_0 = \lbrace\mu_0\rbrace\times(0,\infty);  \quad H_0 = \mu=\mu_\star \ vs \ H_1: \mu \neq \mu_\star  $ (t-Test), 
+	
+	\item $ \Theta= \R \times (0,\infty)\times \R \times (0,\infty), \quad \Theta_0 = \lbrace( \mu_x, \sigma_x ^2,\mu_y, \sigma_y^2) \in \Theta : \sigma_x ^2 = \sigma_y ^2 \rbrace ; \\ H_0 =  \sigma_x ^2 = \sigma_y ^2 \ vs \ H_1:  \sigma_x ^2 \neq \sigma_y ^2  $ (F-Test).
 \end{itemize} 
 
-Die dazugehörige Likelihood-Ratio-Statistik (L-R-Statistik) \index{Likelihood-Ratio} ist definiert als 
+Allgemeine Modell: Hier ist die Likelihood-Ratio-Statistik (L-R-Statistik) \index{Likelihood-Ratio} ist definiert als 
 \[
 \Lambda = \frac{L(\hat{\theta}_0)}{L(\hat{\theta})}, 
 \] wobei $ \hat{\theta}_0 $ der ML-Schätzer für $ \theta $ unter $ H_0 $ ist, also $ \hat{\theta}_0 = \underset{\theta\in\Theta_0}{\argmax} \; L(\theta) $, 
@@ -2967,7 +2952,9 @@ Die dazugehörige Likelihood-Ratio-Statistik (L-R-Statistik) \index{Likelihood-R
 und wobei $ \hat{\theta} $ der (unrestringierte) ML-Schätzer für $ \theta $ ist, also $ \hat{\theta} = \underset{\theta\in\Theta}{\argmax} \; L(\theta) $.
 
 \begin{remark}
-Beachte: $ 0\le\Lambda\le 1 $, letzte Ungleichung gilt, da $ \Theta_0\subseteq\Theta $.
+Beachte:  Wird  $ \Theta_0\subseteq\Theta $, ist \\
+$ \underbrace{ \underset{\theta\in\Theta_0}{\argmax}\; L(\theta) }_{L (\hat{\theta}_0)}   \leq  \underbrace {\underset{\theta\in\Theta}{\argmax} \; L(\theta)}_{L (\hat{\theta})} $ \\
+Sodass $ 0\le\Lambda\le 1 $ liegt. 
 \end{remark}
 
 Der L-R-Test verwirft $ H_0 $, wenn $ \Lambda\le c $ für einen geeigneten kritischen Wert $ c<1 $.
@@ -2986,14 +2973,11 @@ Der L-R-Test verwirft $ H_0 $, wenn $ \Lambda\le c $ für einen geeigneten kriti
 \begin{example}[z-Test mit zweiseitiger Alternative]
 	$ X_1,\ldots,X_n $ i.i.d. $ N(\mu,\sigma^2), \; \mu\in\R, \; \sigma^2 $ bekannt. 
 	
-	$ H_0\colon\mu=\mu_0 \equiv \mu\in\lbrace\mu_0\rbrace = \Theta_0 $, 
+	$ H_0\colon\mu_0 =\mu_\star $, 
+	$ H_1\colon\mu_0 \ne\mu_\star $. \\
+	$ \Theta = \R, \Theta_0 = \{ \mu_\star \} $ \\ 
 	
-	
-	$ H_1\colon\mu\ne\mu_0 \equiv \mu\in\R\setminus\lbrace\mu_0\rbrace = \Theta\setminus\Theta_0 \in \R $. \\
-	
-	z-Test: $ \xcancel{H_0} $ falls $ \big|\frac{\sqrt{n}}{\sigma}(\bar{X}_n-\mu_0)\big| > \Phi^{-1}\left(1-\frac{\alpha}{2}\right) $.
-	
-	Likelihood: 
+	Likelihood für $\mu \in \Theta $ ist: 
 	\[
 	\begin{aligned}
 		L(\mu) & = \prod_{i=1}^{n}\Phi_{\mu,\sigma^2}(X_i) \\
@@ -3002,76 +2986,66 @@ Der L-R-Test verwirft $ H_0 $, wenn $ \Lambda\le c $ für einen geeigneten kriti
 	\end{aligned}
 	\]
 	
-	$ \hat{\mu}_0 = \underset{\mu\in\lbrace\mu_0\rbrace}{\argmax} \; L(\mu) = \mu_0 $. 
+	$ \hat{\theta}_0 = \underset{\mu\in\lbrace\theta_0\rbrace}{\argmax} \; L(\mu) = \mu_\star $. 
 	
-	$ \hat{\mu} = \underset{\mu\in\R}{\argmax} \; L(\mu) = \bar{X}_n $. 
+	$ \hat{\theta} = \underset{\mu\in\theta}{\argmax} \; L(\mu) = \bar{X}_n $.
 	
 	\[
 	\begin{aligned}
-		\Lambda & = \frac{L(\mu_0)}{L(\bar{X}_n)} \\
-		& = \frac{(2\pi\sigma^2)^{-\frac{n}{2}} e^{-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(X_i-\mu_0)^2}}{(2\pi\sigma^2)^{-\frac{n}{2}} e^{-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(X_i-\bar{X}_n)^2}} \\
-		& = \exp\left(-\frac{1}{2\sigma^2}\underbrace{\left(\sum_{i=1}^{n}(X_i-\mu_0)^2-\sum_{i=1}^{n}(X_i-\bar{X}_n)^2\right)}_{(\hexstar)}\right).
+		\Lambda & = \frac{L(\mu_\star)}{L(\bar{X}_n)} \\
+		& = \frac{(2\pi\sigma^2)^{-\frac{n}{2}} e^{-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(X_i-\mu_\star)^2}}{(2\pi\sigma^2)^{-\frac{n}{2}} e^{-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(X_i-\bar{X}_n)^2}} \\
+		& = \exp\left(-\frac{1}{2\sigma^2}\underbrace{\left(\sum_{i=1}^{n}(X_i-\mu_\star)^2-\sum_{i=1}^{n}(X_i-\bar{X}_n)^2\right)}_{(\hexstar)}\right).
 	\end{aligned}
 	\]
 	
 	L-R-Test verwirft $ H_0 $, wenn $ \Lambda $ klein ist, also wenn $ (\hexstar) $ groß ist. 
 	\[
 	\begin{aligned}
-		(\hexstar) & = \sum_{i=1}^{n}\left(X_i^2-2\mu_0X_i+\mu_0^2-Xi^2+2\bar{X}_n X_i -\bar{X}_n^2\right) \\
-		& = -2\mu_0\bar{X}_n\cdot n + \mu_0^2\cdot n + 2\bar{X}_n\bar{X}_n\cdot n -\bar{X}_n^2\cdot n \\
-		& = n\left(\mu_0^2-2\mu_0\bar{X}_n+\bar{X}_n^2\right) \\
-		& = n\left(\bar{X}_n-\mu_0\right)^2.
+		(\hexstar) & = \sum_{i=1}^{n}\left(X_i^2-2\mu_\star X_i+\mu_\star ^2-Xi^2+2\bar{X}_n X_i -\bar{X}_n^2\right) \\
+		& = -2\mu_\star \bar{X}_n\cdot n + \mu_\star ^2\cdot n + 2\bar{X}_n\bar{X}_n\cdot n -\bar{X}_n^2\cdot n \\
+		& = n\left(\mu_\star ^2-2\mu_\star \bar{X}_n+\bar{X}_n^2\right) \\
+		& = n\left(\bar{X}_n-\mu_\star \right)^2.
 	\end{aligned}
 	\]
 	
-	Also verwirft der L-R-Test, wenn $ \left(\bar{X}_n-\mu_0\right)^2 $ bzw. $ |\bar{X}_n-\mu_0| $ groß ist. Das ist dieselbe Entscheidungsregel wie beim z-Test. 
+	Damit ist $ (\hexstar) $ genau dann groß, wenn $ |\bar{X}_n-\mu_0| $ groß ist. Das ist dieselbe Entscheidungsregel wie beim z-Test. 
 	
 	Also: L-R-Test ist hier der z-Test (bei zweiseitiger Alternative).
 	
 \end{example}
 
-\begin{remark}
-	Bemerkung: Auch der t-Test bei zweiseitiger Alternative ist ein L-R-Test.
-\end{remark}
-
-\begin{remark}
-	Bemerkung: Bei einseitigen Alternativen stimmen L-R-Test und z- (bzw. t-)Test ebenfalls überein. 
-\end{remark}
-
-\begin{example}
-	$ X_1,\ldots,X_n $ i.i.d. $ N(\mu,\sigma^2), \quad \sigma^2 $ bekannt. 
+\begin{example}[z-Test mit linksseitiger Alternative]
+	$ X_1,\ldots,X_n $ wie zuvor. 
 	
 	\begin{center}
 	\begin{tabular}{lcl}
-		$ H_0 \colon \mu=\mu_0 $ & & $ \mu\in\{\mu_0\}=\Theta_0 $ \\
+		$ H_0 \colon \mu=\mu_\star $ & & $ \Theta_0 = \{\mu_\star\}$ \\
 			& $\equiv$ & \\
-		$ H_1 \colon \mu < \mu_0 $ & & $ \mu\in\Theta\setminus\Theta_0 $ für $ \Theta=\left(-\infty,\mu_0\right] $
+		$ H_1 \colon \mu < \mu_\star $ & & $ \Theta=\left(-\infty,\mu_\star \right] $
 	\end{tabular}
 	\end{center}
 
-	Hier ist \[ \hat{\mu} = \underset{\mu\le\mu_0}{\argmax}\; L(\mu) = \min \; \{\bar{X}_n,\mu_0\}. \]
-	
-	Die L-R-Statistik ist hier gegeben durch 
-	\[
-	\Lambda = \frac{L(\mu_0)}{L(\hat{\mu})}.
-	\]
-	
-	Für $ c<1 $ verwirft der L-R-Test, wenn 
+	Hier ist \[ \hat{\theta}_0 = \mu_\star \]  \[  \hat{\theta} = \min \; \{\bar{X}_n,\mu_0\}  \]
+
+	Hier verwirft der L-R-Test, wenn 
 	\[
 	\begin{aligned}
-	&& \Lambda & \le c & (<1) &	\\
-	& \Leftrightarrow & \frac{L(\mu_0)}{L(\min \; \{\bar{X}_n,\mu_0\})} & \le c & (<1) &\\
-	& & & & & \ldots \text{ kann nur auftreten, wenn }\bar{X}_n < \mu_0! \\
-	& \Leftrightarrow & \frac{L(\mu_0)}{L(\bar{X}_n)} & \le c &  &\text{und } \bar{X}_n < \mu_0 \\
-	& \Leftrightarrow & (\bar{X}_n-\mu_0)^2 & & & \text{groß und } \bar{X}_n < \mu_0 \\
-	& \Leftrightarrow & \bar{X}_n -\mu_0  & & & \text{klein (und negativ)} \\
-	& \Leftrightarrow & \underbrace{\frac{\sqrt{n}}{\sigma}(\bar{X}_n-\mu_0)}_{\text{z-Statistik}} & & & \text{klein ( und negativ)} \\
-	& \Leftrightarrow & \text{z-Test verwirft } H_0 .
+	& & \frac{L(\mu_\star )}{L(\min \; \{\bar{X}_n,\mu_\star\})} \text{ klein ist } ( \le c & <1) &\\
+	& \Leftrightarrow & \text{Nun ist } \frac{L(\mu_\star )}{L(\min \; \{\bar{X}_n,\mu_\star\})} \le c & <1 &\\
+	& \Leftrightarrow & \frac{L(\mu_\star )}{L(\bar{X}_n)} & \le c <1 &  &\text{und } \bar{X}_n < \mu_\star \\
+	& \Leftrightarrow & (\bar{X}_n-\mu_0)^2 & & & \text{groß und } \bar{X}_n < \mu_\star \\
+	& \Leftrightarrow & \bar{X}_n -\mu_\star  & & & \text{Weit links von 0 (klein und negativ)} \\
 	\end{aligned}
 	\] 
+	Der Z-Test verwirft wenn $ \frac{\sqrt{n}}{\sigma}{(\bar{X}_n-\mu_0)} $ klein ist $(\leq \phi^{-1}(\alpha))$. Also ist auch hier der L-R-Test das selbe wie die Z-Test.
+	
 \end{example}
 
-Im folgenden \textbf{Neyman-Pearson Lemma}\index{Neyman-Pearson Lemma} betrachtet man sogenannte \textbf{simple Hypothesen}, unter denen die Verteilung der Daten vollständig spezifiziert ist:
+\begin{remark}
+	Bemerkung: Für den t-Test gelten die Resultate analog zu den letzten beiden Beispielen. 
+\end{remark}
+
+Im folgenden \textbf{Neyman-Pearson Lemma}\index{Neyman-Pearson Lemma} betrachtet man sogenannte \textbf{simple Hypothesen}, unter denen die Verteilung der Daten jeweils komplett spezifiziert ist:
 
 $ X_1,\ldots,X_n $ i.i.d. mit Dichte $ f_\theta(x) $ (bzw. Wahrscheinlichkeitsfunktion $ p_\theta(x) $), wobei $ \theta\in\Theta=\{0,1\} $. Teste:
 
@@ -3086,15 +3060,15 @@ $ X_1,\ldots,X_n $ i.i.d. mit Dichte $ f_\theta(x) $ (bzw. Wahrscheinlichkeitsfu
 	\end{center}
 
 \begin{satz}[Neyman-Pearson Lemma]
-	Unter allen Tests zwischen zwei simplen Hypothesen mit Signifikanzniveau $ \alpha\in(0,1) $ hat der entsprechende L-R-Test die größtmögliche Power.
+	Unter allen Tests zwischen zwei simplen Hypothesen mit Signifikanzniveau $ \alpha\in(0,1) $ hat der entsprechende L-R-Test die größtmögliche Power. (Fehler 2. Art möglichst klein)
 \end{satz}
 
 \begin{remark}
-	Bemerkung:  Im Setting des Satzes ist die L-R-Statistik gegeben durch 
+	Bemerkung:  Zwischen 2 einfache Hypothesen ist die entsprechende L-R-Statistik gegeben durch:   
 	\[
-	\Lambda = \frac{L(0)}{\max\;\{L(0),L(1)\}}.
+	\Lambda = \frac{L(0)}{\max\;\{L(0),L(1)\}} (<1). 
 	\]
-	Für $ c<1 $ ist $ \Lambda\le c \Leftrightarrow \frac{L(0)}{L(1)} \le c $.
+	Also wenn $ \frac{L(0)}{L(1)} \le c(<1)  $ ist .
 \end{remark}
 
 \begin{proof}
@@ -3104,33 +3078,48 @@ $ X_1,\ldots,X_n $ i.i.d. mit Dichte $ f_\theta(x) $ (bzw. Wahrscheinlichkeitsfu
 	
 	$ L(\theta)=f_\theta(x), \quad \theta\in\{0,1\} $. 
 	
-	Sei $ \alpha\in(0,1) $ und sei $ c<1 $ so, dass der L-R-Test Signifikanzniveau $ \alpha $ hat: \\
+	Sei $ \alpha\in(0,1) $ und sei $ c $ der Kritische Wert der L-R-Test zum Signifikanzniveau $ \alpha $ hat: \\
 	\[
 	\alpha = \Prob(\Lambda\le c\;|H_0) = \Prob\left(\frac{f_0(x)}{f_1(x)}\le c \;|H_0\right).
 	\]
-	Diesen Test entspricht eine $ 0-1 $-wertige Zufallsvariable $ d_{LR}=d_{LR}(X) \colon $
+	Diesen  Test entspricht eine $ 0-1 $-wertige Zufallsvariable $ d_{LR} \colon $
 	
 	\[
-	d_{LR}(X)=\left\{\begin{array}{ll}
-		0 & \colon \rightsquigarrow H_0, \\
-		1 & \colon \xcancel{H_0},
+	d_{LR}= d_{LR}(X_1)=\left\{\begin{array}{ll}
+		0 & \colon (\frac{f_0(x)}{f_1(x)} > c, \\
+		1 & \colon (\frac{f_0(x)}{f_1(x)}\le c,
 	\end{array}\right.
 	\]
-	wobei $ \Prob\left(d_{LR}=1\;|H_0\right)=\alpha $. 
+	Beachte $c<1$,
+
+	Verteilung von $d_{LR}$ unter $H_0$:
 	
-	Betrachte nun einen anderen Test mit Signifikanzniveau $ \alpha $, sowie die diesem entsprechende $ 0-1 $-wertige Zufallsvariable $ d=d(X) $, wobei $ \Prob\left(d=1\;|H_0\right)=\alpha $. 
+	 $ \Prob\left(d_{LR}=1\;|H_0\right)=  \Prob(\Lambda\le c\;|H_0) = \Prob\left(\frac{f_0(x)}{f_1(x)}\le c \;|H_0\right)  =\alpha $
+	 
+	 Also: $d_{LR} ~ B(p)$ unter $H_0$. \\
+	 
+	
+	Betrachte nun einen weiteren Test mit Signifikanzniveau $ \alpha $, diesen Test entspricht eine Weitere $ 0-1 $-wertige Zufallsvariable $ d=d(X) $, wobei 
+	\[
+	d(X)=\left\{\begin{array}{ll}
+		0 & \colon \text{Test verwirft nicht} \\
+		1 & \colon \text{Test verwirft}
+	\end{array}\right.
+	\]
+	\[  \Prob\left(d=1\;|H_0\right)=\Prob\left(\text{Test verwirft } \;|H_0\right) = \alpha \]
+	 Also: $d ~ B(p)$ unter $H_0$. 
 	
 	Zu zeigen: 
 	\[
 	\begin{aligned}
-		\text{Power von }  d & \le \text{Power von } d_{LR} \\
+		\text{Power von des neuen Tests } ( d ) & \le \text{Power des L-R-Tests } (d_{LR}) \\
 		\equiv \Prob(d=1\;|H_1) & \le \Prob(d_{LR}=1\;|H_1).
 	\end{aligned}
 	\]
 	
 	Hilfsmittel: 
 	\[
-	\Prob(A) = \Prob(A\cap B) +\Prob(A\cap B^\complement).
+	\Prob(A) = \Prob(A\cap B) +\Prob(A\cap B^\complement); \ A={d=1}; \ B={d_{LR}=1}.
 	\]
 	
 	\[
@@ -3140,34 +3129,42 @@ $ X_1,\ldots,X_n $ i.i.d. mit Dichte $ f_\theta(x) $ (bzw. Wahrscheinlichkeitsfu
 		& = \Prob(d_{LR}=1\;|H_1) - \int_{\substack{x\colon d(x)=0, \\ d_{LR}(x)=1}} f_1(x) dx + \int_{\substack{x\colon d(x)=1, \\ d_{LR}(x)=0}} f_1(x) dx \\
 		& \le \Prob(d_{LR}=1\;|H_1) - \frac{1}{c}\int_{\substack{x\colon d(x)=0, \\ d_{LR}(x)=1}} f_0(x) dx + \frac{1}{c}\int_{\substack{x\colon d(x)=1, \\ d_{LR}(x)=0}} f_0(x) dx \\
 		& = \Prob(d_{LR}=1\;|H_1) - \frac{1}{c}\left(\Prob(d=0,d_{LR}=1\;|H_0)-\Prob(d=1,d_{LR}=0\;|H_0)\right) \\
-		& = \Prob(d_{LR}=1\;|H_1) - \frac{1}{c}\left(\Prob(d_{LR}=1\;|H_0)-\Prob(d=1,d_{LR}=1\;|H_0)-\Prob(d=1,d_{LR}=0\;|H_0)\right) \\
-		& = \Prob(d_{LR}=1\;|H_1) - \frac{1}{c}\left(\underbrace{\Prob(d_{LR}=1\;|H_0)}_{=\alpha}-\underbrace{\Prob(d=1\;|H_0)}_{=\alpha}\right) \\
-		& = \Prob(d_{LR}=1\;|H_1).
+		& = \Prob(d_{LR}=1\;|H_1) - \frac{1}{c}\left( \alpha - \underbrace{\Prob(d=1,d_{LR}=1\;|H_0)-\Prob(d=1,d_{LR}=0\;|H_0)}_{=\alpha} \right) \\
+		& = \Prob(d_{LR}=1\;|H_1) - \frac{1}{c} ( \alpha - \alpha) \\
+		& = \Prob(d_{LR} =1\;|H_1). \\
 	\end{aligned}
 	\]
 	
 	Also: $ \Prob(d=1\;|H_1)\le\Prob(d_{LR}=1\;|H_1) \;\checkmark $.
 	
+	Der Fall für diskrete Zufallsvariable (mit W-Fkt) geht analog.
+	
 	Für den Fall $ n\ge 1 $ argumentiert man ganz genauso (siehe Übung).
+	
 \end{proof}
 
 \begin{corollary}
 	Seien $ X_1,\ldots,X_n $ i.i.d. $ N(\mu,\sigma^2), \quad \mu \in \left(-\infty,\mu_0\right], \quad \sigma^2 > 0  $ bekannt.
 	
-	Teste $ H_0\colon \mu=\mu_0 $ gegen $ H_1\colon \mu < \mu_0 $. 
+	Teste $ H_0\colon \mu=\mu_0 $ gegen $ H_1\colon \mu < \mu_0 $, für eine feste Zahl $\mu$.
 	
-	Hier hat unter allen Tests mit Signifikanzniveau $ \alpha\in(0,1) $ der z-Test (L-R-Test) die größtmögliche Power (Uniformly most powerful test - UMP).  
+	Hier hat die L-R-Test mit Signifikanzniveau $ \alpha $ die größtmögliche Power. \\
+	
+	Power einen Test wenn $\mu=\mu_1$ $\leq$ Power den L-R-Test wenn $\mu \neq \mu_1$ \\
+	 $ \Pi (\mu_1)$ $\leq$  $\Pi_{LR} (\mu_1)$\\
+	 
+	 Einen Test mit diesem Eigenschaft nennt man Uniformly Most Powerful  (UMP)
+	
 \end{corollary}
 
 \begin{proof}
-	Betrachte den L-R-Test $ d_{LR} $ und einen weiteren Test $ d $ mit $ \Prob(d_{LR}=1\;|H_0)=\Prob(d=1\;|H_0)=\alpha $.
+	Sie $\mu_1 <  \mu_0 $. Zu zeigen: $\Pi(\mu_1) \leq \Pi_{LR}(\mu_1) $
 	
-	Sei $ \mu_1 < \mu_0 $. 
+	Der beiden Tests entsprechen wieder $0-1-$Wertige Zufallsvariable $d$ und $d_{LR}$.
 	
-	Zu zeigen: 
-	\[
-	\Prob(d=1\;|\mu=\mu_1) \le \Prob(d_{LR}=1\|\mu=\mu_1).
-	\]
+	Beachte: $ \Prob(d_{LR}=1\;|H_0)=\Prob(d=1\;|H_0)=\alpha $.
+	
+	Beide Tests haben die Signifikanzniveau $ \alpha $.
 	
 	Betrachte dazu ein neues Testproblem:
 	
@@ -3181,36 +3178,48 @@ $ X_1,\ldots,X_n $ i.i.d. mit Dichte $ f_\theta(x) $ (bzw. Wahrscheinlichkeitsfu
 		\end{tabular}
 	\end{center}
 	
-	Hier gilt:
+	Beachte:
 	\begin{itemize}
-		\item $ \Prob(d=1\;|\tilde{H}_0) = \Prob(d=1\;|H_0) = \alpha $, 
+		\item $ \Prob(d_{LR}=1\;|\tilde{H}_0) = \Prob(d_{LR}=1\;|H_0) = \alpha $. 
 		
-		$ \Prob(d_{LR}=1\;|\tilde{H}_0) = \Prob(d_{LR}=1\;|H_0) = \alpha $. 
+		$ \Prob(d=1\;|\tilde{H}_0) = \Prob(d=1\;|H_0) = \alpha $, 
+		
 		D.h. beim Testen von $ \tilde{H}_0 $ gegen $ \tilde{H}_1 $ haben $ d_{LR} $ und $ d $ beide Signifikanzniveau $ \alpha $. 
 		
-		\item Der L-R-Test zum Testen von $ \tilde{H}_0 $ gegen $ \tilde{H}_1 $, mit Signifikanzniveau $\alpha$, verwirft $ H_0 $, wenn 
+		 \item Der L-R-Test zum Testen von $ \tilde{H}_0 $ gegen $ \tilde{H}_1 $, verwirft $ H_0 $, wenn 
+		 
+		\[
+		   \begin{aligned}
+ 	     & & \tilde{\Lambda} & =  \frac{L(\mu_0)}{L(\mu_1)}  & \le \tilde{c} & < 1 \\
+ 	     & \Leftrightarrow & & \frac{(2\pi\sigma^2)^{-\frac{n}{2}}e^{-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(X_i-\mu_0)^2}}{(2\pi\sigma^2)^{-\frac{n}{2}}e^{-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(X_i-\mu_1)^2}} & \text{Soll klein sein} \\
+	      & \Leftrightarrow & & \exp\left(-\frac{1}{2\sigma^2}\sum_{i=1}^{n}( (X_i-\mu_0)^2 ) + \frac{1}{2\sigma^2}\sum_{i=1}^{n}( (X_i-\mu_1)^2 ) \right) & \text{Soll klein sein} \\
+	     & \Leftrightarrow & & \exp\left(-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(X_i^2-2\mu_0X_i+\mu_0^2-X_i^2+2\mu_1X_i-\mu_1^2)\right) & \text{Soll klein sein} \\
+     	 & \Leftrightarrow & & \exp\left(-\frac{n}{2\sigma^2} ((\mu_0^2 - \mu_1^2) +2 ( \mu_1 - \mu_0 ) \bar{X}_n )  \right) & \text{Klein} \\
+      	& \Leftrightarrow & & n((\mu_0^2-\mu_1^2)+2\bar{X}_n(\underbrace{\mu_1-\mu_0}_{<0})) \text{ groß} \\
+      	& \Leftrightarrow && \bar{X}_n \text{ klein} \\
+	& \Leftrightarrow && \text{Genauer: } \bar{X}_n \text{ sodass } \Prob(\bar{X}_n \leq c | H_0 )= \alpha
+    \end{aligned}
+    \]
+		
+		\item Der L-R-Test von $H_0$ gegen $H_1$ ist der Z-Test. Dieser Test verwirft $H_0 \text{(  bzw. } \tilde{H}_0 ) $ wenn
 		\[
 		\begin{aligned}
-			& & \tilde{\Lambda} & = \frac{L(\mu_0)}{\max\;\{L(\mu_0),L(\mu_1)\}} & \le \tilde{c} & < 1 \\
-			&  \Leftrightarrow & & \frac{L(\mu_0)}{L(\mu_1)} & \le \tilde{c} \\
-			& \Leftrightarrow & & \frac{(2\pi\sigma^2)^{-\frac{n}{2}}e^{-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(X_i-\mu_0)^2}}{(2\pi\sigma^2)^{-\frac{n}{2}}e^{-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(X_i-\mu_1)^2}} & \le \tilde{c} \\
-			& \Leftrightarrow & & \exp\left(-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(X_i^2-2\mu_0X_i+\mu_0^2-X_i^2+2\mu_1X_i-\mu_1^2)\right) & \le \tilde{c} \\
-			& \Leftrightarrow & & \exp\left(-\frac{1}{2\sigma^2}\underbrace{(-2\mu_0n\bar{X}_n+n\mu_0^2+2\mu_1n\bar{X}_n-n\mu_1^2)}_{(\hexstar)}\right) & \le \tilde{c} \\
-			& \Leftrightarrow & & (\hexstar) \text{ groß} \\
-			& \Leftrightarrow & & n(\mu_0^2-\mu_1^2+2\bar{X}_n(\underbrace{\mu_1-\mu_0}_{<0})) \text{ groß} \\
-			& \Leftrightarrow && \bar{X}_n \text{ klein} \\
-			& \Leftrightarrow && \frac{\sqrt{n}}{\sigma}(\bar{X}_n-\mu_0) \text{ klein} \\
-			& \Leftrightarrow && \text{z-Test (zum Testen von }H_0 \text{ gegen } H_1 \text{) verwirft.} \\
-			& \Leftrightarrow && \text{L-R-Test (zum Testen von }H_0 \text{ gegen } H_1 \text{) verwirft.}\\
-			& \Leftrightarrow & & d_{LR} = 1.
+			&& \frac{\sqrt{n}}{\sigma}(\bar{X}_n-\mu_0) \text{ klein} \\
+			& \Leftrightarrow && \bar{X}_n-\mu_0 \text{ klein} \\
+			& \Leftrightarrow && \bar{X}_n \text{ klein.}\\
 		\end{aligned}
 		\]
 		
-		Mit N-P-Lemma folgt:
+		Also: Der L-R-Test zwischen $H_0$ und $H_1$, und der L-R-Test zwischen $\tilde{H}_0$ und $\tilde{H}_1$ stimmen überein.
+		
+		Mit N-P-Lemma: Unter allen Tests von $\tilde{H}_0$ gegen $\tilde{H}_1$ mit Signifikanzniveau $\alpha$ hat der L-R-Test die Maximale Power.
+		
+		Also:
 		\[
 		\begin{aligned}
 			\Prob(d=1\;|\tilde{H}_1) & \le \Prob(d_{LR}=1\;|\tilde{H}_1) \\
-			\equiv \Prob(d=1\;|\mu=\mu_1) & \le \Prob(d_{LR}=1\;|\mu=\mu_1).
+			 \Prob(d=1\;| \mu_1) & \le \Prob(d_{LR}=1\;| \mu_1)\\
+			 \Pi(\mu_1)  & \le  \Pi_{LR} (\mu_1)  	
 		\end{aligned}
 		\]
 	\end{itemize}
@@ -3218,41 +3227,48 @@ $ X_1,\ldots,X_n $ i.i.d. mit Dichte $ f_\theta(x) $ (bzw. Wahrscheinlichkeitsfu
 \end{proof}
 
 \begin{remark}
-	Bemerkung: Die obige Aussage gilt auch für rechtsseitige Alternativen $ (\mu>\mu_0) $, sowie im Fall unbekannter Varianz, d.h. für den t-Test.
+	Bemerkung: Die obige Aussage gilt auch für rechtsseitige Alternativen $ (\mu>\mu_0) $, sowie im Fall unbekannter Varianz, d.h. für den t-Test. Bei 2-Seitige Alternative gibt es keinen UMP.
 \end{remark}
 
-\begin{remark}
-	Bemerkung: Seien $ X_1,\ldots,X_n $ i.i.d. $ N(\mu,\sigma^2), \; \mu\in\R , \; \sigma^2>0 $ bekannt. Teste $ H_0\colon \mu=\mu_0 $ gegen $ H_1\colon \mu\ne\mu_0 $.
+\begin{example}
+	 Seien $ X_1,\ldots,X_n $ i.i.d. $ N(\mu,\sigma^2), \; \mu\in\R , \; \sigma^2>0 $ bekannt. Teste $ H_0\colon \mu=\mu_0 $ gegen $ H_1\colon \mu\ne\mu_0 $.
 	
 	Hierfür existiert kein UMP-Test (Siehe hierzu auch R-Code vom 17.06.21).
-\end{remark}
+
 
 \begin{proof}[Beweisidee]
 	Fixiere $ \alpha\in(0,1) $. Angenommen es gibt einen UMP-Test. Sei $ d_{\hexstar} $ die diesem entsprechende $ 0-1 $-wertige Zufallsvariable.
 	
 	\begin{itemize}
-		\item Für Werte $ \mu_1<\mu_0 $ vergleicht man $ d_{\hexstar} $ mit dem L-R-Test $ d_{LR^-} $ zum Testen von $ \tilde{H}_0\colon \mu=\mu_0 $ gegen $ \tilde{H}_1\colon \mu=\mu_1 \;(<\mu_0) $. 
+		\item Betrachte zunächst dem Fall $\mu_1<\mu_0$, sowie das asymptotische Testproblem
 		
-		Wegen dem Neyman-Pearson-Lemma ist 
 		\[
-		\Prob\left(d_{LR^-}=1\; |\mu=\mu_1\right) \ge \Prob\left(d_{\hexstar}=1\; |\mu=\mu_1\right).
+		\tilde{H}_0\colon \mu<\mu_0
+		\]
+		\[
+		\tilde{H}_1\colon \mu<\mu_1.
+		\]
+		
+		Sei $\tilde{d}$ der L-R-Test zum Testen von $\tilde{H}_0$ gegen $\tilde{H}_1$. Mit dem Neyman-Pearson-Lemma ist 
+		\[
+		\Prob\left(\tilde{d}=1\; |\mu=\mu_1\right) \ge \Prob\left(d_{\hexstar}=1\; |\mu=\mu_1\right).
 		\]
 		
 		Weil $ d_{\hexstar} $ UMP ist, gilt auch 
 		\[
-		\Prob\left(d_{LR^-}=1\; |\mu=\mu_1\right) \le \Prob\left(d_{\hexstar}=1\; |\mu=\mu_1\right).
+		\Prob\left(\tilde{d}=1\; |\mu=\mu_1\right) \le \Prob\left(d_{\hexstar}=1\; |\mu=\mu_1\right).
 		\]
 		
-		Die Power von $ d_{\hexstar} $ und von $ d_{LR^-} $ ist gleich. 
+		Die Power von $ d_{\hexstar} $ und von $ \tilde{d} $ ist gleich. 
 		
 		$ \underset{\text{informell}}{\Rightarrow} $ Die Tests $ d_{\hexstar} $ und $ d_{LR^-} $ stimmen überein.
 		
-		Also: 
+		Nun ist $\tilde{d}$ den Z-Test (siehe letzte Beispiel): 
 		\[
 		\begin{aligned}
 			d_{\hexstar} & = \left\{\begin{array}{ll}
-				1 & \colon d_{LR^-}=1, \\
-				0 & \colon d_{LR^-}=0,
+				1 & \colon \tilde{d}=1, \\
+				0 & \colon \tilde{d}=0,
 			\end{array}\right. \\
 			& = \left\{\begin{array}{ll}
 				1 & \colon \frac{\sqrt{n}}{\sigma}(\bar{X}_n-\mu_0)\le\Phi^{-1}(\alpha) \\
@@ -3261,15 +3277,30 @@ $ X_1,\ldots,X_n $ i.i.d. mit Dichte $ f_\theta(x) $ (bzw. Wahrscheinlichkeitsfu
 		\end{aligned}
 		\]
 		
-		\item Für $ \mu_1>\mu_0 $ vergleicht man $ d_{\hexstar} $ mit dem L-R-Test $ d_{LR^+} $ zum Testen von $ \tilde{H}_0\colon \mu=\mu_0 $ gegen $ \tilde{H}_1\colon \mu=\mu_1 \; (>\mu_0) $. 
+		\item Betrachte nun den Fall $\mu_1>\mu_0$ und argumentiere wie zuvor.
 		
-		Wie zuvor sieht man, dass $ d_{\hexstar} $ und $ d_{LR^+} $ übereinstimmen. 
-			Also: 
+		Syntetisches Testproblem:
+		
 		\[
-			d_{\hexstar} = \left\{\begin{array}{ll}
+		\tilde{\tilde{H}}_0\colon\mu=\mu_0
+		\]
+		\[
+		\tilde{\tilde{H}}_1\colon\mu=\mu_1.
+		\]
+		
+		Ist $\tilde{\tilde{d}}$ der entsprechende L-R-Test, dann stimmen wie zuvor die Tests $\tilde{\tilde{d}}$ und $d_{\hexstar}$ überein. Wieder ist $\tilde{\tilde{d}}$ ein Z-Test:
+		
+		\[
+		\begin{aligned}
+			d_{\hexstar} & = \left\{\begin{array}{ll}
+				1 & \colon \tilde{\tilde{d}}=1, \\
+				0 & \colon \tilde{\tilde{d}}=0,
+			\end{array}\right. \\
+			& = \left\{\begin{array}{ll}
 				1 & \colon \frac{\sqrt{n}}{\sigma}(\bar{X}_n-\mu_0)\ge\Phi^{-1}(1-\alpha) \\
 				0 & \colon \text{sonst}.
 			\end{array}\right.
+		\end{aligned}
 		\]
 		
 		Die beiden Formeln für $ d_{\hexstar} $ widersprechen einander. 
@@ -3278,31 +3309,36 @@ $ X_1,\ldots,X_n $ i.i.d. mit Dichte $ f_\theta(x) $ (bzw. Wahrscheinlichkeitsfu
 	\end{itemize}
 \end{proof}
 
+\end{example}
+
 \begin{remark}
-	Bemerkung: Das eben beobachtete Phänomen tritt auch im Fall unbekannter Varianz auf. 
+	Bemerkung: Das oben beobachtete Phänomen tritt auch im Fall unbekannter Varianz (t-Test) auf. 
 	
 	Darüber hinaus ist in vielen der hier beobachteten Modellen $ (B(p), F_{m-1,n-1}, \text{etc.}) $ bei einseitigen Alternativen der entsprechende L-R-Test UMP, und für zweiseitige Alternativen existiert kein UMP.
 \end{remark}
 
-
 \section{L-R-Tests in großen Stichproben}
 
-$ X_1,\ldots,X_n $ i.i.d. mit Dichte $ f(x|\theta) $ (bzw. Wahrscheinlichkeitsfunktion $ p(x|\theta) $), $ \theta\in\Theta\subseteq\R^p $. 
+Betrachte: $ X_1,\ldots,X_n $ i.i.d. mit Dichte $ f(x|\theta) $ (bzw. Wahrscheinlichkeitsfunktion $ p(x|\theta) $), $ \theta\in\Theta\subseteq\R^p $. 
 
 Teste: 
 	\[\begin{aligned}
-	H_0 &\colon \theta\in\Theta_0 \quad (\Theta_0\subseteq\Theta) \\
+	H_0 &\colon \theta\in\Theta_0 \quad \subseteq \Theta_1 \\
 	H_1 &\colon \theta\in\Theta\setminus\Theta_0.
 	\end{aligned}
 	\]
 	
+Betrachte der L-R-Statistik: $ \Lambda= \frac{L(\hat{\theta}_0)}{ L(\hat{\theta})} $
+
+wobei: $ \hat{\theta}_0 = \underset{\theta \in \Theta_0}{\argmax} \; L(\theta), \hat{\theta} = \underset{\theta \in \Theta}{\argmax} \; L(\theta),  $. 
+	
 \begin{satz}[Wilks' Theorem]\index{Wilks' Theorem}
 	Unter geeigneten Voraussetzungen gilt unter $ H_0 $:
 	\[
-	-2\log\Lambda \xrightarrow{w} \chi^2_{k-k_0},
+	-2\log\Lambda_n \xrightarrow{w} \chi^2_{k-k_0}
 	\]
-	wobei $ k $ (bzw. $ k_0 $) die Anzahl der freien Parameter in $ \Theta $ (bzw. $ \Theta_0 $) bezeichnet. Oft $ k = \dim \Theta $, $ k_0 = \dim \Theta_0 $. 
-	
+	wobei $ k $ (bzw. $ k_0 $) die Anzahl der freien Parameter in $ \Theta $ (bzw. $ \Theta_0 $) ist. Oft $ k = \dim \Theta $, $ k_0 = \dim \Theta_0 $.
+		
 	\[
 	\begin{aligned}
 		H_0\colon \mu & = \mu \quad , k_0 = 0 \\ 
@@ -3313,7 +3349,159 @@ Teste:
 	\end{aligned}
 	\]
 \end{satz}
-Der Beweis beruht auf dem zentralen Grenzwertsatz und der $ \delta $-Methode (VO Mathematische Statistik).
+
+(Ohne Beweis)
+
+	Damit erhält man einen Test ($H_0$ gegen $H_1$) mit nominaler Signifikanzniveu $\alpha$ wie folgt:
+	\[ \xcancel{H_0} \text{ falls } -2 \log \Lambda \ge c \]
+	
+	Wähle c sodaß,
+	
+	\[
+	\begin{aligned}
+			\alpha & \approx \Prob (-2 \log \Lambda_n \ge c | H_0) \\
+			& = 1- \Prob (-2 \log \Lambda_n \le c | H_0) \\
+			& \approx 1- \Prob( \chi_{k-k_0}^2 < c ) =  \% \\
+			& \uparrow \text{Wilks}
+	\end{aligned}
+	\]
+	
+	Setze $c= \F_{k-k_0}^{-1} (1-\alpha) \rightarrow  $ Quantil der $\chi_{k-k_0}^2$ 
+	\[
+	\begin{aligned}
+			\Rightarrow \%&=  1- \Prob( \chi_{k-k_0}^2 \le c ) \\
+			&= 1-(1- \alpha ) = \alpha \\
+			& \Rightarrow \Prob(\xcancel{H_0}| H_0) \approx \alpha
+	\end{aligned}
+	\]
+	
+	Für $n-> \infty$ näher sich das Signifikanzniveu dieses Test dem Wert $\alpha$ an:
+	\[
+	\begin{aligned}
+			& \lim_{n \to \infty}  \Prob (-2 \log \Lambda_n \ge c | H_0) \\
+			&= \lim_{n \to \infty} 1-  \Prob (-2 \log \Lambda_n < c | H_0) \\
+			&= 1 - \lim_{n \to \infty}  \Prob (-2 \log \Lambda_n < c | H_0) \\
+			&= 1- \underbrace{ \Prob( \chi_{k-k_0}^2 < c ) }_{1-\alpha }\\
+			&= \alpha \checkmark
+	\end{aligned}
+	\]
+	
+	Beispiele für $k, k_0$ : $ \lambda_i \text{, iid, } \N(\mu, \sigma^2) \\$
+	\[
+	\begin{aligned}
+			&H_0: \mu = \mu_0 \\
+			&H_1: \mu \neq \mu_0 \\
+			&\Theta= \R \times (0, \infty) ... k=2\\
+			&\Theta_0 = \{ \mu_0 \} \times (0, \infty) ... k=1\\
+	\end{aligned}
+	\]
+	
+	\begin{example}[Kategoriale Daten, einfache Nullhypothese] 
+	
+	 Betrachte: \\
+	  $X_1,...,X_n$ iid diskret mit Werten in $ \{ 1,..,m \}$.
+	  
+	  Wahrscheinlichkeitsfunktion $p(j)=\underset{i \le j \le m}{\Prob(X_i=j)}, \theta=(p(j))^m_{j=1}$ unbekannt.
+	  
+	  Weiters sei $p_0(j), \ 1 \le j \le m $, eine bestimmte Wahrscheinlichkeitsfunktion. Teste:
+	  
+	  \[
+	\begin{aligned}
+		&H_0: p(j)=p_0(j) \text{ für alle } j=1,..,m \\
+		&H_1: p(j) \neq p_0(j) \text{ für mindestens ein } j \in \{1,..,m\} \\
+		& \\
+		&\Theta=\bigl\{ (p(j))^{m}_{j=1} \in [ 0 ,1 ]^m: \sum_{j=1}^{m} p(j)=1 \bigl\} ...k=1 \\
+		&\Theta_0=\bigl\{  (p(j))^{m}_{j=1} \bigl\} ...k_0=0 \\
+		&\\
+		& \hat{\theta}_0 = \underset{\theta=\Theta_0}{\argmax} L(\theta) = (p_0(j))^{m}_{j=1}  \\
+		& \hat{\theta} = \underset{\theta=\Theta}{\argmax} L(\theta) = \left( \frac{O_j}{n} \right)^m_{j=1}  \text{, wobei } =O_j =  \# \{ i=1,...,n: \ X_i=j \}, \ 1\le j \le m \\
+		& O_j  \text{ '' Observed number of cases in class j ''}	\\
+	\end{aligned}
+	\]
+	
+	Allgemein ist: 
+	  \[
+	\begin{aligned}
+		& L((p(j))^{m}_{j=1}) = p(x_1)\cdot p(x_2)\cdot ... \cdot p(x_n)=\\
+		& p(1)^{O_1} \cdot p(2)^{O_2} \cdot ... \cdot p(m)^{O_m} \\
+		& \\
+		& -2 \log \Lambda = -2 \log \frac{L(\hat{\theta}_0 )}{L(\hat{\theta})}=  2 \log \frac{L(\hat{\theta})}{L(\hat{\theta}_0 )} \\
+		& 2 \log \frac{\prod_{j=1}^{m}(\frac{O_j}{n})^{O_j}}{\prod_{j=1}^{m} (p_0(j))^{O_j}} =  2 \log \prod_{j=1}^{m}(\frac{O_j}{n \cdot p_0(j)})^{O_j} = \\
+		& 2 \sum_{j=1}^{m} O_j \log \frac{O_j}{n p_0(j)}=  2 \sum_{j=1}^{m} O_j \log \frac{O_j}{E_j} , \\			
+		& \text{Wobei } E_j=n\cdot p_0(j), \ 1 \leq j \leq m \text {''Expected number of  cases in class j under } H_0 " 
+	\end{aligned}
+	\]
+	Grenzverteilung von $2 \sum_{j=1}^{m} O_j \log \frac{O_j}{E_j}$ ist die $\chi_{m-1}^2$-Verteilung.
+	
+	\end{example}
+	
+	\begin{remark}
+		Bemerkung: Im Kontext des letzten Beispiels wird oft Pearson's $\chi^2 -$Anpassungstest verwendet. 
+	
+		Die Statistik ist: $\chi^2 := \sum_{j=1}^{m} \frac{(E_j-O_j)^2}{E_j} (\chi^2 \leftarrow $ nicht eine Verteilung) .
+		
+		Unter $H_0$ gilt $\chi^2 \overset{w}{\rightarrow} \chi_{m-1}^{2}$.
+		
+		Tatsächlich sind hier der L-R-Test und der $\chi^2 -$Anpassungstest äquivalent.
+	\end{remark}
+	
+	\begin{remark}
+		Bemerkung: Die Approximation 
+		
+		$\Prob(-2 \log \Lambda \le t | H_0) \approx \Prob( \chi_{m-1}^2 \le t)$
+		
+		$ \Prob( \chi^2 \le t | H_0) \approx  \Prob( \chi_{m-1}^2 \le t) $
+		
+		werden klein, wenn für jedes $j=1,..,m$ die größte $E_j = n \cdot p_0(j)$ größ ist. Daumenregel: $E_j \geq S^j$
+	\end{remark}
+	
+	Falls die Daumenregeln verletzt ist, kann man ''Klassen zusammenlegen''.
+	
+	\begin{example}
+	$\lambda_1,...\lambda_n$ iid $\N ( \mu, \sigma^2) ,  \ \sigma^2>0$ bekannt. Teste:
+	
+	  \[
+	\begin{aligned}
+	&H_0: \mu=\mu_0 \quad \Theta_0 = \{ \mu_0 \} \\
+	&H_1:  \mu \neq \mu_0 \quad \Theta =  \R 
+	\end{aligned}
+	\]
+	
+	$\hat{\mu}_0$...ML Schätzer für $\mu_0$ unter $H_0 = \mu_0$
+	
+	$\hat{\mu}$...ML Schätzer ''unrestringiert''   $= \bar{X}_n$ 
+	
+	  \[
+	\begin{aligned}
+	 &\Lambda = \frac{ \prod_{i=1}^{n} (2\pi\sigma^2)^{-\frac{1}{2}} e^{-\frac{1}{2\sigma^2} (X_i-\mu_0)^2} }{ \prod_{i=1}^{n} (2\pi\sigma^2)^{-\frac{1}{2}} e^{-\frac{1}{2\sigma^2} (X_i-\bar{X}_n)^2}   } = e^{ -\frac{1}{2\sigma^2} \sum_{i=1}^{n} \left( (X_i-\mu_0)^2 - (X_i - \bar{X}_n)^2) \right) } \\
+	 &= -2 \log \Lambda = -2\frac{(-1)}{2\sigma^2}\sum_{i=1}^{n} \left( X_i^2 -2 X_i \mu_0 +\mu_0^2  - X_i^2 +2X_i \bar{X}_n - \bar{X}_n^2 \right) \\
+	 &= \frac{1}{\sigma^2} (-2\mu_0 n \bar{X}_n + n\mu_0^2 + \underbrace{2 \bar{X}_n n  \bar{X}_n -  n\bar{X}_n^2}_{n \bar{X}_n^2}) \\
+	 & =  \frac{n}{\sigma^2} (\mu_0^2 -2\mu_0 \bar{X}_n + \bar{X}_n^2 ) \\
+	&=  \frac{n}{\sigma^2} (\bar{X}_n - \mu_0)^2  \\
+	&=  \left( \frac{\sqrt{n}(\bar{X}_n - \mu_0)}{\sigma} \right) ^2  = ( \hexstar) 
+	\end{aligned}
+	\]
+	
+	Unter $H_0$ ist
+	
+	  \[
+	\begin{aligned}
+	&\bar{X}_n ~ \N \left( \mu_0, \frac{\sigma^2}{n} \right) \\
+	&\bar{X}_n - \mu_0 ~ \N \left( 0, \frac{\sigma^2}{n} \right) \\
+	&  \frac{\sqrt{n}}{\sigma} \left( \bar{X}_n - \mu_0 \right)~ \N \left( 0, 1 \right) \\
+	& \Rightarrow -2\log \Lambda = (\hexstar) = \chi^2.
+	\end{aligned}
+	\] 
+	
+	
+	\end{example}
+
+
+%---------------------------------------------------------------------------
+	
+	
+%---------------------------------------------------------------------------
+	
 
 \chapter{Zufallsvektoren und Zufallsmatrizen}
 
@@ -3321,7 +3509,11 @@ Der Beweis beruht auf dem zentralen Grenzwertsatz und der $ \delta $-Methode (VO
 	Siehe zu diesem Kapitel S. 564-574. in \textit{Rice, J. A. (2007). Mathematical statistics and data analysis. Belmont, CA: Thomson/Brooks/Cole.} 
 \end{book}
 
-
+\begin{remark}
+	
+	Dieses Kapitel haben wir im SS 2022 nicht gemacht, es bleibt aber vom Vorjahr hier!
+	
+\end{remark}
 
 
 \begin{remark}
@@ -3335,12 +3527,9 @@ Der Beweis beruht auf dem zentralen Grenzwertsatz und der $ \delta $-Methode (VO
 	\]
 	
 \end{remark}
- 
- 
- 
 
 
-\section{Erwartungswerte und Varianz/Kovarianz-Matrizen}
+\section{Erwartungswerte und Varianz/Kovarianz-Matrizen} 
 
 
 \begin{definition}[Erwartungswert]
